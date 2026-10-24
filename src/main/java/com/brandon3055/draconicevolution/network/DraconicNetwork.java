@@ -141,7 +141,7 @@ public class DraconicNetwork {
         PacketCustom packet = new PacketCustom(CHANNEL, C_UNDYING_ACTIVATION);
         packet.writeVarInt(target.getId());
         packet.writeRegistryId(ForgeRegistries.ITEMS, item);
-        packet.sendToChunk(target.level(), target.blockPosition());
+        packet.sendToChunk(target.level, target.blockPosition());
     }
 
     public static void sendDislocatorMessage(int id, Consumer<MCDataOutput> callback) {
@@ -155,7 +155,7 @@ public class DraconicNetwork {
         PacketCustom packet = new PacketCustom(CHANNEL, C_BLINK);
         packet.writeVarInt(player.getId());
         packet.writeFloat(distance);
-        packet.sendToChunk(player.level(), player.blockPosition());
+        packet.sendToChunk(player.level, player.blockPosition());
     }
 
     public static void sendStaffEffect(LivingEntity source, int damageType, Consumer<MCDataOutput> callback) {
@@ -163,7 +163,7 @@ public class DraconicNetwork {
         packet.writeByte(damageType);
         packet.writeVarInt(source.getId());
         callback.accept(packet);
-        packet.sendToChunk(source.level(), source.blockPosition());
+        packet.sendToChunk(source.level, source.blockPosition());
     }
 
     public static void sendFusionRecipeMove(IFusionRecipe recipe, boolean maxTransfer) {
@@ -187,7 +187,7 @@ public class DraconicNetwork {
         packet.writeByte(phase.getType().getId());
         packet.writeByte(func);
         if (callBack != null) callBack.accept(packet);
-        packet.sendToChunk(entity.level(), entity.blockPosition());
+        packet.sendToChunk(entity.level, entity.blockPosition());
     }
 
     public static void sendBossShieldPacket(ServerPlayer player, UUID id, int operation, Consumer<MCDataOutput> callBack) {

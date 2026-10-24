@@ -89,7 +89,7 @@ public class ForestHarvestHandler implements IHarvestHandler {
 
         complete = true;//temp
 //        harvestComplete();
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1F, 0.5F * ((player.level().random.nextFloat() - player.level().random.nextFloat()) * 0.7F + 1.8F));
+        player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1F, 0.5F * ((player.level.random.nextFloat() - player.level.random.nextFloat()) * 0.7F + 1.8F));
     }
 
     private void updateSearch(Level level, Player player) {

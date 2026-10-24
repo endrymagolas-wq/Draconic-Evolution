@@ -192,7 +192,7 @@ public class GuardianFightManager extends WorldEntity implements ITickableWorldE
         }
 
         GuardianFightManager manager = guardian.getFightManager();
-        ItemEntity item = EntityType.ITEM.create(guardian.level());
+        ItemEntity item = EntityType.ITEM.create(guardian.level);
         if (manager != null && item != null) {
             item.setItem(new ItemStack(DEContent.DRAGON_HEART.get()));
             BlockPos podiumPos = manager.getArenaOrigin().above(20);
@@ -202,7 +202,7 @@ public class GuardianFightManager extends WorldEntity implements ITickableWorldE
             item.setInvulnerable(true);
             item.setNoGravity(true);
             item.getPersistentData().putBoolean("guardian_heart", true); //This is here to help fox out
-            guardian.level().addFreshEntity(item);
+            guardian.level.addFreshEntity(item);
         }
 
         cleanUpAndDispose();

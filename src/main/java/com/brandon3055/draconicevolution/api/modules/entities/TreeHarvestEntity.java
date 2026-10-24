@@ -65,7 +65,7 @@ public class TreeHarvestEntity extends ModuleEntity<TreeHarvestData> implements 
         }
         IOPStorage storage = optional.orElseThrow(IllegalStateException::new);
 
-        activeHandler.tick(player.level(), player, stack, storage, itemBuffer);
+        activeHandler.tick(player.level, player, stack, storage, itemBuffer);
 
         if (itemBuffer.getStacks().size() > 8) {
             dropContents(player, stack);
@@ -74,7 +74,7 @@ public class TreeHarvestEntity extends ModuleEntity<TreeHarvestData> implements 
 
     private void endUse(LivingEntityUseItemEvent event) {
         if (activeHandler != null && event.getEntity() instanceof ServerPlayer player) {
-            activeHandler.stop(player.level(), player);
+            activeHandler.stop(player.level, player);
         }
         activeHandler = null;
 

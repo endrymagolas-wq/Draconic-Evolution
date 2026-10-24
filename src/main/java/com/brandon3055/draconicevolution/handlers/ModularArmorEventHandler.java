@@ -133,7 +133,7 @@ public class ModularArmorEventHandler {
 
     private static void onEntityAttacked(LivingAttackEvent event) {
         LivingEntity entity = event.getEntity();
-        if (event.isCanceled() || event.getAmount() <= 0 || entity.level().isClientSide || event.getSource().is(DEDamage.KILL)) {
+        if (event.isCanceled() || event.getAmount() <= 0 || entity.level.isClientSide || event.getSource().is(DEDamage.KILL)) {
             return;
         }
 
@@ -147,7 +147,7 @@ public class ModularArmorEventHandler {
         //Allows /kill to completely bypass all protections
         if (event.getAmount() == Float.MAX_VALUE && event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD)) {
             event.setCanceled(true);
-            entity.hurt(DEDamage.killDamage(entity.level()), Float.MAX_VALUE / 5);
+            entity.hurt(DEDamage.killDamage(entity.level), Float.MAX_VALUE / 5);
             return;
         }
 
@@ -167,7 +167,7 @@ public class ModularArmorEventHandler {
 
     private static void onEntityDamaged(LivingDamageEvent event) {
         LivingEntity entity = event.getEntity();
-        if (event.isCanceled() || event.getAmount() <= 0 || entity.level().isClientSide || event.getSource().is(DEDamage.KILL)) {
+        if (event.isCanceled() || event.getAmount() <= 0 || entity.level.isClientSide || event.getSource().is(DEDamage.KILL)) {
             return;
         }
 
@@ -203,7 +203,7 @@ public class ModularArmorEventHandler {
 
     private static void onEntityDeath(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        if (event.isCanceled() || entity.level().isClientSide) {
+        if (event.isCanceled() || entity.level.isClientSide) {
             return;
         }
 
@@ -286,9 +286,9 @@ public class ModularArmorEventHandler {
             }
         }
 
-        if (!entity.level().isClientSide() && TimeKeeper.getServerTick() % 10 == 0) {
+        if (!entity.level.isClientSide() && TimeKeeper.getServerTick() % 10 == 0) {
             ATTRIBUTE_HANDLER.updateEntity(entity, armorAbilities);
-        } else if (!entity.level().isClientSide() && entity instanceof Player) {
+        } else if (!entity.level.isClientSide() && entity instanceof Player) {
             ATTRIBUTE_HANDLER.updateEntity(entity, armorAbilities);
         }
 
@@ -301,7 +301,7 @@ public class ModularArmorEventHandler {
             if (armorAbilities.creativeFlight && armorAbilities.flightPower != null && !player.getAbilities().instabuild && !player.isSpectator()) {
                 canFly = armorAbilities.flightPower.getOPStored() >= EquipCfg.creativeFlightEnergy;
                 noPower = !canFly;
-                if (canFly && player.getAbilities().flying && !entity.level().isClientSide) {
+                if (canFly && player.getAbilities().flying && !entity.level.isClientSide) {
                     armorAbilities.flightPower.modifyEnergyStored(-EquipCfg.creativeFlightEnergy);
                 }
             }
@@ -313,7 +313,7 @@ public class ModularArmorEventHandler {
                     playersWithFlight.put(player, false);
                 }
 
-                if (playersWithFlight.get(player) && !entity.level().isClientSide) {
+                if (playersWithFlight.get(player) && !entity.level.isClientSide) {
                     playersWithFlight.put(player, false);
 
                     if (!player.getAbilities().instabuild && !player.isSpectator()) {
@@ -327,7 +327,7 @@ public class ModularArmorEventHandler {
                     }
                 }
 
-                if (player.level().isClientSide && playersWithFlight.get(player)) {
+                if (player.level.isClientSide && playersWithFlight.get(player)) {
                     playersWithFlight.put(player, false);
                     if (!player.getAbilities().instabuild) {
                         player.getAbilities().mayfly = false;
@@ -444,7 +444,7 @@ public class ModularArmorEventHandler {
             }
         }
 
-        if (!player.onGround() && host.getModuleData(ModuleTypes.MINING_STABILITY) != null) {
+        if (!player.isOnGround() && host.getModuleData(ModuleTypes.MINING_STABILITY) != null) {
             newDigSpeed *= 5f;
         }
 
@@ -455,7 +455,7 @@ public class ModularArmorEventHandler {
 
     private static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
-        if (player.onGround()) return;
+        if (player.isOnGround()) return;
 
         ItemStack chestStack = IModularArmor.getArmor(player);
         LazyOptional<ModuleHost> optional = chestStack.getCapability(DECapabilities.MODULE_HOST_CAPABILITY);

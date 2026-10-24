@@ -73,7 +73,7 @@ public class KeyInputHandler {
                     player.onUpdateAbilities();
                 } else {
                     player.getAbilities().flying = true;
-                    if (player.onGround()) {
+                    if (player.isOnGround()) {
                         player.setPos(player.getX(), player.getY() + 0.05D, player.getZ());
                         player.setDeltaMovement(player.getDeltaMovement().x, 0, player.getDeltaMovement().z);
                     }

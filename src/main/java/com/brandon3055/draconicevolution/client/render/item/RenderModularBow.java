@@ -79,7 +79,7 @@ public class RenderModularBow extends ToolRenderBase {
         @Override
         public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int i) {
             RenderModularBow.this.entity = entity;
-            RenderModularBow.this.world = world == null ? entity == null ? null : (ClientLevel) entity.level() : null;
+            RenderModularBow.this.world = world == null ? entity == null ? null : (ClientLevel) entity.level : null;
             return originalModel;
         }
     };

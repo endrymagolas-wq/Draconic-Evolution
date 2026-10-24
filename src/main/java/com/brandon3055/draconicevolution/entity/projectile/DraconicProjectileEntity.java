@@ -201,7 +201,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
      * @return true prevents normal arrow damage processing.
      * */
     protected boolean activateDamageEffect(@Nullable HitResult traceResult) {
-        if (level().isClientSide) return true;
+        if (level.isClientSide) return true;
         Entity owner = getOwner();
         Module<DamageModData> damageMod = getDamageModifier();
         Vec3 pos = position();
@@ -225,14 +225,14 @@ public class DraconicProjectileEntity extends AbstractArrow {
             } else {
                 modifier = damageMod.getData().modifier();
             }
-            modifier.doDamageAndEffects(level(), pos, traceResult, owner instanceof LivingEntity ? (LivingEntity) owner : null, projectileBaseDamage, secondaryChange, true);
+            modifier.doDamageAndEffects(level, pos, traceResult, owner instanceof LivingEntity ? (LivingEntity) owner : null, projectileBaseDamage, secondaryChange, true);
             setDamageModifier(null);
             disableDefault = true;
         } else if (explosivePower > 0) {
             if (owner instanceof LivingEntity) {
-                level().explode(owner, level().damageSources().explosion(owner, null), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
+                level.explode(owner, level.damageSources().explosion(owner, null), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
             }else {
-                level().explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
+                level.explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
             }
 
             explosivePower = 0;
@@ -316,7 +316,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
 
     @Override
     public void tick() {
-        boolean forceActivation = pseudoInstantTravel && !level().isAreaLoaded(getOnPos(), 20);
+        boolean forceActivation = pseudoInstantTravel && !level.isAreaLoaded(getOnPos(), 20);
 
         //Drag mitigation. This is a little nasty but it works and there really isn't a better way to do it without mixins.
         if (hasNoDrag()) {
@@ -330,7 +330,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
             super.tick();
         }
 
-        if (this.level().isClientSide) {
+        if (this.level.isClientSide) {
             if (this.inGround) {
                 if (this.inGroundTime % 5 == 0) {
                     this.spawnPotionParticles(1);
@@ -339,7 +339,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
                 this.spawnPotionParticles(2);
             }
         } else if (this.inGround && this.inGroundTime != 0 && !this.customPotionEffects.isEmpty() && this.inGroundTime >= 600) {
-            this.level().broadcastEntityEvent(this, (byte) 0);
+            this.level.broadcastEntityEvent(this, (byte) 0);
             this.potion = Potions.EMPTY;
             this.customPotionEffects.clear();
             this.entityData.set(COLOR, -1);
@@ -365,7 +365,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
             double d2 = (double) (i >> 0 & 255) / 255.0D;
 
             for (int j = 0; j < particleCount; ++j) {
-                this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+                this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
             }
 
         }
@@ -486,7 +486,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
                 double d2 = (double) (i >> 0 & 255) / 255.0D;
 
                 for (int j = 0; j < 20; ++j) {
-                    this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+                    this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
                 }
             }
         } else {

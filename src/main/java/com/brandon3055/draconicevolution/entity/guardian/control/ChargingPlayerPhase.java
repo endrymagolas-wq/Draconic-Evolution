@@ -61,10 +61,10 @@ public class ChargingPlayerPhase extends Phase {
                 if (distance <= 5) {
                     guardian.getPhaseManager().setPhase(PhaseType.START);
                     debug("Charge Successful");
-                    targetPlayer.hurt(DEDamage.guardian(guardian.level(), guardian), GuardianFightManager.CHARGE_DAMAGE);
+                    targetPlayer.hurt(DEDamage.guardian(guardian.level, guardian), GuardianFightManager.CHARGE_DAMAGE);
                     guardian.playSound(SoundEvents.GENERIC_EAT, 20, 0.95F + (guardian.getRandom().nextFloat() * 0.2F));
                     guardian.playSound(SoundEvents.GENERIC_EAT, 20, 0.95F + (guardian.getRandom().nextFloat() * 0.2F));
-                    DraconicNetwork.sendImpactEffect(guardian.level(), targetPlayer.blockPosition(), 0);
+                    DraconicNetwork.sendImpactEffect(guardian.level, targetPlayer.blockPosition(), 0);
                 }
             }
         }

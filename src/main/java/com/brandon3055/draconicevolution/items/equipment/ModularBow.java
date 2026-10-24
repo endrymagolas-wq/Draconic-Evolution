@@ -94,7 +94,7 @@ public class ModularBow extends BowItem implements IReaperItem, IModularItem {
                 // auto fire
                 InteractionHand usingHand = player.getUsedItemHand();
                 player.stopUsingItem();
-                stack.releaseUsing(player.level(), player, 0);
+                stack.releaseUsing(player.level, player, 0);
                 player.startUsingItem(usingHand);
             }
         }
@@ -217,9 +217,9 @@ public class ModularBow extends BowItem implements IReaperItem, IModularItem {
 
         Entity owner = arrow.getOwner();
         if (!(owner instanceof LivingEntity)) { //Because it seems there is an edge case where owner may be null hear.
-            return new DraconicArrowEntity(DEContent.ENTITY_DRACONIC_ARROW.get(), arrow.level());
+            return new DraconicArrowEntity(DEContent.ENTITY_DRACONIC_ARROW.get(), arrow.level);
         }
-        DraconicArrowEntity newArrow = new DraconicArrowEntity(arrow.level(), (LivingEntity) arrow.getOwner());
+        DraconicArrowEntity newArrow = new DraconicArrowEntity(arrow.level, (LivingEntity) arrow.getOwner());
         if (arrow instanceof SpectralArrow) {
             newArrow.setSpectral(((SpectralArrow) arrow).duration);
         }

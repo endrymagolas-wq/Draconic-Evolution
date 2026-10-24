@@ -89,6 +89,6 @@ public abstract class Phase implements IPhase {
    }
 
    public boolean isValidTarget(LivingEntity entity) {
-      return entity.isAlive() && entity.level().dimensionType() == guardian.level().dimensionType() && entity.distanceToSqr(guardian) < 300*300;
+      return entity.isAlive() && entity.level.dimensionType() == guardian.level.dimensionType() && entity.distanceToSqr(guardian) < 300*300;
    }
 }

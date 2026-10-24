@@ -80,10 +80,10 @@ public class DislocatorAdvanced extends Dislocator {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player.level().isClientSide) {
+        if (player.level.isClientSide) {
             return true;
         }
-        TargetPos location = getTargetPos(stack, player.level());
+        TargetPos location = getTargetPos(stack, player.level);
         int fuel = getFuel(stack);
 
         if (!player.getAbilities().instabuild && fuel <= 0) {
@@ -117,7 +117,7 @@ public class DislocatorAdvanced extends Dislocator {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        TargetPos location = getTargetPos(stack, player.level());
+        TargetPos location = getTargetPos(stack, player.level);
 
         boolean blink = getBlinkMode(stack);
         if (player.isShiftKeyDown() || (location == null && !blink)) {
@@ -178,9 +178,9 @@ public class DislocatorAdvanced extends Dislocator {
         double range = DEConfig.dislocatorBlinkRange;
         Vec3 endVec = playerVec.add(player.getLookAngle().multiply(range, range, range));
         ClipContext context = new ClipContext(playerVec, endVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player);
-        BlockHitResult result = player.level().clip(context);
+        BlockHitResult result = player.level.clip(context);
 
-        player.level().playSound(null, playerVec.x, playerVec.y, playerVec.z, DESounds.BLINK.get(), SoundSource.PLAYERS, 1F, 1F);
+        player.level.playSound(null, playerVec.x, playerVec.y, playerVec.z, DESounds.BLINK.get(), SoundSource.PLAYERS, 1F, 1F);
 
         DraconicNetwork.sendBlinkEffect(player, (float) (playerVec.distanceTo(endVec) / range));
 
@@ -189,7 +189,7 @@ public class DislocatorAdvanced extends Dislocator {
                 player.connection.teleport(endVec.x, endVec.y, endVec.z, player.getYRot(), player.getXRot(), Sets.newHashSet(RelativeMovement.X, RelativeMovement.Y, RelativeMovement.Z));
                 player.setYHeadRot(player.getYRot());
             } else {
-                TeleportUtils.teleportEntity(player, player.level().dimension(), endVec.x, endVec.y, endVec.z);
+                TeleportUtils.teleportEntity(player, player.level.dimension(), endVec.x, endVec.y, endVec.z);
             }
         } else {
             BlockPos pos = result.getBlockPos().relative(result.getDirection());
@@ -199,14 +199,14 @@ public class DislocatorAdvanced extends Dislocator {
                 case UP:
                     break;
                 default:
-                    if (player.level().getBlockState(pos.below()).isPathfindable(player.level(), pos.below(), PathComputationType.AIR)) {
+                    if (player.level.getBlockState(pos.below()).isPathfindable(player.level, pos.below(), PathComputationType.AIR)) {
                         vec.y -= 1;
                     }
             }
-            TeleportUtils.teleportEntity(player, player.level().dimension(), vec.x, vec.y, vec.z);
+            TeleportUtils.teleportEntity(player, player.level.dimension(), vec.x, vec.y, vec.z);
         }
 
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), DESounds.BLINK.get(), SoundSource.PLAYERS, 1F, 1F);
+        player.level.playSound(null, player.getX(), player.getY(), player.getZ(), DESounds.BLINK.get(), SoundSource.PLAYERS, 1F, 1F);
 
     }
 
@@ -230,7 +230,7 @@ public class DislocatorAdvanced extends Dislocator {
 
     @Override
     public void generateHudText(ItemStack stack, Player player, List<Component> displayList) {
-        DislocatorTarget location = getTargetPos(stack, player.level());
+        DislocatorTarget location = getTargetPos(stack, player.level);
         if (location != null) {
             displayList.add(Component.literal(location.getName()));
         }

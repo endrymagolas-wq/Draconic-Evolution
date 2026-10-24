@@ -190,7 +190,7 @@ public class TileDislocatorReceptacle extends TileBCore implements IInteractTile
                     return;
                 }
 
-                BCoreNetwork.sendSound(entity.level(), entity.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, rand.nextFloat() * 0.1F + 0.9F, false);
+                BCoreNetwork.sendSound(entity.level, entity.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, rand.nextFloat() * 0.1F + 0.9F, false);
                 entity.setPortalCooldown();
                 target.teleport(entity);
                 if (entity instanceof ServerPlayer) {
@@ -200,7 +200,7 @@ public class TileDislocatorReceptacle extends TileBCore implements IInteractTile
                     DelayedTask.run(60, () -> DraconicNetwork.sendDislocatorTeleported((ServerPlayer) entity));
                 }
                 entity.setPortalCooldown();
-                DelayedTask.run(1, () -> BCoreNetwork.sendSound(entity.level(), entity.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, rand.nextFloat() * 0.1F + 0.9F, false));
+                DelayedTask.run(1, () -> BCoreNetwork.sendSound(entity.level, entity.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, rand.nextFloat() * 0.1F + 0.9F, false));
             }
             teleportQ.clear();
         }

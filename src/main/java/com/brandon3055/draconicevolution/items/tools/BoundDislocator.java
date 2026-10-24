@@ -70,9 +70,9 @@ public class BoundDislocator extends Dislocator {
         if (entity.getAge() >= 0 && entity.pickupDelay != 32767) {
             entity.setExtendedLifetime();
         }
-        if (entity.level() instanceof ServerLevel && TimeKeeper.getServerTick() % 20 == 0) {
+        if (entity.level instanceof ServerLevel && TimeKeeper.getServerTick() % 20 == 0) {
             if (isValid(stack) && !isPlayer(stack)) {
-                DislocatorSaveData.updateLinkTarget(entity.level(), stack, new GroundTarget(entity));
+                DislocatorSaveData.updateLinkTarget(entity.level, stack, new GroundTarget(entity));
             }
         }
         return false;
@@ -80,10 +80,10 @@ public class BoundDislocator extends Dislocator {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (player.level().isClientSide) {
+        if (player.level.isClientSide) {
             return true;
         }
-        TargetPos location = getTargetPos(stack, player.level());
+        TargetPos location = getTargetPos(stack, player.level);
         if (location == null) {
             if (isPlayer(stack)) {
                 player.sendSystemMessage(Component.translatable("dislocate.draconicevolution.bound.cant_find_player").withStyle(ChatFormatting.RED));
@@ -97,21 +97,21 @@ public class BoundDislocator extends Dislocator {
             return true;
         }
 
-        BCoreNetwork.sendSound(player.level(), player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level().random.nextFloat() * 0.1F + 0.9F, false);
+        BCoreNetwork.sendSound(player.level, player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level.random.nextFloat() * 0.1F + 0.9F, false);
 
         location.setPitch(player.getXRot());
         location.setYaw(player.getYRot());
-        notifyArriving(stack, player.level(), entity);
+        notifyArriving(stack, player.level, entity);
         location.teleport(entity);
 
-        BCoreNetwork.sendSound(player.level(), player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level().random.nextFloat() * 0.1F + 0.9F, false);
+        BCoreNetwork.sendSound(player.level, player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level.random.nextFloat() * 0.1F + 0.9F, false);
         return true;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (player.level().isClientSide) {
+        if (player.level.isClientSide) {
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
 
@@ -142,12 +142,12 @@ public class BoundDislocator extends Dislocator {
                 return new InteractionResultHolder<>(InteractionResult.PASS, stack);
             }
 
-            BCoreNetwork.sendSound(player.level(), player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level().random.nextFloat() * 0.1F + 0.9F, false);
+            BCoreNetwork.sendSound(player.level, player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level.random.nextFloat() * 0.1F + 0.9F, false);
             location.setPitch(player.getXRot());
             location.setYaw(player.getYRot());
-            notifyArriving(stack, player.level(), player);
+            notifyArriving(stack, player.level, player);
             location.teleport(player);
-            BCoreNetwork.sendSound(player.level(), player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level().random.nextFloat() * 0.1F + 0.9F, false);
+            BCoreNetwork.sendSound(player.level, player.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, player.level.random.nextFloat() * 0.1F + 0.9F, false);
 
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }

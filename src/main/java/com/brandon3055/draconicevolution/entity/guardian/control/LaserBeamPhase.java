@@ -39,7 +39,7 @@ public class LaserBeamPhase extends ChargeUpPhase {
 
     public LaserBeamPhase(DraconicGuardianEntity guardian) {
         super(guardian, 3 * 20);
-        this.damage = DEDamage.guardianLaser(guardian.level(), guardian);
+        this.damage = DEDamage.guardianLaser(guardian.level, guardian);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LaserBeamPhase extends ChargeUpPhase {
         //Check for block Collision
         beamPos = Vector3.fromEntityCenter(attackTarget);
         boolean obstructed = false;
-        HitResult result = guardian.level().clip(new ClipContext(headPos.vec3(), beamPos.vec3(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, guardian));
+        HitResult result = guardian.level.clip(new ClipContext(headPos.vec3(), beamPos.vec3(), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, guardian));
         if (result.getType() != HitResult.Type.MISS) {
             beamPos = new Vector3(result.getLocation());
             obstructed = true;
@@ -82,15 +82,15 @@ public class LaserBeamPhase extends ChargeUpPhase {
         float beamPower = (getBeamCharge() - 0.5F) / 0.5F;
         if (fireSecondary()) {
             beamPower += getSecondaryCharge();
-            DraconicNetwork.sendGuardianBeam(guardian.level(), headPos, beamPos, beamPower);
+            DraconicNetwork.sendGuardianBeam(guardian.level, headPos, beamPos, beamPower);
             beamPower += getSecondaryCharge() * (Float.MAX_VALUE / 5F);
         } else {
-            DraconicNetwork.sendGuardianBeam(guardian.level(), headPos, beamPos, beamPower);
+            DraconicNetwork.sendGuardianBeam(guardian.level, headPos, beamPos, beamPower);
             beamPower *= 20;
         }
 
         if (obstructed & chargedTime % 2 == 0) {
-            guardian.level().explode(null, damage, null, beamPos.x, beamPos.y, beamPos.z, 8, false, Level.ExplosionInteraction.MOB);
+            guardian.level.explode(null, damage, null, beamPos.x, beamPos.y, beamPos.z, 8, false, Level.ExplosionInteraction.MOB);
         } else if (!obstructed) {
             float prevHealth = attackTarget.getHealth();
             if (getSecondaryCharge() >= 1) {
@@ -126,7 +126,7 @@ public class LaserBeamPhase extends ChargeUpPhase {
         }
 
         Vec3 focus = Vec3.atCenterOf(guardian.getArenaOrigin());
-        List<Player> targetOptions = guardian.level().players()
+        List<Player> targetOptions = guardian.level.players()
                 .stream()
                 .filter(e -> e.distanceToSqr(focus) <= 200 * 200)
                 .filter(e -> StartPhase.AGRO_TARGETS.test(guardian, e))

@@ -69,7 +69,7 @@ public class MultiBlockBuilder implements IProcess {
 
     @Override
     public void updateProcess() {
-        if (workOrder.isEmpty() || !player.isAlive() || player.level() != level) {
+        if (workOrder.isEmpty() || !player.isAlive() || player.level != level) {
             isDead = true;
             if (controller != null) {
                 controller.validateStructure();

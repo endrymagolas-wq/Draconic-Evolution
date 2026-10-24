@@ -52,7 +52,7 @@ public class Dislocator extends Item implements IHudItem {
      * @param target The entity being teleported if not the user.
      */
     public Entity dislocateEntity(ItemStack stack, @Nonnull Entity user, @Nonnull Entity target, TargetPos targetPos) {
-        if (target.level().isClientSide) {
+        if (target.level.isClientSide) {
             return target;
         }
 
@@ -61,10 +61,10 @@ public class Dislocator extends Item implements IHudItem {
             return target;
         }
 
-        BCoreNetwork.sendSound(target.level(), target.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, target.level().random.nextFloat() * 0.1F + 0.9F, false);
+        BCoreNetwork.sendSound(target.level, target.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, target.level.random.nextFloat() * 0.1F + 0.9F, false);
         target = targetPos.teleport(target);
         Entity finalTarget = target;
-        DelayedTask.run(1, () -> BCoreNetwork.sendSound(finalTarget.level(), finalTarget.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, finalTarget.level().random.nextFloat() * 0.1F + 0.9F, false));
+        DelayedTask.run(1, () -> BCoreNetwork.sendSound(finalTarget.level, finalTarget.blockPosition(), DESounds.PORTAL.get(), SoundSource.PLAYERS, 0.1F, finalTarget.level.random.nextFloat() * 0.1F + 0.9F, false));
         return target;
     }
 
@@ -82,11 +82,11 @@ public class Dislocator extends Item implements IHudItem {
             return true;
         }
 
-        if (player.level().isClientSide || !entity.canChangeDimensions() || !(entity instanceof LivingEntity) || player.getCooldowns().getCooldownPercent(this, 0) > 0) {
+        if (player.level.isClientSide || !entity.canChangeDimensions() || !(entity instanceof LivingEntity) || player.getCooldowns().getCooldownPercent(this, 0) > 0) {
             return true;
         }
 
-        TargetPos location = getTargetPos(stack, player.level());
+        TargetPos location = getTargetPos(stack, player.level);
         player.getCooldowns().addCooldown(this, 20);
         dislocateEntity(stack, player, entity, location);
         stack.hurtAndBreak(1, player, e -> {});
@@ -186,7 +186,7 @@ public class Dislocator extends Item implements IHudItem {
 
     @Override
     public void generateHudText(ItemStack stack, Player player, List<Component> displayList) {
-        TargetPos location = getTargetPos(stack, player.level());
+        TargetPos location = getTargetPos(stack, player.level);
         if (location != null) {
             displayList.add(stack.getHoverName());
             displayList.add(Component.literal("{" + location.getReadableName(false) + ")"));

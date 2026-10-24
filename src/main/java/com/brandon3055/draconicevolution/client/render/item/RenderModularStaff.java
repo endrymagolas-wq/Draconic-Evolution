@@ -95,7 +95,7 @@ public class RenderModularStaff extends ToolRenderBase {
         @Override
         public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int light) {
             RenderModularStaff.this.entity = entity;
-            RenderModularStaff.this.world = world == null ? entity == null ? null : (ClientLevel) entity.level() : null;
+            RenderModularStaff.this.world = world == null ? entity == null ? null : (ClientLevel) entity.level : null;
             return originalModel;
         }
     };

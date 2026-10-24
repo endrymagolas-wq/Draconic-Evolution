@@ -218,7 +218,7 @@ public class ServerPacketHandler implements ICustomPacketHandler.IServerPacketHa
     private void jeiFusionTransfer(ServerPlayer sender, PacketCustom packet) {
         ResourceLocation id = packet.readResourceLocation();
         boolean maxTransfer = packet.readBoolean();
-        Recipe<?> recipe = sender.level().getRecipeManager().byKey(id).orElse(null);
+        Recipe<?> recipe = sender.level.getRecipeManager().byKey(id).orElse(null);
         if (recipe instanceof IFusionRecipe && sender.containerMenu instanceof FusionCraftingCoreMenu) {
             FusionRecipeTransferHelper.doServerSideTransfer(sender, (FusionCraftingCoreMenu) sender.containerMenu, (IFusionRecipe) recipe, maxTransfer);
         }
@@ -232,7 +232,7 @@ public class ServerPacketHandler implements ICustomPacketHandler.IServerPacketHa
 
         HitResult traceResult = player.pick(5, 0, false);
         if (traceResult.getType() == HitResult.Type.BLOCK) {
-            Level level = player.level();
+            Level level = player.level;
             BlockHitResult blockTrace = (BlockHitResult) traceResult;
             BlockPos posHit = blockTrace.getBlockPos();
             if (!com.brandon3055.brandonscore.network.ServerPacketHandler.verifyPlayerPermission(player, posHit)) {

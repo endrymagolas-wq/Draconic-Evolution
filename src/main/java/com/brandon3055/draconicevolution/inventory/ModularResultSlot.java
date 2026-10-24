@@ -48,7 +48,7 @@ public class ModularResultSlot extends ModularSlot {
    @Override
    protected void checkTakeAchievements(ItemStack pStack) {
       if (this.removeCount > 0) {
-         pStack.onCraftedBy(this.player.level(), this.player, this.removeCount);
+         pStack.onCraftedBy(this.player.level, this.player, this.removeCount);
          net.minecraftforge.event.ForgeEventFactory.firePlayerCraftingEvent(this.player, pStack, this.craftSlots);
       }
 
@@ -64,7 +64,7 @@ public class ModularResultSlot extends ModularSlot {
    public void onTake(Player pPlayer, ItemStack pStack) {
       this.checkTakeAchievements(pStack);
       net.minecraftforge.common.ForgeHooks.setCraftingPlayer(pPlayer);
-      NonNullList<ItemStack> nonnulllist = pPlayer.level().getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, this.craftSlots, pPlayer.level());
+      NonNullList<ItemStack> nonnulllist = pPlayer.level.getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING, this.craftSlots, pPlayer.level);
       net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
       for(int i = 0; i < nonnulllist.size(); ++i) {
          ItemStack itemstack = this.craftSlots.getItem(i);

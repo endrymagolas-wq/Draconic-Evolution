@@ -52,7 +52,7 @@ public class EnergyLinkEntity extends ModuleEntity<EnergyLinkData> {
         IOPStorage storage = moduleContext.getOpStorage();
         if (!(moduleContext instanceof StackModuleContext context) || storage == null) return;
 
-        Level level = context.getEntity().level();
+        Level level = context.getEntity().level;
         if (!(level instanceof ServerLevel serverLevel)) return;
 
         boolean crossDimension = false;

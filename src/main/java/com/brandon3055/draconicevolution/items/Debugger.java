@@ -46,7 +46,7 @@ public class Debugger extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        Level world = player.level();
+        Level world = player.level;
 //        EntityChaosGuardian guardian = DataUtils.firstMatch(world.getEntitiesWithinAABB(EntityChaosGuardian.class, player.getEntityBoundingBox().grow(300)), entityChaosGuardian -> true);
 //        if (guardian != null) {
 //            guardian.removePassengers();

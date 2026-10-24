@@ -68,13 +68,13 @@
 //        }
 //
 //        BlockPos pos = result.getBlockPos();
-//        IItemHandler handler = getInventory(player.level(), pos);
+//        IItemHandler handler = getInventory(player.level, pos);
 //        String recipe = getFusionRecipe(handler);
 //
 //        while (player.getOffhandItem().getItem() == Items.GOLDEN_APPLE) {
 //            pos = pos.above();
-//            if (player.level().getBlockEntity(pos) instanceof ChestBlockEntity) {
-//                handler = getInventory(player.level(), pos);
+//            if (player.level.getBlockEntity(pos) instanceof ChestBlockEntity) {
+//                handler = getInventory(player.level, pos);
 //                recipe += "\n\n" + getFusionRecipe(handler);
 //            } else {
 //                break;

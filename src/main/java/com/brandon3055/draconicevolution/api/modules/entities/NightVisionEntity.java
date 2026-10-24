@@ -34,7 +34,7 @@ public class NightVisionEntity extends ModuleEntity<AutoFeedData> {
     @Override
     public void tick(ModuleContext context) {
         if ((tick++ % 20 != 0) || !(context instanceof StackModuleContext ctx)) return;
-        if (!(ctx.getEntity() instanceof ServerPlayer player) || player.level().isClientSide() || !ctx.isEquipped()) return;
+        if (!(ctx.getEntity() instanceof ServerPlayer player) || player.level.isClientSide() || !ctx.isEquipped()) return;
 
         if (!enabled.getValue()) {
             if (wasJustDisabled && appliedByModule) {
@@ -53,7 +53,7 @@ public class NightVisionEntity extends ModuleEntity<AutoFeedData> {
             return;
         }
 
-        boolean shouldApply = player.level().getRawBrightness(player.blockPosition(), 0) <= enableInLight.getValue();
+        boolean shouldApply = player.level.getRawBrightness(player.blockPosition(), 0) <= enableInLight.getValue();
         if (shouldApply) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 302, 0, false, false));
             ctx.getOpStorage().modifyEnergyStored(-EquipCfg.nightVisionEnergy * 20L);

@@ -53,7 +53,7 @@ public class LootEventHandler {
 
     public static void addDrops(LivingDropsEvent event) {
         LivingEntity entity = event.getEntity();
-        Level level = entity.level();
+        Level level = entity.level;
         if (level.isClientSide() || event.isCanceled()) {
             return;
         }
@@ -70,7 +70,7 @@ public class LootEventHandler {
 
     public static void processDrops(LivingDropsEvent event) {
         Entity attacker = event.getSource().getEntity();
-        if (!(attacker instanceof Player player) || player.level().isClientSide()) {
+        if (!(attacker instanceof Player player) || player.level.isClientSide()) {
             return;
         }
         handleLootCollection(player, event);
@@ -90,34 +90,34 @@ public class LootEventHandler {
             EndDragonFight manager = dragon.getDragonFight();
             if (manager == null) return;
 
-            ItemEntity item = EntityType.ITEM.create(entity.level());
+            ItemEntity item = EntityType.ITEM.create(entity.level);
             if (item != null) {
                 item.setItem(new ItemStack(DEContent.DRAGON_HEART.get()));
-                BlockPos podiumPos = entity.level().getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.getLocation(manager.origin)).offset(0, 3, 0);
+                BlockPos podiumPos = entity.level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.getLocation(manager.origin)).offset(0, 3, 0);
                 item.moveTo(podiumPos.getX() + 0.5, podiumPos.getY(), podiumPos.getZ() + 0.5, 0, 0);
                 item.setDeltaMovement(0, 0, 0);
                 item.setUnlimitedLifetime();
                 item.setNoGravity(true);
-                entity.level().addFreshEntity(item);
+                entity.level.addFreshEntity(item);
             }
 
             if (DEConfig.dragonEggSpawnOverride && manager.hasPreviouslyKilledDragon()) {
-                entity.level().setBlockAndUpdate(entity.level().getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.getLocation(manager.origin)).offset(0, 0, -4), Blocks.DRAGON_EGG.defaultBlockState());
+                entity.level.setBlockAndUpdate(entity.level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.getLocation(manager.origin)).offset(0, 0, -4), Blocks.DRAGON_EGG.defaultBlockState());
             }
         }
 
         if (entity instanceof EnderDragon || entity instanceof DraconicGuardianEntity) {
             if (DEConfig.dragonDustLootModifier > 0) {
-                double count = (DEConfig.dragonDustLootModifier * 0.9D) + (entity.level().random.nextDouble() * (DEConfig.dragonDustLootModifier * 0.2));
+                double count = (DEConfig.dragonDustLootModifier * 0.9D) + (entity.level.random.nextDouble() * (DEConfig.dragonDustLootModifier * 0.2));
                 for (int i = 0; i < (int) count; i++) {
                     float mm = 0.3F;
-                    ItemEntity dust = new ItemEntity(entity.level(), entity.getX() - 2 + entity.level().random.nextInt(4), entity.getY() - 2 + entity.level().random.nextInt(4), entity.getZ() - 2 + entity.level().random.nextInt(4), new ItemStack(DEContent.DUST_DRACONIUM.get()));
+                    ItemEntity dust = new ItemEntity(entity.level, entity.getX() - 2 + entity.level.random.nextInt(4), entity.getY() - 2 + entity.level.random.nextInt(4), entity.getZ() - 2 + entity.level.random.nextInt(4), new ItemStack(DEContent.DUST_DRACONIUM.get()));
                     dust.setDeltaMovement(
-                            mm * ((((float) entity.level().random.nextInt(100)) / 100F) - 0.5F),
-                            mm * ((((float) entity.level().random.nextInt(100)) / 100F) - 0.5F),
-                            mm * ((((float) entity.level().random.nextInt(100)) / 100F) - 0.5F)
+                            mm * ((((float) entity.level.random.nextInt(100)) / 100F) - 0.5F),
+                            mm * ((((float) entity.level.random.nextInt(100)) / 100F) - 0.5F),
+                            mm * ((((float) entity.level.random.nextInt(100)) / 100F) - 0.5F)
                     );
-                    entity.level().addFreshEntity(dust);
+                    entity.level.addFreshEntity(dust);
                 }
             }
         }

@@ -100,10 +100,10 @@ public class GuardianCrystalEntity extends Entity {
     @Override
     public void tick() {
         ++time;
-        if (level() instanceof ServerLevel) {
+        if (level instanceof ServerLevel) {
             BlockPos blockpos = blockPosition();
-            if (getManagerId() != null && level().getBlockState(blockpos).isAir()) {
-                level().setBlockAndUpdate(blockpos, BaseFireBlock.getState(level(), blockpos));
+            if (getManagerId() != null && level.getBlockState(blockpos).isAir()) {
+                level.setBlockAndUpdate(blockpos, BaseFireBlock.getState(level, blockpos));
             }
 
             GuardianFightManager manager = getManager();
@@ -113,14 +113,14 @@ public class GuardianCrystalEntity extends Entity {
                     setUnstableTime(getUnstableTime() - 1);
                     if (getUnstableTime() > 0) {
                         for (int i = 0; i < 3; i++) {
-                            BCoreNetwork.sendParticle(level(), ParticleTypes.FIREWORK, Vector3.fromEntity(this), new Vector3(random.nextFloat(), 0.5 + (random.nextFloat() / 2), random.nextFloat()).subtract(0.5).multiply(1.5), true);
+                            BCoreNetwork.sendParticle(level, ParticleTypes.FIREWORK, Vector3.fromEntity(this), new Vector3(random.nextFloat(), 0.5 + (random.nextFloat() / 2), random.nextFloat()).subtract(0.5).multiply(1.5), true);
                         }
                         if (random.nextInt(3) == 0) {
                             setBeamTarget(manager.getArenaOrigin());
-                            BCoreNetwork.sendSound(level(), this, DESounds.CRYSTAL_UNSTABLE.get(), SoundSource.HOSTILE, 6F, 0.9F + (random.nextFloat() * 0.2F), false);
+                            BCoreNetwork.sendSound(level, this, DESounds.CRYSTAL_UNSTABLE.get(), SoundSource.HOSTILE, 6F, 0.9F + (random.nextFloat() * 0.2F), false);
                         }
                     } else {
-                        BCoreNetwork.sendSound(level(), this, DESounds.CRYSTAL_RESTORE.get(), SoundSource.HOSTILE, 8, 0.5F + level().random.nextFloat() * 0.2F, false);
+                        BCoreNetwork.sendSound(level, this, DESounds.CRYSTAL_RESTORE.get(), SoundSource.HOSTILE, 8, 0.5F + level.random.nextFloat() * 0.2F, false);
                     }
                 } else if (getShieldPower() < DEConfig.guardianCrystalShield) {
                     setShieldPower(Math.min(DEConfig.guardianCrystalShield, getShieldPower() + (DEConfig.guardianCrystalShield / 1200.0f)));
@@ -175,11 +175,11 @@ public class GuardianCrystalEntity extends Entity {
         if (isInvulnerableTo(source)) {
             return false;
         } else {
-            if (!isRemoved() && !level().isClientSide) {
+            if (!isRemoved() && !level.isClientSide) {
                 GuardianFightManager manager = getManager();
                 float shield = getShieldPower() / (float) DEConfig.guardianCrystalShield;
                 if (shield > 0) {
-                    BCoreNetwork.sendSound(level(), this, DESounds.SHIELD_STRIKE.get(), SoundSource.HOSTILE, 6, 0.5F + shield, false);
+                    BCoreNetwork.sendSound(level, this, DESounds.SHIELD_STRIKE.get(), SoundSource.HOSTILE, 6, 0.5F + shield, false);
                 }
                 if (manager != null && shield > 0) {
                     float modifier = manager.getCrystalDamageModifier(this, source);
@@ -200,7 +200,7 @@ public class GuardianCrystalEntity extends Entity {
 
                 discard();
                 if (!source.is(DamageTypeTags.IS_EXPLOSION)) {
-                    level().explode(null, getX(), getY(), getZ(), 10.0F, Level.ExplosionInteraction.BLOCK);
+                    level.explode(null, getX(), getY(), getZ(), 10.0F, Level.ExplosionInteraction.BLOCK);
                 }
                 onCrystalAttacked(source, amount, true);
             }
@@ -212,7 +212,7 @@ public class GuardianCrystalEntity extends Entity {
     private void playChargeAnimation() {
         GuardianFightManager manager = getManager();
         if (beamChargeAnim == 0 && manager != null) {
-            BCoreNetwork.sendSound(level(), this, DESounds.CRYSTAL_BEAM.get(), SoundSource.HOSTILE, 6, 1, false);
+            BCoreNetwork.sendSound(level, this, DESounds.CRYSTAL_BEAM.get(), SoundSource.HOSTILE, 6, 1, false);
             beamChargeAnim = 20;
             setBeamTarget(manager.getArenaOrigin());
             setBeamPower(0);
@@ -221,7 +221,7 @@ public class GuardianCrystalEntity extends Entity {
 
     @Override
     public void kill() {
-        onCrystalAttacked(level().damageSources().generic(), 0, true);
+        onCrystalAttacked(level.damageSources().generic(), 0, true);
         super.kill();
     }
 
@@ -271,14 +271,14 @@ public class GuardianCrystalEntity extends Entity {
 
     public void destabilize() {
         if (getUnstableTime() == 0) {
-            BCoreNetwork.sendSound(level(), this, DESounds.CRYSTAL_DESTABILIZE.get(), SoundSource.HOSTILE, 8, 0.5F + level().random.nextFloat() * 0.2F, false);
+            BCoreNetwork.sendSound(level, this, DESounds.CRYSTAL_DESTABILIZE.get(), SoundSource.HOSTILE, 8, 0.5F + level.random.nextFloat() * 0.2F, false);
         }
         setUnstableTime(DEConfig.guardianCrystalUnstableWindow);
     }
 
     public GuardianFightManager getManager() {
-        if (level() instanceof ServerLevel && getManagerId() != null) {
-            WorldEntity worldEntity = WorldEntityHandler.getWorldEntity(level(), managerId);
+        if (level instanceof ServerLevel && getManagerId() != null) {
+            WorldEntity worldEntity = WorldEntityHandler.getWorldEntity(level, managerId);
             if (worldEntity instanceof GuardianFightManager) {
                 return (GuardianFightManager) worldEntity;
             }

@@ -55,7 +55,7 @@ public class GuardianProjectileEntity extends AbstractHurtingProjectile implemen
         super.onHit(result);
         Entity shooter = this.getOwner();
         if (result.getType() != HitResult.Type.ENTITY || !((EntityHitResult) result).getEntity().is(shooter)) {
-            if (!this.level().isClientSide) {
+            if (!this.level.isClientSide) {
                 detonate();
             }
         }
@@ -77,7 +77,7 @@ public class GuardianProjectileEntity extends AbstractHurtingProjectile implemen
     }
 
     private void detonate() {
-        List<LivingEntity> list = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(splashRange), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+        List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(splashRange), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
         Entity shooter = this.getOwner();
         for (LivingEntity entity : list) {
             if (entity == shooter) continue;
@@ -88,7 +88,7 @@ public class GuardianProjectileEntity extends AbstractHurtingProjectile implemen
             }
             df *= Explosion.getSeenPercent(position(), entity);
             float damage = (float) ((int) ((df * df + df) / 2.0D * 6.0D * power + 1.0D));
-            entity.hurt(DEDamage.guardianProjectile(level(), this, shooter), damage);
+            entity.hurt(DEDamage.guardianProjectile(level, this, shooter), damage);
         }
         boolean destroy = false;
         if (shooter instanceof DraconicGuardianEntity) {
@@ -98,8 +98,8 @@ public class GuardianProjectileEntity extends AbstractHurtingProjectile implemen
             }
         }
 //                BCoreNetwork.sendSound(level, blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundCategory.HOSTILE, 10, random.nextFloat() * 0.1F + 0.9F, false);
-        level().explode(shooter, blockPosition().getX(), blockPosition().getY(), blockPosition().getZ(), 8, destroy ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
-        DraconicNetwork.sendImpactEffect(level(), blockPosition(), 0);
+        level.explode(shooter, blockPosition().getX(), blockPosition().getY(), blockPosition().getZ(), 8, destroy ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+        DraconicNetwork.sendImpactEffect(level, blockPosition(), 0);
 
         this.discard();
     }

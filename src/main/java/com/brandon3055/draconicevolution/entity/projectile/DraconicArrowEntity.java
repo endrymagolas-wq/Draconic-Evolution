@@ -138,7 +138,7 @@ public class DraconicArrowEntity extends AbstractArrow {
     public void tick() {
         superTick();
 
-        if (level().isClientSide) {
+        if (level.isClientSide) {
             if (this.inGround) {
                 if (this.inGroundTime % 5 == 0) {
                     this.makeParticle(1);
@@ -147,7 +147,7 @@ public class DraconicArrowEntity extends AbstractArrow {
                 this.makeParticle(2);
             }
         } else if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty() && this.inGroundTime >= 600) {
-            level().broadcastEntityEvent(this, (byte) 0);
+            level.broadcastEntityEvent(this, (byte) 0);
             this.potion = Potions.EMPTY;
             this.effects.clear();
             this.entityData.set(ID_EFFECT_COLOR, -1);
@@ -161,7 +161,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             this.leftOwner = this.checkLeftOwner();
         }
         //Entity Tick
-        if (!level().isClientSide) {
+        if (!level.isClientSide) {
             this.setSharedFlag(6, this.isCurrentlyGlowing());
         }
         this.baseTick();
@@ -178,9 +178,9 @@ public class DraconicArrowEntity extends AbstractArrow {
         }
 
         BlockPos blockpos = this.blockPosition();
-        BlockState blockstate = level().getBlockState(blockpos);
+        BlockState blockstate = level.getBlockState(blockpos);
         if (!blockstate.isAir() && !flag) {
-            VoxelShape voxelshape = blockstate.getCollisionShape(level(), blockpos);
+            VoxelShape voxelshape = blockstate.getCollisionShape(level, blockpos);
             if (!voxelshape.isEmpty()) {
                 Vec3 vector3d1 = this.position();
 
@@ -204,7 +204,7 @@ public class DraconicArrowEntity extends AbstractArrow {
         if (this.inGround && !flag) {
             if (this.lastState != blockstate && this.shouldFall()) {
                 this.startFalling();
-            } else if (!level().isClientSide) {
+            } else if (!level.isClientSide) {
                 this.tickDespawn();
             }
 
@@ -213,7 +213,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             this.inGroundTime = 0;
             Vec3 vector3d2 = this.position();
             Vec3 vector3d3 = vector3d2.add(vector3d);
-            HitResult raytraceresult = level().clip(new ClipContext(vector3d2, vector3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            HitResult raytraceresult = level.clip(new ClipContext(vector3d2, vector3d3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
             if (raytraceresult.getType() != HitResult.Type.MISS) {
                 vector3d3 = raytraceresult.getLocation();
             }
@@ -254,7 +254,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             double d0 = vector3d.z;
             if (this.isCritArrow()) {
                 for (int i = 0; i < 4; ++i) {
-                    level().addParticle(ParticleTypes.CRIT, this.getX() + d3 * (double) i / 4.0D, this.getY() + d4 * (double) i / 4.0D, this.getZ() + d0 * (double) i / 4.0D, -d3, -d4 + 0.2D, -d0);
+                    level.addParticle(ParticleTypes.CRIT, this.getX() + d3 * (double) i / 4.0D, this.getY() + d4 * (double) i / 4.0D, this.getZ() + d0 * (double) i / 4.0D, -d3, -d4 + 0.2D, -d0);
                 }
             }
 
@@ -276,7 +276,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             if (this.isInWater()) {
                 for (int j = 0; j < 4; ++j) {
                     float f4 = 0.25F;
-                    level().addParticle(ParticleTypes.BUBBLE, d5 - d3 * 0.25D, d1 - d4 * 0.25D, d2 - d0 * 0.25D, d3, d4, d0);
+                    level.addParticle(ParticleTypes.BUBBLE, d5 - d3 * 0.25D, d1 - d4 * 0.25D, d2 - d0 * 0.25D, d3, d4, d0);
                 }
 
                 f2 = this.getWaterInertia();
@@ -341,7 +341,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             Player player = (Player) entity;
             if (player.isUsingItem() && player.getUseItem().getItem() instanceof ShieldItem) {
                 player.getCooldowns().addCooldown(player.getUseItem().getItem(), 100);
-                level().broadcastEntityEvent(player, (byte) 30);
+                level.broadcastEntityEvent(player, (byte) 30);
                 player.stopUsingItem();
             }
         }
@@ -353,7 +353,7 @@ public class DraconicArrowEntity extends AbstractArrow {
 
             if (entity instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity) entity;
-                if (!level().isClientSide && this.getPierceLevel() <= 0 && penetration <= 0) {
+                if (!level.isClientSide && this.getPierceLevel() <= 0 && penetration <= 0) {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
 
@@ -364,7 +364,7 @@ public class DraconicArrowEntity extends AbstractArrow {
                     }
                 }
 
-                if (!level().isClientSide && owner instanceof LivingEntity) {
+                if (!level.isClientSide && owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(livingentity, owner);
                     EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingentity);
                 }
@@ -378,7 +378,7 @@ public class DraconicArrowEntity extends AbstractArrow {
                     this.piercedAndKilledEntities.add(livingentity);
                 }
 
-                if (!level().isClientSide && owner instanceof ServerPlayer) {
+                if (!level.isClientSide && owner instanceof ServerPlayer) {
                     ServerPlayer serverplayerentity = (ServerPlayer) owner;
                     if (this.piercedAndKilledEntities != null && this.shotFromCrossbow()) {
                         CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverplayerentity, this.piercedAndKilledEntities);
@@ -397,7 +397,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             this.setDeltaMovement(this.getDeltaMovement().scale(0));
             this.setYRot(getYRot() + 180.0F);
             this.yRotO += 180.0F;
-            if (!level().isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
+            if (!level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
                 if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
@@ -411,7 +411,7 @@ public class DraconicArrowEntity extends AbstractArrow {
         Entity owner = this.getOwner();
         TechLevel techLevel = TechLevel.byIndex(entityData.get(TECH_LEVEL));
         boolean bypassImmune = getProjectileImmuneOverride() && DEConfig.projectileAntiImmuneEntities.contains(ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).toString());
-        return DEDamage.draconicArrow(level(), this, owner, techLevel, bypassImmune);
+        return DEDamage.draconicArrow(level, this, owner, techLevel, bypassImmune);
     }
 
     private int blockPenetration = 0;
@@ -428,9 +428,9 @@ public class DraconicArrowEntity extends AbstractArrow {
         if (canPenetrate > 0 && basePenetration >= techLevel * 1.5) {
             blockPenetration += remainingPenetration;
             BlockPos pos = traceResult.getBlockPos();
-            BlockState blockstate = level().getBlockState(pos);
+            BlockState blockstate = level.getBlockState(pos);
             if (!blockstate.isAir()) {
-                VoxelShape voxelshape = blockstate.getCollisionShape(level(), pos);
+                VoxelShape voxelshape = blockstate.getCollisionShape(level, pos);
                 if (!voxelshape.isEmpty()) {
                     boolean canPass = true;
                     Vec3 vector3d1 = traceResult.getLocation().add(getDeltaMovement().normalize().multiply(canPenetrate, canPenetrate, canPenetrate));
@@ -446,7 +446,7 @@ public class DraconicArrowEntity extends AbstractArrow {
                         for (int i = 0; i < 25; i++) {
                             Vec3 critPos = traceResult.getLocation().add(getDeltaMovement().normalize().multiply(2, 2, 2).add((-0.5 + random.nextGaussian()) * 0.2, (-0.5 + random.nextGaussian()) * 0.2, (-0.5 + random.nextGaussian()) * 0.2));
                             Vec3 critVel = getDeltaMovement().normalize().multiply(5, 5, 5);
-                            level().addParticle(ParticleTypes.CRIT, critPos.x, critPos.y, critPos.z, critVel.x, critVel.y, critVel.z);
+                            level.addParticle(ParticleTypes.CRIT, critPos.x, critPos.y, critPos.z, critVel.x, critVel.y, critVel.z);
                         }
 
                         //Fire Shrapnel
@@ -464,9 +464,9 @@ public class DraconicArrowEntity extends AbstractArrow {
             }
         }
 
-        this.lastState = level().getBlockState(traceResult.getBlockPos());
-        BlockState blockstate = level().getBlockState(traceResult.getBlockPos());
-        blockstate.onProjectileHit(level(), blockstate, traceResult, this);
+        this.lastState = level.getBlockState(traceResult.getBlockPos());
+        BlockState blockstate = level.getBlockState(traceResult.getBlockPos());
+        blockstate.onProjectileHit(level, blockstate, traceResult, this);
         Vec3 vector3d = traceResult.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vector3d);
         Vec3 vector3d1 = vector3d.normalize().scale((double) 0.05F);
@@ -547,7 +547,7 @@ public class DraconicArrowEntity extends AbstractArrow {
             double d2 = (double) (i >> 0 & 255) / 255.0D;
 
             for (int j = 0; j < p_184556_1_; ++j) {
-                level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+                level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
             }
 
         }
@@ -685,7 +685,7 @@ public class DraconicArrowEntity extends AbstractArrow {
                 double d2 = (double) (i >> 0 & 255) / 255.0D;
 
                 for (int j = 0; j < 20; ++j) {
-                    level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
+                    level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
                 }
             }
         } else {
