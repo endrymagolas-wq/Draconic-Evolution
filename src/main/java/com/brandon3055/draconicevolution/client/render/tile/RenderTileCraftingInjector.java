@@ -5,7 +5,7 @@ import com.brandon3055.draconicevolution.blocks.machines.CraftingInjector;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileFusionCraftingInjector;
 import com.brandon3055.draconicevolution.client.handler.ClientEventHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 public class RenderTileCraftingInjector implements BlockEntityRenderer<TileFusionCraftingInjector> {
 
@@ -36,13 +36,13 @@ public class RenderTileCraftingInjector implements BlockEntityRenderer<TileFusio
 
             if (facing.getAxis() == Direction.Axis.Y) {
                 if (facing == Direction.DOWN) {
-                    mStack.mulPose(Axis.XP.rotationDegrees(180));
+                    mStack.mulPose(Vector3f.XP.rotationDegrees(180));
                 }
             } else {
-                mStack.mulPose(new Quaternionf().rotationXYZ(facing.getStepZ() * 90 * (float) MathHelper.torad, 0, facing.getStepX() * -90 * (float) MathHelper.torad));
+                mStack.mulPose(Quaternion.fromXYZ(facing.getStepZ() * 90 * (float) MathHelper.torad, 0, facing.getStepX() * -90 * (float) MathHelper.torad));
             }
 
-            mStack.mulPose(Axis.YP.rotationDegrees((ClientEventHandler.elapsedTicks + partialTicks) * -0.8F));
+            mStack.mulPose(Vector3f.YP.rotationDegrees((ClientEventHandler.elapsedTicks + partialTicks) * -0.8F));
 
             ItemStack stack = te.itemHandler.getStackInSlot(0);
             Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());

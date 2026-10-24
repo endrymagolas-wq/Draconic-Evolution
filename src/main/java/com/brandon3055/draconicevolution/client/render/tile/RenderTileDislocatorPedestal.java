@@ -9,7 +9,7 @@ import com.brandon3055.draconicevolution.init.DEContent;
 import com.brandon3055.draconicevolution.items.tools.DislocatorAdvanced;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
 
         mStack.pushPose();
         mStack.translate(0.5, 0.5, 0.5);
-        mStack.mulPose(Axis.YP.rotationDegrees(-tile.rotation.get() * 22.5F));
+        mStack.mulPose(Vector3f.YP.rotationDegrees(-tile.rotation.get() * 22.5F));
         mStack.translate(-0.5, -0.5, -0.5);
 
         VertexConsumer builder = getter.getBuffer(RenderType.solid());
@@ -60,7 +60,7 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
             mStack.pushPose();
             mStack.translate(0.5, 0.79, 0.52);
             mStack.scale(0.5F, 0.5F, 0.5F);
-            mStack.mulPose(Axis.XP.rotationDegrees(-67.5F));
+            mStack.mulPose(Vector3f.XP.rotationDegrees(-67.5F));
             mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedoverlay, mStack, getter, tile.getLevel(), tile.posSeed());
             mStack.popPose();
         }
@@ -97,7 +97,7 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
         mStack.pushPose();
         mStack.translate(0.5, 1.125, 0.5);
         mStack.scale(0.02F, 0.02F, 0.02F);
-        mStack.mulPose(new Quaternionf().rotationXYZ(0, -90 * (float) MathHelper.torad, 180 * (float) MathHelper.torad));
+        mStack.mulPose(Quaternion.fromXYZ(0, -90 * (float) MathHelper.torad, 180 * (float) MathHelper.torad));
 
         double xDiff = player.getX() - (tile.getBlockPos().getX() + 0.5);
         double yDiff = (player.getY() + player.getEyeHeight()) - (tile.getBlockPos().getY() + 1.125);
@@ -105,8 +105,8 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
         double yawAngle = Math.toDegrees(Math.atan2(zDiff, xDiff));
         double pitchAngle = Math.toDegrees(Math.atan2(yDiff, Utils.getDistance(player.getX(), player.getY(), player.getZ(), tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5)));
 
-        mStack.mulPose(Axis.YP.rotationDegrees((float) yawAngle));
-        mStack.mulPose(Axis.XP.rotationDegrees((float) -pitchAngle));
+        mStack.mulPose(Vector3f.YP.rotationDegrees((float) yawAngle));
+        mStack.mulPose(Vector3f.XP.rotationDegrees((float) -pitchAngle));
         mStack.scale(1, 1, -1);
 
         int textWidth = mc.font.width(name);

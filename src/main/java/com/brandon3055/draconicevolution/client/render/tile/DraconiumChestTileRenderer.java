@@ -6,7 +6,7 @@ import com.brandon3055.draconicevolution.blocks.DraconiumChest;
 import com.brandon3055.draconicevolution.blocks.tileentity.chest.TileDraconiumChest;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -69,7 +69,7 @@ public class DraconiumChestTileRenderer implements BlockEntityRenderer<TileDraco
     public void renderChest(PoseStack mStack, MultiBufferSource getter, float rotation, float lidAngle, int packedLight, int packedOverlay, int colour) {
         mStack.pushPose();
         mStack.translate(0.5D, 0.5D, 0.5D);
-        mStack.mulPose(Axis.YP.rotationDegrees(-rotation));
+        mStack.mulPose(Vector3f.YP.rotationDegrees(-rotation));
         mStack.translate(-0.5D, -0.5D, -0.5D);
         VertexConsumer buffer = getter.getBuffer(renderType);
         this.render(mStack, buffer, this.lid, this.lock, this.bottom, lidAngle, packedLight, packedOverlay, colour);

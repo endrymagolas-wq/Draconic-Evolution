@@ -6,7 +6,7 @@ import com.brandon3055.draconicevolution.client.DEShaders;
 import com.brandon3055.draconicevolution.entity.GuardianCrystalEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,7 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 @OnlyIn(Dist.CLIENT)
 public class GuardianCrystalRenderer extends EntityRenderer<GuardianCrystalEntity> {
@@ -53,18 +53,18 @@ public class GuardianCrystalRenderer extends EntityRenderer<GuardianCrystalEntit
             this.base.render(poseStack, vertexconsumer, packedLight, overlayTex);
         }
 
-        poseStack.mulPose(Axis.YP.rotationDegrees(anim));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(anim));
         poseStack.translate(0.0D, 1.5F + yBob / 2.0F, 0.0D);
-        poseStack.mulPose((new Quaternionf()).setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
+        poseStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), ((float)Math.PI / 3F), false));
         this.glass.render(poseStack, vertexconsumer, packedLight, overlayTex);
         float scale = 0.875F;
         poseStack.scale(scale, scale, scale);
-        poseStack.mulPose((new Quaternionf()).setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
-        poseStack.mulPose(Axis.YP.rotationDegrees(anim));
+        poseStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), ((float)Math.PI / 3F), false));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(anim));
         this.glass.render(poseStack, vertexconsumer, packedLight, overlayTex);
         poseStack.scale(scale, scale, scale);
-        poseStack.mulPose((new Quaternionf()).setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
-        poseStack.mulPose(Axis.YP.rotationDegrees(anim));
+        poseStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), ((float)Math.PI / 3F), false));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(anim));
         this.cube.render(poseStack, vertexconsumer, packedLight, overlayTex);
         poseStack.popPose();
 
@@ -81,17 +81,17 @@ public class GuardianCrystalRenderer extends EntityRenderer<GuardianCrystalEntit
             if (crystal.showsBottom()) {
                 this.base.render(poseStack, shaderBuilder, packedLight, overlayTex);
             }
-            poseStack.mulPose(Axis.YP.rotationDegrees(anim));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(anim));
             poseStack.translate(0.0D, 1.5F + yBob / 2.0F, 0.0D);
-            poseStack.mulPose((new Quaternionf()).setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
+            poseStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), ((float)Math.PI / 3F), false));
             this.glass.render(poseStack, shaderBuilder, packedLight, overlayTex);
             poseStack.scale(scale, scale, scale);
-            poseStack.mulPose((new Quaternionf()).setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
-            poseStack.mulPose(Axis.YP.rotationDegrees(anim));
+            poseStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), ((float)Math.PI / 3F), false));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(anim));
             this.glass.render(poseStack, shaderBuilder, packedLight, overlayTex);
             poseStack.scale(scale, scale, scale);
-            poseStack.mulPose((new Quaternionf()).setAngleAxis(((float)Math.PI / 3F), SIN_45, 0.0F, SIN_45));
-            poseStack.mulPose(Axis.YP.rotationDegrees(anim));
+            poseStack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), ((float)Math.PI / 3F), false));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(anim));
             this.cube.render(poseStack, shaderBuilder, packedLight, overlayTex);
             poseStack.popPose();
         }

@@ -6,7 +6,7 @@ import com.brandon3055.draconicevolution.client.AtlasTextureHelper;
 import com.brandon3055.draconicevolution.entity.guardian.control.ChargeUpPhase;
 import com.brandon3055.draconicevolution.entity.guardian.control.PhaseManager;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -16,8 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public class GuardianChargeParticle extends SingleQuadParticle {
@@ -67,23 +67,23 @@ public class GuardianChargeParticle extends SingleQuadParticle {
         float x = (float) (pos.x - vector3d.x()) + (Mth.sin((float) (angularPos * Math.PI * 2) + anim) * radius);
         float y = (float) (pos.y - vector3d.y());
         float z = (float) (pos.z - vector3d.z()) + (Mth.cos((float) (angularPos * Math.PI * 2) + anim) * radius);
-        Quaternionf quaternion;
+        Quaternion quaternion;
         if (this.roll == 0.0F) {
             quaternion = camera.rotation();
         } else {
-            quaternion = new Quaternionf(camera.rotation());
+            quaternion = camera.rotation().copy();
             float f3 = Mth.lerp(partialTicks, this.oRoll, this.roll);
-            quaternion.mul(Axis.ZP.rotation(f3));
+            quaternion.mul(Vector3f.ZP.rotation(f3));
         }
 
         Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-        vector3f1.rotate(quaternion);
+        vector3f1.transform(quaternion);
         Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
         float f4 = this.getQuadSize(partialTicks);
 
         for (int i = 0; i < 4; ++i) {
             Vector3f vector3f = avector3f[i];
-            vector3f.rotate(quaternion);
+            vector3f.transform(quaternion);
             vector3f.mul(f4);
             vector3f.add(x, y, z);
         }

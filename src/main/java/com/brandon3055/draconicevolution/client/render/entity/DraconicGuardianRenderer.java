@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
@@ -25,8 +25,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -72,8 +72,8 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
         poseStack.pushPose();
         float f = (float) guardian.getLatencyPos(7, partialTicks)[0];
         float f1 = (float) (guardian.getLatencyPos(5, partialTicks)[1] - guardian.getLatencyPos(10, partialTicks)[1]);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-f));
-        poseStack.mulPose(Axis.XP.rotationDegrees(f1 * 10.0F));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(-f));
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(f1 * 10.0F));
         poseStack.translate(0.0D, 0.0D, 1.0D);
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         poseStack.translate(0.0D, -1.501F, 0.0D);
@@ -118,12 +118,12 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
             poseStack.translate(0.0D, -1.0D, -2.0D);
 
             for (int i = 0; (float) i < (f5 + f5 * f5) / 2.0F * 60.0F; ++i) {
-                poseStack.mulPose(Axis.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                poseStack.mulPose(Axis.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(random.nextFloat() * 360.0F));
-                poseStack.mulPose(Axis.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                poseStack.mulPose(Axis.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
+                poseStack.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                poseStack.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F));
+                poseStack.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                poseStack.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
                 float f3 = random.nextFloat() * 20.0F + 5.0F + f7 * 10.0F;
                 float f4 = random.nextFloat() * 2.0F + 1.0F + f7 * 2.0F;
                 Matrix4f matrix4f = poseStack.last().pose();
@@ -193,8 +193,8 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
         float distance = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ);
         mStack.pushPose();
         mStack.translate(0.0D, 2.0D, 0.0D);
-        mStack.mulPose(Axis.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
-        mStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
         VertexConsumer builder = getter.getBuffer(beamType);
         float f2 = 0.0F - ((float) animTicks + partialTicks) * 0.01F;
         float f3 = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ) / 32.0F - ((float) animTicks + partialTicks) * 0.01F;
@@ -226,8 +226,8 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
         float distance = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ);
         mStack.pushPose();
         mStack.translate(0.0D, 2.0D, 0.0D);
-        mStack.mulPose(Axis.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
-        mStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
         VertexConsumer builder = getter.getBuffer(BEAM_TYPE2);
         float f2 = 0.0F - ((float) animTicks + partialTicks) * 0.01F;
         float f3 = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ) / 32.0F - ((float) animTicks + partialTicks) * 0.01F;
@@ -259,8 +259,8 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
         float distance = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ);
         mStack.pushPose();
         mStack.translate(0.0D, 2.0D, 0.0D);
-        mStack.mulPose(Axis.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
-        mStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
         VertexConsumer builder = getter.getBuffer(BEAM_TYPE2);
         float vMin = ((float) animTicks + partialTicks) * 0.01F;
         float vMax = (Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ) / 32.0F) + (((float) animTicks + partialTicks) * 0.01F);
@@ -296,8 +296,8 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
         float distance = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ);
         mStack.pushPose();
         mStack.translate(0.0D, 2.0D, 0.0D);
-        mStack.mulPose(Axis.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
-        mStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.YP.rotation((float) (-Math.atan2(crystalRelZ, crystalRelX)) - ((float) Math.PI / 2F)));
+        mStack.mulPose(Vector3f.XP.rotation((float) (-Math.atan2(xzDistance, crystalRelY)) - ((float) Math.PI / 2F)));
         VertexConsumer builder = getter.getBuffer(beamType);
         float f2 = 0.0F - ((float) animTicks + partialTicks) * 0.01F;
         float f3 = Mth.sqrt(crystalRelX * crystalRelX + crystalRelY * crystalRelY + crystalRelZ * crystalRelZ) / 32.0F - ((float) animTicks + partialTicks) * 0.01F;
@@ -396,7 +396,7 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
             float f1 = (float) (Math.sin(f * ((float) Math.PI * 2F) - 1.0F) + 1.0D);
             f1 = (f1 * f1 + f1 * 2.0F) * 0.05F;
             p_114281_.translate(0.0D, f1 - 2.0F, -3.0D);
-            p_114281_.mulPose(Axis.XP.rotationDegrees(f1 * 2.0F));
+            p_114281_.mulPose(Vector3f.XP.rotationDegrees(f1 * 2.0F));
             float f2 = 0.0F;
             float f3 = 20.0F;
             float f4 = -12.0F;
@@ -431,7 +431,7 @@ public class DraconicGuardianRenderer extends EntityRenderer<DraconicGuardianEnt
             this.head.render(p_114281_, p_114282_, p_114283_, p_114284_, 1.0F, 1.0F, 1.0F, p_114288_);
             p_114281_.pushPose();
             p_114281_.translate(0.0D, 1.0D, 0.0D);
-            p_114281_.mulPose(Axis.ZP.rotationDegrees(-f6 * 1.5F));
+            p_114281_.mulPose(Vector3f.ZP.rotationDegrees(-f6 * 1.5F));
             p_114281_.translate(0.0D, -1.0D, 0.0D);
             this.body.zRot = 0.0F;
             this.body.render(p_114281_, p_114282_, p_114283_, p_114284_, 1.0F, 1.0F, 1.0F, p_114288_);

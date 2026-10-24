@@ -4,7 +4,7 @@ import com.brandon3055.draconicevolution.blocks.tileentity.StabilizedSpawnerLogi
 import com.brandon3055.draconicevolution.blocks.tileentity.TileStabilizedSpawner;
 import com.brandon3055.draconicevolution.init.DEContent;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -39,9 +39,9 @@ public class RenderTileStabilizedSpawner implements BlockEntityRenderer<TileStab
             }
 
             mStack.translate(0.0D, 0.4F, 0.0D);
-            mStack.mulPose(Axis.YP.rotationDegrees((float) Mth.lerp(partialTicks, spawnerLogic.getoSpin(), spawnerLogic.getSpin()) * 10.0F));
+            mStack.mulPose(Vector3f.YP.rotationDegrees((float) Mth.lerp(partialTicks, spawnerLogic.getoSpin(), spawnerLogic.getSpin()) * 10.0F));
             mStack.translate(0.0D, -0.2F, 0.0D);
-            mStack.mulPose(Axis.XP.rotationDegrees(-30.0F));
+            mStack.mulPose(Vector3f.XP.rotationDegrees(-30.0F));
             mStack.scale(f, f, f);
             Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, mStack, getter, packedLight);
         }
@@ -49,7 +49,7 @@ public class RenderTileStabilizedSpawner implements BlockEntityRenderer<TileStab
 
         mStack.translate(0.5, 1F - (1F / 32F), 0.5);
         mStack.scale(0.75F, 0.75F, 0.75F);
-        mStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+        mStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
 
         ItemStack stack = CORE_RENDER_ITEMS[tile.spawnerTier.get().ordinal()];
         Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, mStack, getter, tile.getLevel(), tile.posSeed());

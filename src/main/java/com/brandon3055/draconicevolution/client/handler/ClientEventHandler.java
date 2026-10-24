@@ -33,7 +33,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.joml.Vector4f;
+import com.mojang.math.Vector4f;
 
 import java.nio.FloatBuffer;
 import java.util.Random;

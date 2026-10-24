@@ -4,7 +4,7 @@ import codechicken.lib.math.MathHelper;
 import com.brandon3055.draconicevolution.blocks.PlacedItem;
 import com.brandon3055.draconicevolution.blocks.tileentity.TilePlacedItem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 import java.util.List;
 
@@ -43,17 +43,17 @@ public class RenderTilePlacedItem implements BlockEntityRenderer<TilePlacedItem>
             mStack.pushPose();
             if (stack.getItem() instanceof BlockItem) {
                 mStack.translate(PlacedItem.getXOffset(i, stackList.size()), -0.5 + ((3 / 16D)), PlacedItem.getZOffset(i, stackList.size()));
-                mStack.mulPose(Axis.YP.rotationDegrees(tile.rotation[i].get() * -22.5F)); //TODO Correct Direction?
+                mStack.mulPose(Vector3f.YP.rotationDegrees(tile.rotation[i].get() * -22.5F)); //TODO Correct Direction?
                 if (direction.getAxis() != Direction.Axis.Y) {
-                    mStack.mulPose(Axis.XP.rotationDegrees(90));
+                    mStack.mulPose(Vector3f.XP.rotationDegrees(90));
                 }/*else if (direction == Direction.DOWN) {
                     mStack.mulPose(new Quaternion(0, 0, 180, true));
                 }*/
                 mStack.scale(6 / 8F, 6 / 8F, 6 / 8F);
             } else {
                 mStack.translate(PlacedItem.getXOffset(i, stackList.size()), -0.5 + ((0.55 / 16D) * scale), PlacedItem.getZOffset(i, stackList.size()));
-                mStack.mulPose(Axis.YP.rotationDegrees(tile.rotation[i].get() * -22.5F));
-                mStack.mulPose(Axis.XP.rotationDegrees(90));
+                mStack.mulPose(Vector3f.YP.rotationDegrees(tile.rotation[i].get() * -22.5F));
+                mStack.mulPose(Vector3f.XP.rotationDegrees(90));
                 mStack.scale(scale, scale, scale);
             }
             mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, mStack, getter, tile.getLevel(), posLong + i);
@@ -68,19 +68,19 @@ public class RenderTilePlacedItem implements BlockEntityRenderer<TilePlacedItem>
     private void rotateToSide(Direction direction, PoseStack mStack) {
         switch (direction) {
             case DOWN:
-                mStack.mulPose(Axis.XP.rotationDegrees(180));
+                mStack.mulPose(Vector3f.XP.rotationDegrees(180));
                 break;
             case NORTH:
-                mStack.mulPose(Axis.XN.rotationDegrees(90));
+                mStack.mulPose(Vector3f.XN.rotationDegrees(90));
                 break;
             case SOUTH:
-                mStack.mulPose(new Quaternionf().rotationXYZ(-90 * (float) MathHelper.torad, 0, 180 * (float) MathHelper.torad));
+                mStack.mulPose(Quaternion.fromXYZ(-90 * (float) MathHelper.torad, 0, 180 * (float) MathHelper.torad));
                 break;
             case WEST:
-                mStack.mulPose(new Quaternionf().rotationXYZ(-90 * (float) MathHelper.torad, 0, 90 * (float) MathHelper.torad));
+                mStack.mulPose(Quaternion.fromXYZ(-90 * (float) MathHelper.torad, 0, 90 * (float) MathHelper.torad));
                 break;
             case EAST:
-                mStack.mulPose(new Quaternionf().rotationXYZ(-90 * (float) MathHelper.torad, 0, -90 * (float) MathHelper.torad));
+                mStack.mulPose(Quaternion.fromXYZ(-90 * (float) MathHelper.torad, 0, -90 * (float) MathHelper.torad));
                 break;
         }
     }

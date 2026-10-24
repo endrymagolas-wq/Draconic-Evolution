@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -104,8 +104,8 @@ public class RenderItemMobSoul implements IItemRenderer {
             float rotA = (float) Math.sin((TimeKeeper.getClientTick() + Minecraft.getInstance().getFrameTime()) / 50F) * 15F;
             float rotB = (TimeKeeper.getClientTick() + Minecraft.getInstance().getFrameTime()) * 3;
 
-            mStack.mulPose(new Quaternionf().rotationXYZ(1 * rotA * (float) MathHelper.torad, 0, -0.5F * rotA * (float) MathHelper.torad));
-            mStack.mulPose(new Quaternionf().rotationXYZ(0, 1 * rotB * (float) MathHelper.torad, 0));
+            mStack.mulPose(Quaternion.fromXYZ(1 * rotA * (float) MathHelper.torad, 0, -0.5F * rotA * (float) MathHelper.torad));
+            mStack.mulPose(Quaternion.fromXYZ(0, 1 * rotB * (float) MathHelper.torad, 0));
         }
 
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();

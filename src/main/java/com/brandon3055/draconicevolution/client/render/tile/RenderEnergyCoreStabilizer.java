@@ -9,7 +9,7 @@ import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyCoreStabili
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 import java.util.Map;
 
@@ -65,11 +65,11 @@ public class RenderEnergyCoreStabilizer implements BlockEntityRenderer<TileEnerg
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         if (facing.getAxis() == Direction.Axis.X || facing.getAxis() == Direction.Axis.Y) {
-            poseStack.mulPose(new Quaternionf().rotationXYZ(facing.getStepY() * 90 * (float)MathHelper.torad, facing.getStepX() * -90 * (float)MathHelper.torad, 0));
+            poseStack.mulPose(Quaternion.fromXYZ(facing.getStepY() * 90 * (float)MathHelper.torad, facing.getStepX() * -90 * (float)MathHelper.torad, 0));
         } else if (facing == Direction.SOUTH) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(180F));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(180F));
         }
-        poseStack.mulPose(Axis.ZP.rotationDegrees(tile.rotation + (coreActive ? partialTicks : 0)));
+        poseStack.mulPose(Vector3f.ZP.rotationDegrees(tile.rotation + (coreActive ? partialTicks : 0)));
         poseStack.translate(0, -1.5, 0);
         ccrs.bind(coreActive ? MODEL_TYPE_ACTIVE : MODEL_TYPE, getter, poseStack);
         model.render(ccrs);

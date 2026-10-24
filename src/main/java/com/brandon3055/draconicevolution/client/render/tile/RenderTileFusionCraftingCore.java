@@ -16,7 +16,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
@@ -71,7 +71,7 @@ public class RenderTileFusionCraftingCore implements BlockEntityRenderer<TileFus
             mStack.pushPose();
             mStack.translate(0.5, 0.5, 0.5);
             mStack.scale(0.5F, 0.5F, 0.5F);
-            mStack.mulPose(Axis.YP.rotationDegrees((TimeKeeper.getClientTick() + partialTicks) * 0.8F));
+            mStack.mulPose(Vector3f.YP.rotationDegrees((TimeKeeper.getClientTick() + partialTicks) * 0.8F));
             mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
             mStack.popPose();
         }

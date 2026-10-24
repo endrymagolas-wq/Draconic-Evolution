@@ -3,7 +3,7 @@ package com.brandon3055.draconicevolution.client.render.tile;
 import codechicken.lib.math.MathHelper;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyTransfuser;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Quaternionf;
+import com.mojang.math.Quaternion;
 
 /**
  * Created by brandon3055 on 12/12/2020.
@@ -46,7 +46,7 @@ public class RenderTileEnergyTransfuser implements BlockEntityRenderer<TileEnerg
             mStack.mulPose(dir.getRotation());
 
             mStack.pushPose();
-            mStack.mulPose(Axis.XP.rotationDegrees(90));
+            mStack.mulPose(Vector3f.XP.rotationDegrees(90));
             double xOffset = dir == Direction.NORTH ? 2 : dir == Direction.SOUTH ? 1 : 2.5;
             mStack.translate(0.0625 * -xOffset, 0.0625 * -3.5, 0.0625 * 1.375);
             mStack.scale(0.0625F, 0.0625F, 0.0625F);
@@ -55,7 +55,7 @@ public class RenderTileEnergyTransfuser implements BlockEntityRenderer<TileEnerg
 
             ItemStack stack = tile.itemsCombined.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                mStack.mulPose(new Quaternionf().rotationYXZ(90 * (float) MathHelper.torad, 90 * (float) MathHelper.torad, 180 * (float) MathHelper.torad));
+                mStack.mulPose(Quaternion.fromYXZ(90 * (float) MathHelper.torad, 90 * (float) MathHelper.torad, 180 * (float) MathHelper.torad));
                 mStack.translate(0, 0, 0.0625 * (1.5 / 2));
                 mStack.scale(0.5F, 0.5F, 0.5F);
                 Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, mStack, getter, tile.getLevel(), tile.posSeed());

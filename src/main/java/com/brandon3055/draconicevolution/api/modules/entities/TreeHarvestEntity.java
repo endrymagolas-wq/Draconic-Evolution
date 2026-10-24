@@ -16,7 +16,7 @@ import com.brandon3055.draconicevolution.api.modules.entities.logic.TreeHarvestH
 import com.brandon3055.draconicevolution.api.modules.lib.EntityOverridesItemUse;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -142,9 +142,9 @@ public class TreeHarvestEntity extends ModuleEntity<TreeHarvestData> implements 
         int handOffset = !leftHand ? 1 : -1;
 
         poseStack.translate((float) handOffset * -0.2785682F, 0.18344387F, 0.15731531F);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-13.935F));
-        poseStack.mulPose(Axis.YP.rotationDegrees((float) handOffset * 35.3F));
-        poseStack.mulPose(Axis.ZP.rotationDegrees((float) handOffset * -9.785F));
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(-13.935F));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees((float) handOffset * 35.3F));
+        poseStack.mulPose(Vector3f.ZP.rotationDegrees((float) handOffset * -9.785F));
         float drawTime = (float) 72000 - ((float) player.getUseItemRemainingTicks() - event.getPartialTick() + 1.0F);
         float charge = drawTime / 20.0F;
         charge = (charge * charge + charge * 2.0F) / 3.0F;
@@ -161,7 +161,7 @@ public class TreeHarvestEntity extends ModuleEntity<TreeHarvestData> implements 
 
         poseStack.translate(charge * 0.0F, charge * 0.0F, charge * 0.04F);
         poseStack.scale(1.0F, 1.0F, 1.0F + charge * 0.2F);
-        poseStack.mulPose(Axis.YN.rotationDegrees((float) handOffset * 45.0F));
+        poseStack.mulPose(Vector3f.YN.rotationDegrees((float) handOffset * 45.0F));
     }
 
     @Override
