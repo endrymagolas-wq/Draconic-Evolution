@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ public class RenderItemDraconiumChest implements IItemRenderer {
     }
 
     @Override
-    public void renderItem(ItemStack stack, ItemDisplayContext context, PoseStack mStack, MultiBufferSource getter, int packedLight, int packedOverlay) {
+    public void renderItem(ItemStack stack, ItemTransforms.TransformType context, PoseStack mStack, MultiBufferSource getter, int packedLight, int packedOverlay) {
         int colour = 0x640096;
         if (stack.getTag() != null && stack.getTag().contains("bc_tile_data")) {
             colour = stack.getTag().getCompound("bc_tile_data").getCompound("bc_managed_data").getInt("colour");

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import com.mojang.math.Quaternion;
@@ -45,7 +45,7 @@ public class RenderTileCraftingInjector implements BlockEntityRenderer<TileFusio
             mStack.mulPose(Vector3f.YP.rotationDegrees((ClientEventHandler.elapsedTicks + partialTicks) * -0.8F));
 
             ItemStack stack = te.itemHandler.getStackInSlot(0);
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
+            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
         }
     }
 }

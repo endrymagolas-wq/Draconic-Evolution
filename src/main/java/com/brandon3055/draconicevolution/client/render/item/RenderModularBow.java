@@ -32,7 +32,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,7 +90,7 @@ public class RenderModularBow extends ToolRenderBase {
     }
 
     @Override
-    public void renderTool(CCRenderState ccrs, ItemStack stack, ItemDisplayContext context, Matrix4 mat, MultiBufferSource buffers, boolean gui) {
+    public void renderTool(CCRenderState ccrs, ItemStack stack, ItemTransforms.TransformType context, Matrix4 mat, MultiBufferSource buffers, boolean gui) {
         transform(mat, 0.46, 0.54, 0.5, gui ? 0.9 : 1.125);
         double drawAngle = getDrawAngle(stack, Minecraft.getInstance().getDeltaFrameTime());
 
@@ -106,7 +106,7 @@ public class RenderModularBow extends ToolRenderBase {
         drawStrings(ccrs, context, mat, bottomMat, buffers, drawAngle, hasPower);
     }
 
-    private void drawStrings(CCRenderState ccrs, ItemDisplayContext context, Matrix4 topMat, Matrix4 bottomMat, MultiBufferSource buffers, double drawAngle, boolean isCharged) {
+    private void drawStrings(CCRenderState ccrs, ItemTransforms.TransformType context, Matrix4 topMat, Matrix4 bottomMat, MultiBufferSource buffers, double drawAngle, boolean isCharged) {
         glUniformStringBaseColor(DEShaders.BOW_STRING_SHADER);
         VertexConsumer builder = new TransformingVertexConsumer(buffers.getBuffer(bowStringType), topMat);
 

@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import com.mojang.math.Quaternion;
@@ -92,7 +92,7 @@ public class RenderItemMobSoul implements IItemRenderer {
 //    }
 
     @Override
-    public void renderItem(ItemStack stack, ItemDisplayContext transformType, PoseStack mStack, MultiBufferSource getter, int packedLight, int packedOverlay) {
+    public void renderItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack mStack, MultiBufferSource getter, int packedLight, int packedOverlay) {
         Entity mob = DEContent.MOB_SOUL.get().getRenderEntity(stack);
         if (brokenMobs.contains(mob)) return;
 
@@ -100,7 +100,7 @@ public class RenderItemMobSoul implements IItemRenderer {
         mStack.translate(0.5, 0, 0.5);
         mStack.scale(scale, scale, scale);
 
-        if (transformType != ItemDisplayContext.GROUND && transformType != ItemDisplayContext.FIXED) {
+        if (transformType != ItemTransforms.TransformType.GROUND && transformType != ItemTransforms.TransformType.FIXED) {
             float rotA = (float) Math.sin((TimeKeeper.getClientTick() + Minecraft.getInstance().getFrameTime()) / 50F) * 15F;
             float rotB = (TimeKeeper.getClientTick() + Minecraft.getInstance().getFrameTime()) * 3;
 

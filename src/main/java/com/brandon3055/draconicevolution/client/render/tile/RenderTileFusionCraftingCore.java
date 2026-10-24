@@ -30,7 +30,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
@@ -72,7 +72,7 @@ public class RenderTileFusionCraftingCore implements BlockEntityRenderer<TileFus
             mStack.translate(0.5, 0.5, 0.5);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Vector3f.YP.rotationDegrees((TimeKeeper.getClientTick() + partialTicks) * 0.8F));
-            mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
+            mc.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
             mStack.popPose();
         }
     }

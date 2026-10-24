@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +52,7 @@ public class RenderModularChestpiece extends ToolRenderBase {
     }
 
     @Override
-    public void renderTool(CCRenderState ccrs, ItemStack stack, ItemDisplayContext context, Matrix4 mat, MultiBufferSource buffers, boolean gui) {
+    public void renderTool(CCRenderState ccrs, ItemStack stack, ItemTransforms.TransformType context, Matrix4 mat, MultiBufferSource buffers, boolean gui) {
         mat.translate(0.5, 1.05, 0.5);
         mat.rotate(MathHelper.torad * 180, Vector3.Z_POS);
         mat.scale(1.95);
@@ -100,7 +100,7 @@ public class RenderModularChestpiece extends ToolRenderBase {
         }
 
         @Override
-        public void render(ItemDisplayContext transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
+        public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
             render(buffers, mat, 0xFFFFFFFF);
         }
 

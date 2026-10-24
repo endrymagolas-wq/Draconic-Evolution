@@ -8,7 +8,7 @@ import com.brandon3055.brandonscore.api.TechLevel;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
@@ -33,7 +33,7 @@ public class RenderModularHoe extends ToolRenderBase {
     }
 
     @Override
-    public void renderTool(CCRenderState ccrs, ItemStack stack, ItemDisplayContext context, Matrix4 mat, MultiBufferSource buffers, boolean gui) {
+    public void renderTool(CCRenderState ccrs, ItemStack stack, ItemTransforms.TransformType context, Matrix4 mat, MultiBufferSource buffers, boolean gui) {
         transform(mat, 0.28, 0.28, 0.5, 1.25);
         basePart.render(context, buffers, mat);
         materialPart.render(context, buffers, mat);

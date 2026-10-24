@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import com.mojang.math.Quaternion;
 
@@ -28,7 +28,7 @@ public class RenderTileDisenchanter implements BlockEntityRenderer<TileDisenchan
             mStack.translate(0.5, 1.15 + Math.sin((ClientEventHandler.elapsedTicks + partialTicks) / 40) / 10, 0.5);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Vector3f.YP.rotationDegrees((ClientEventHandler.elapsedTicks + partialTicks) * 0.8F));
-            mc.getItemRenderer().renderStatic(input, ItemDisplayContext.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
+            mc.getItemRenderer().renderStatic(input, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
             mStack.popPose();
         }
 
@@ -39,7 +39,7 @@ public class RenderTileDisenchanter implements BlockEntityRenderer<TileDisenchan
             mStack.translate(0.5, 0.76, 0.5);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Quaternion.fromXYZ(90 * (float) MathHelper.torad, 0, 180 * (float) MathHelper.torad));
-            mc.getItemRenderer().renderStatic(books, ItemDisplayContext.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
+            mc.getItemRenderer().renderStatic(books, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
             mStack.popPose();
         }
     }

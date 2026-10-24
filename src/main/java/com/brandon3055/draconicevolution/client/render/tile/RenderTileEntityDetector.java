@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -31,7 +31,7 @@ public class RenderTileEntityDetector implements BlockEntityRenderer<TileEntityD
         poseStack.scale(scale, scale, scale);
         poseStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
         poseStack.mulPose(Vector3f.XP.rotationDegrees(pitch));
-        mc.getItemRenderer().renderStatic(getRenderStack(advanced), ItemDisplayContext.FIXED, packedLight, packedLight, poseStack, buffers, te.getLevel(), te.posSeed());
+        mc.getItemRenderer().renderStatic(getRenderStack(advanced), ItemTransforms.TransformType.FIXED, packedLight, packedLight, poseStack, buffers, te.getLevel(), te.posSeed());
         poseStack.popPose();
     }
 

@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import com.mojang.math.Quaternion;
 
@@ -56,7 +56,7 @@ public class RenderTilePlacedItem implements BlockEntityRenderer<TilePlacedItem>
                 mStack.mulPose(Vector3f.XP.rotationDegrees(90));
                 mStack.scale(scale, scale, scale);
             }
-            mc.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, packedLight, packedOverlay, mStack, getter, tile.getLevel(), posLong + i);
+            mc.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, mStack, getter, tile.getLevel(), posLong + i);
             mStack.popPose();
             mStack.translate(0, 0.00005F, 0); //Adds a slight offset to avoid z-fighting when items overlap
         }
