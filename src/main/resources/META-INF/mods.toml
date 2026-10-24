@@ -7,19 +7,18 @@ license="CoFH \"Don't Be a Jerk\" License"
 	displayName="Draconic Evolution"
 	version="${file.jarVersion}"
 	authors="brandon3055"
-	description=''''''
-	updateJSONURL="https://version-check.covers1624.net/check/?mod=Draconic-Evolution&mc=${mc_version}"
+	description='''[Unofficial 1.19.2 port] Unofficial derivative port of Draconic Evolution 3.1.2 (MC 1.20.1) to Minecraft 1.19.2 / Forge 43. Not supported by brandon3055.'''
 
 [[dependencies.draconicevolution]]
 	modId="forge"
 	mandatory=true
-	versionRange="[${neo_version},)"
+	versionRange="[${forge_version},)"
 	ordering="NONE"
 	side="BOTH"
 [[dependencies.draconicevolution]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16,)"
+    versionRange="[1.19.2,1.20)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.draconicevolution]]
