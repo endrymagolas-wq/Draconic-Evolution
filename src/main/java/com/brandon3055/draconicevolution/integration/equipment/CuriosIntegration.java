@@ -77,13 +77,13 @@ public class CuriosIntegration extends EquipmentManager {
 
     @Override
     public List<ResourceLocation> getSlotIcons(LivingEntity entity) {
-        LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosInventory(entity);
+        LazyOptional<ICuriosItemHandler> optional = CuriosApi.getCuriosHelper().getCuriosHandler(entity); //1.19.2 (Curios 5.1.x): de-1.18 form of 1.20 CuriosApi.getCuriosInventory(entity)
         if (optional.isPresent()) {
             ICuriosItemHandler handler = optional.orElseThrow(WTFException::new);
             List<ResourceLocation> icons = new ArrayList<>();
             handler.getCurios().forEach((s, h) -> {
                 for (int i = 0; i < h.getSlots(); i++) {
-                    ResourceLocation icon = CuriosApi.getSlotIcon(s); //Why couldnt this just be the full path?
+                    ResourceLocation icon = CuriosApi.getIconHelper().getIcon(s); //Why couldnt this just be the full path? (1.19.2: de-1.18 form of 1.20 CuriosApi.getSlotIcon(s); same "curios:slot/empty_x_slot" format)
                     icons.add(new ResourceLocation(icon.getNamespace(), "textures/" + icon.getPath() + ".png"));
                 }
             });
