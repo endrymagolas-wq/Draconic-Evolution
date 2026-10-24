@@ -125,7 +125,7 @@ public class GuardianProjectileEntity extends AbstractHurtingProjectile implemen
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

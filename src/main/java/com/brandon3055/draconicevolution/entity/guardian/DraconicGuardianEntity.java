@@ -925,7 +925,7 @@ public class DraconicGuardianEntity extends Mob implements Enemy {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return super.getAddEntityPacket();
     }
 }

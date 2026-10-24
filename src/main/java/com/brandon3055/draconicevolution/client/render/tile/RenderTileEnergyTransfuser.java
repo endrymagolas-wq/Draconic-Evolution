@@ -50,7 +50,7 @@ public class RenderTileEnergyTransfuser implements BlockEntityRenderer<TileEnerg
             double xOffset = dir == Direction.NORTH ? 2 : dir == Direction.SOUTH ? 1 : 2.5;
             mStack.translate(0.0625 * -xOffset, 0.0625 * -3.5, 0.0625 * 1.375);
             mStack.scale(0.0625F, 0.0625F, 0.0625F);
-            mc.font.drawInBatch(TEXT[i].getVisualOrderText(), 0, 0, tile.ioModes[i].get().getColour(), false, mStack.last().pose(), getter, Font.DisplayMode.NORMAL, 240, 240);
+            mc.font.drawInBatch(TEXT[i].getVisualOrderText(), 0, 0, tile.ioModes[i].get().getColour(), false, mStack.last().pose(), getter, false, 240, 240);
             mStack.popPose();
 
             ItemStack stack = tile.itemsCombined.getStackInSlot(i);
@@ -58,7 +58,7 @@ public class RenderTileEnergyTransfuser implements BlockEntityRenderer<TileEnerg
                 mStack.mulPose(Quaternion.fromYXZ(90 * (float) MathHelper.torad, 90 * (float) MathHelper.torad, 180 * (float) MathHelper.torad));
                 mStack.translate(0, 0, 0.0625 * (1.5 / 2));
                 mStack.scale(0.5F, 0.5F, 0.5F);
-                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, OverlayTexture.NO_OVERLAY, mStack, getter, tile.getLevel(), tile.posSeed());
+                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, OverlayTexture.NO_OVERLAY, mStack, getter, tile.posSeed());
             }
 
             mStack.popPose();

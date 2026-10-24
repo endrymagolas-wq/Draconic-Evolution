@@ -165,7 +165,7 @@ public class CrystalFXRing extends CrystalFXBase<TileCrystalBase> {
 
         @Override
         public void end(Tesselator tessellator) {
-            tessellator.getBuilder().setQuadSorting(VertexSorting.byDistance(0, 0, 0));//TODO is this valid?
+            tessellator.getBuilder().setQuadSortOrigin(0, 0, 0);//TODO is this valid?
             tessellator.end();
         }
     };

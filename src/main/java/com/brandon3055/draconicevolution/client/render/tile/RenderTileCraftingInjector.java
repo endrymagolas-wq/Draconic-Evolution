@@ -45,7 +45,7 @@ public class RenderTileCraftingInjector implements BlockEntityRenderer<TileFusio
             mStack.mulPose(Vector3f.YP.rotationDegrees((ClientEventHandler.elapsedTicks + partialTicks) * -0.8F));
 
             ItemStack stack = te.itemHandler.getStackInSlot(0);
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.getLevel(), te.posSeed());
+            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.posSeed());
         }
     }
 }

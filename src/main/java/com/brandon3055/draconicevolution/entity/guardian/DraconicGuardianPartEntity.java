@@ -52,7 +52,7 @@ public class DraconicGuardianPartEntity extends PartEntity<DraconicGuardianEntit
    }
 
    @Override
-   public Packet<ClientGamePacketListener> getAddEntityPacket() {
+   public Packet<?> getAddEntityPacket() {
       throw new UnsupportedOperationException();
    }
 

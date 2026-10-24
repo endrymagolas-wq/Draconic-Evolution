@@ -495,7 +495,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return SneakyUtils.unsafeCast(BCoreNetwork.getEntitySpawnPacket(this));
     }
 }

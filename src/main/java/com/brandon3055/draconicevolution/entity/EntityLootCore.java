@@ -46,7 +46,7 @@
 //    }
 //
 //    @Override
-//    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+//    public Packet<?> getAddEntityPacket() {
 //        return null;
 //    }
 //

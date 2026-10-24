@@ -176,8 +176,8 @@ public abstract class FilteredModuleEntity<T extends ModuleData<T>> extends Modu
             Material texture = ModuleTextures.get(module);
             TextureAtlasSprite sprite = texture.sprite();
             ;
-            float ar = (float) sprite.contents().width() / (float) sprite.contents().height();
-            float iar = (float) sprite.contents().height() / (float) sprite.contents().width();
+            float ar = (float) sprite.getWidth() / (float) sprite.getHeight();
+            float iar = (float) sprite.getHeight() / (float) sprite.getWidth();
 
             if (iar * width <= height) { //Fit Width
                 double h = width * iar;

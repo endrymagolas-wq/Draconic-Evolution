@@ -61,7 +61,7 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
             mStack.translate(0.5, 0.79, 0.52);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Vector3f.XP.rotationDegrees(-67.5F));
-            mc.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedoverlay, mStack, getter, tile.getLevel(), tile.posSeed());
+            mc.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedoverlay, mStack, getter, tile.posSeed());
             mStack.popPose();
         }
         RenderUtils.endBatch(getter);
@@ -111,7 +111,7 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
 
         int textWidth = mc.font.width(name);
         mStack.translate(0, 0, -0.0125);
-        mc.font.drawInBatch(name, -(textWidth / 2F), 0, 0xffffff, true, mStack.last().pose(), getter, Font.DisplayMode.NORMAL, 0, 15728880);
+        mc.font.drawInBatch(name, -(textWidth / 2F), 0, 0xffffff, true, mStack.last().pose(), getter, false, 0, 15728880);
         mStack.popPose();
     }
 }
