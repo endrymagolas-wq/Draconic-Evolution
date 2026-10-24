@@ -92,3 +92,18 @@ differ. These are edge cases and cannot be set per block in 1.19.2 without overr
   the classpath (`fg.deobf`); the dedicated dev server boots with all of them (WP-30 boot gate).
 - 1.19.2 `RecipeManager` logs `Loaded N recipes` with N = number of recipe *types* (vanilla behaviour), not recipes;
   DE's 179 recipes are counted from the data (0 parse errors, 0 skipped), see the WP-30 handoff.
+
+## GameTests and reference diff (WP-31, Phase 3)
+
+- Build: a dev-only `gametest` source set and the FG run `gameTestServer` (Gradle task `runGameTestServer`, working dir
+  `run/gametest`) live in one delimited block at the end of `build.gradle`. `jar` packs `sourceSets.main` only; the
+  refdiff of the port jar shows no gametest class. The run sets `forceExit false`, so Gradle's exit code is the
+  gametest verdict (FG's default `System.exit(0)` in the single-use daemon made Gradle report "daemon disappeared").
+- Runtime evidence (headless, fresh flat world): 12/12 required tests pass (registry ids vs the 1.20.1 manifest,
+  179 recipes incl. fusion catalysts, 51 block loot tables, 43 tags, 15 worldgen datapack entries, 8 multiblocks,
+  object holders, energy core T1/T2, fusion craft, generator OP, reactor warm-up), plus 11 optional checks of the
+  WP-22 damage facade and WP-23 tabs/block properties, plus the optional reactor run (G12). The runtime registry dump
+  differs from 1.20.1 only by the allowlisted damage types (14), creative-mode-tab registry entries (3) and the
+  client-only `shield_hud`. Reports: `logs\gametest-report.md`, `logs\WP-31.md`.
+- No behaviour change to the mod. The death-message keys a DE source can produce and that have no translation are
+  exactly the 16 on the WP-22 §4 allowlist (missing in 1.20.1 as well, decision D-5).
