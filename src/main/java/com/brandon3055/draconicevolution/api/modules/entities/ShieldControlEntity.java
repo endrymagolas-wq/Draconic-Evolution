@@ -13,40 +13,37 @@ import com.brandon3055.draconicevolution.api.modules.lib.ModuleContext;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleEntity;
 import com.brandon3055.draconicevolution.api.modules.lib.StackModuleContext;
 import com.brandon3055.draconicevolution.handlers.DESounds;
+import com.brandon3055.draconicevolution.init.DEDamage;
 import com.brandon3055.draconicevolution.init.EquipCfg;
 import com.brandon3055.draconicevolution.utils.LogHelper;
 import com.google.common.collect.Sets;
-import net.covers1624.quack.collection.FastStream;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by brandon3055 on 7/7/20
  */
 public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
-    public static final Set<ResourceKey<DamageType>> UNBLOCKABLE = Sets.newHashSet(DamageTypes.DROWN, DamageTypes.STARVE, DamageTypes.IN_WALL, DamageTypes.GENERIC_KILL);
-    public static final HashMap<ResourceKey<DamageType>, Double> ENV_SOURCES = new HashMap<>();
+    // 1.19.2: DamageSource has no equals/hashCode, so these are identity sets of the vanilla singleton sources (= de-1.18).
+    public static final Set<DamageSource> UNBLOCKABLE = Sets.newHashSet(DamageSource.DROWN, DamageSource.STARVE, DamageSource.IN_WALL, DEDamage.killDamage(null));
+    public static final HashMap<DamageSource, Double> ENV_SOURCES = new HashMap<>();
 
     static {
-        ENV_SOURCES.put(DamageTypes.IN_FIRE, 1D);
-        ENV_SOURCES.put(DamageTypes.ON_FIRE, 0.5D);
-        ENV_SOURCES.put(DamageTypes.LAVA, 4D);
-        ENV_SOURCES.put(DamageTypes.HOT_FLOOR, 1D);
-        ENV_SOURCES.put(DamageTypes.IN_WALL, 1D);
-        ENV_SOURCES.put(DamageTypes.CRAMMING, 0D);
-        ENV_SOURCES.put(DamageTypes.CACTUS, 1D);
+        ENV_SOURCES.put(DamageSource.IN_FIRE, 1D);
+        ENV_SOURCES.put(DamageSource.ON_FIRE, 0.5D);
+        ENV_SOURCES.put(DamageSource.LAVA, 4D);
+        ENV_SOURCES.put(DamageSource.HOT_FLOOR, 1D);
+        ENV_SOURCES.put(DamageSource.IN_WALL, 1D);
+        ENV_SOURCES.put(DamageSource.CRAMMING, 0D);
+        ENV_SOURCES.put(DamageSource.CACTUS, 1D);
     }
 
     private BooleanProperty shieldEnabled;
@@ -197,7 +194,7 @@ public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
      */
     public void tryBlockDamage(LivingAttackEvent event) {
         DamageSource source = event.getSource();
-        if (!shieldEnabled.getValue() || source.isBypassInvul() || FastStream.of(UNBLOCKABLE).anyMatch(source::is)) return;
+        if (!shieldEnabled.getValue() || source.isBypassInvul() || UNBLOCKABLE.contains(source)) return;
 
         if (blockEnvironmentalDamage(event, source)) {
             return;
@@ -218,7 +215,7 @@ public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
             entity.clearFire();
         }
 
-        double value = FastStream.of(ENV_SOURCES.entrySet()).filter(e -> source.is(e.getKey())).map(Map.Entry::getValue).firstOrDefault(0D);
+        double value = ENV_SOURCES.getOrDefault(source, 0D);
         if (value != 0) {
             value /= 20;
             if (value <= getShieldPoints()) {
@@ -249,7 +246,10 @@ public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
      */
     public void tryBlockDamage(LivingDamageEvent event) {
         DamageSource source = event.getSource();
-        if (!shieldEnabled.getValue() || UNBLOCKABLE.contains(source)) return;
+        // 1.20.1 parity (WP-22 spec D-2): there UNBLOCKABLE held damage-type keys and was queried with a DamageSource, which never
+        // matched, so the shield also absorbs drown/starve/in-wall (and void) damage at this stage. With the 1.19.2 identity
+        // set the same text would start to match and change behaviour, so the check is intentionally not applied here.
+        if (!shieldEnabled.getValue()) return;
         float damage = applyDamageModifiers(source, event.getAmount());
 
         LivingEntity entity = event.getEntity();

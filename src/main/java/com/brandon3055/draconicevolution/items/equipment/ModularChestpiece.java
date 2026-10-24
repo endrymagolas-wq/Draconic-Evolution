@@ -50,7 +50,7 @@ public class ModularChestpiece extends ArmorItem implements IModularArmor, IDEEq
     private final TechLevel techLevel;
 
     public ModularChestpiece(TechProperties props) {
-        super(ArmorMaterials.DIAMOND, Type.CHESTPLATE, props);
+        super(ArmorMaterials.DIAMOND, EquipmentSlot.CHEST, props); // 1.19.2: ArmorItem(ArmorMaterial, EquipmentSlot, Properties)
         this.techLevel = props.getTechLevel();
     }
 

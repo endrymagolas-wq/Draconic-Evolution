@@ -64,6 +64,7 @@ public class ModularArmorEventHandler {
         MinecraftForge.EVENT_BUS.addListener(ModularArmorEventHandler::onLivingJumpEvent);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, ModularArmorEventHandler::breakSpeed);
         MinecraftForge.EVENT_BUS.addListener(ModularArmorEventHandler::onPlayerLogin);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, DEDamage::applyCooldownBypass); // 1.19.2: emulates #minecraft:bypasses_cooldown (WP-22 spec 1.3a)
 
         ATTRIBUTE_HANDLER.register(WALK_SPEED_UUID, () -> Attributes.MOVEMENT_SPEED, ModularArmorEventHandler::getWalkSpeedAttribute);
         ATTRIBUTE_HANDLER.register(FLY_SPEED_UUID, () -> Attributes.FLYING_SPEED, ModularArmorEventHandler::getFlightSpeedAttribute);
@@ -133,7 +134,7 @@ public class ModularArmorEventHandler {
 
     private static void onEntityAttacked(LivingAttackEvent event) {
         LivingEntity entity = event.getEntity();
-        if (event.isCanceled() || event.getAmount() <= 0 || entity.level.isClientSide || event.getSource().is(DEDamage.KILL)) {
+        if (event.isCanceled() || event.getAmount() <= 0 || entity.level.isClientSide || DEDamage.is(event.getSource(), DEDamage.KILL)) {
             return;
         }
 
@@ -167,7 +168,7 @@ public class ModularArmorEventHandler {
 
     private static void onEntityDamaged(LivingDamageEvent event) {
         LivingEntity entity = event.getEntity();
-        if (event.isCanceled() || event.getAmount() <= 0 || entity.level.isClientSide || event.getSource().is(DEDamage.KILL)) {
+        if (event.isCanceled() || event.getAmount() <= 0 || entity.level.isClientSide || DEDamage.is(event.getSource(), DEDamage.KILL)) {
             return;
         }
 
@@ -232,7 +233,7 @@ public class ModularArmorEventHandler {
             }
         }
 
-        if (undyingModules.isEmpty() || event.getSource().is(DEDamage.KILL)) {
+        if (undyingModules.isEmpty() || DEDamage.is(event.getSource(), DEDamage.KILL)) {
             return;
         }
 

@@ -26,7 +26,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -188,7 +187,7 @@ public class ModularHoe extends HoeItem implements IModularTieredItem, IDraconic
             }
 
             BlockState aoeState = level.getBlockState(aoePos);
-            boolean airOrReplaceable = level.isEmptyBlock(aoePos) || aoeState.is(BlockTags.REPLACEABLE);
+            boolean airOrReplaceable = level.isEmptyBlock(aoePos) || aoeState.getMaterial().isReplaceable();
             boolean lowerBlockOk = level.getBlockState(aoePos.below()).isFaceSturdy(level, aoePos.below(), Direction.UP, SupportType.CENTER) || level.getBlockState(aoePos.below()).is(Blocks.FARMLAND);
 
             //Fill
@@ -201,8 +200,8 @@ public class ModularHoe extends HoeItem implements IModularTieredItem, IDraconic
             }
 
             boolean canDropAbove = level.getBlockState(aoePos.above()).is(Blocks.DIRT) || level.getBlockState(aoePos.above()).is(Blocks.GRASS_BLOCK) || level.getBlockState(aoePos.above()).is(Blocks.FARMLAND);
-            boolean canRemoveAbove = canDropAbove || level.getBlockState(aoePos.above()).is(BlockTags.REPLACEABLE);
-            boolean up2OK = level.isEmptyBlock(aoePos.above().above()) || level.getBlockState(aoePos.above().above()).is(BlockTags.REPLACEABLE);
+            boolean canRemoveAbove = canDropAbove || level.getBlockState(aoePos.above()).getMaterial().isReplaceable();
+            boolean up2OK = level.isEmptyBlock(aoePos.above().above()) || level.getBlockState(aoePos.above().above()).getMaterial().isReplaceable();
 
             if (!level.isEmptyBlock(aoePos.above()) && canRemoveAbove && up2OK) {
                 if (!level.isClientSide && canDropAbove) {

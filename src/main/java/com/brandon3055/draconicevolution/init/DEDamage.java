@@ -23,14 +23,14 @@ import static com.brandon3055.draconicevolution.DraconicEvolution.MODID;
 /**
  * Created by brandon3055 on 13/01/2024
  * <p>
- * 1.19.2 backport (WP-22, specs/WP-22-damage.md §3) of the 1.20 data-driven damage types
+ * 1.19.2 backport (WP-22, specs/WP-22-damage.md s.3) of the 1.20 data-driven damage types
  * (data/draconicevolution/damage_type/*.json + the damage_type tags). 1.19.2 has no damage_type registry, so each
  * {@link Type} mirrors one JSON file and its tag memberships, and the {@link DamageSource} objects are built by
  * {@link DEDamageSources}. The factory method names and parameters are the same as in 1.20 ({@code Level} is accepted
  * and ignored, it may be {@code null}).
  * <p>
- * Call-site rule: {@code src.is(DEDamage.X)} becomes {@code DEDamage.is(src, DEDamage.X)} and
- * {@code src.is(DEDamage.Tags.X)} becomes {@code DEDamage.hasTag(src, DEDamage.Tags.X)}.
+ * Call-site rule: the 1.20 check {@code src.is(<DEDamage key>)} becomes {@code DEDamage.is(src, DEDamage.X)} and
+ * {@code src.is(<DEDamage.Tags key>)} becomes {@code DEDamage.hasTag(src, DEDamage.Tags.X)}.
  */
 public class DEDamage {
 
@@ -96,7 +96,7 @@ public class DEDamage {
         }
 
         /**
-         * Tag to 1.19.2 flag mapping (WP-22 spec §1.2). BYPASSES_SHIELD is implied by bypassArmor() (vanilla shields only
+         * Tag to 1.19.2 flag mapping (WP-22 spec s.1.2). BYPASSES_SHIELD is implied by bypassArmor() (vanilla shields only
          * block sources that do not bypass armour); BYPASSES_COOLDOWN is handled by {@link #applyCooldownBypass}.
          */
         public void applyFlags(DamageSource source) {
@@ -112,7 +112,7 @@ public class DEDamage {
         public String toString() { return "DEDamage.Type(" + id + ")"; }
     }
 
-    /** The five #minecraft:bypasses_* tags shared by the six "boss" types (spec §1.1 "G6"). */
+    /** The five #minecraft:bypasses_* tags shared by the six "boss" types (spec s.1.1 "G6"). */
     private static final Set<Flag> BYPASS5 = EnumSet.of(Flag.BYPASSES_ARMOR, Flag.BYPASSES_SHIELD, Flag.BYPASSES_EFFECTS, Flag.BYPASSES_RESISTANCE, Flag.BYPASSES_COOLDOWN);
 
     private static Set<Flag> bypass5(Flag... extra) {
@@ -133,7 +133,7 @@ public class DEDamage {
 
     // Field names identical to 1.20 (init/DEDamage.java:29-45).
     public static final Type FUSION_EXPLOSION = type("fusion_explosion", Scaling.ALWAYS, false, bypass5(Flag.IS_EXPLOSION), EnumSet.of(TypeTag.CHAOTIC));
-    /** Replaces DamageTypes.GENERIC_KILL. msgId and flags from de-1.18 ModularArmorEventHandler.KILL_COMMAND. */
+    /** Replaces the 1.20 vanilla type minecraft:generic_kill. msgId and flags from de-1.18 ModularArmorEventHandler.KILL_COMMAND. */
     public static final Type KILL = new Type(new ResourceLocation("minecraft", "generic_kill"), "administrative.kill", Scaling.NEVER, 0.0F, false,
             EnumSet.of(Flag.BYPASSES_ARMOR, Flag.BYPASSES_EFFECTS, Flag.BYPASSES_RESISTANCE, Flag.BYPASSES_INVULNERABILITY), EnumSet.noneOf(TypeTag.class));
     public static final Type CRYSTAL_MOVE = type("crystal_move", Scaling.ALWAYS, false, bypass5(Flag.BYPASSES_INVULNERABILITY), EnumSet.noneOf(TypeTag.class));
@@ -214,12 +214,12 @@ public class DEDamage {
         return source instanceof IDEDamageSource de ? de.getDEType() : null;
     }
 
-    /** 1.20 {@code source.is(DEDamage.X)}. */
+    /** Replaces the 1.20 {@code DamageSource#is(ResourceKey)} check against a DE type. */
     public static boolean is(@Nullable DamageSource source, Type type) {
         return getType(source) == type;
     }
 
-    /** 1.20 {@code source.is(DEDamage.Tags.X)}. */
+    /** Replaces the 1.20 {@code DamageSource#is(TagKey)} check against a DE damage_type tag. */
     public static boolean hasTag(@Nullable DamageSource source, TypeTag tag) {
         Type type = getType(source);
         return type != null && type.has(tag);

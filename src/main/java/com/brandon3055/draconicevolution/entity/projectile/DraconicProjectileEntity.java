@@ -40,6 +40,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -229,9 +230,10 @@ public class DraconicProjectileEntity extends AbstractArrow {
             disableDefault = true;
         } else if (explosivePower > 0) {
             if (owner instanceof LivingEntity) {
-                level.explode(owner, level.damageSources().explosion(owner, null), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Explosion.BlockInteraction.NONE);
+                // 1.19.2 (WP-22 D-3): explosion credited to the owner (= de-1.18); 1.20 interaction "MOB" = mobGriefing gamerule
+                level.explode(owner, DamageSource.explosion((LivingEntity) owner), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks && ForgeEventFactory.getMobGriefingEvent(level, owner) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
             }else {
-                level.explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Explosion.BlockInteraction.NONE);
+                level.explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks && ForgeEventFactory.getMobGriefingEvent(level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
             }
 
             explosivePower = 0;

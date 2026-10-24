@@ -13,12 +13,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,7 +91,7 @@ public class LaserBeamPhase extends ChargeUpPhase {
         }
 
         if (obstructed & chargedTime % 2 == 0) {
-            guardian.level.explode(null, damage, null, beamPos.x, beamPos.y, beamPos.z, 8, false, Level.ExplosionInteraction.MOB);
+            guardian.level.explode(null, damage, null, beamPos.x, beamPos.y, beamPos.z, 8, false, ForgeEventFactory.getMobGriefingEvent(guardian.level, null) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE); // 1.19.2: 1.20 explosion interaction "MOB" = mobGriefing gamerule
         } else if (!obstructed) {
             float prevHealth = attackTarget.getHealth();
             if (getSecondaryCharge() >= 1) {
@@ -99,7 +100,7 @@ public class LaserBeamPhase extends ChargeUpPhase {
                  * 60,000,000,000,000,000,000,000,000,000,000,000,000 hit points worth of damage like It's nothing. What the hell am I supposed to do?
                  * Guardian beam at full power = death. End of story.
                  * */
-                attackTarget.getCombatTracker().recordDamage(damage, beamPower);
+                attackTarget.getCombatTracker().recordDamage(damage, prevHealth, beamPower);
                 attackTarget.setHealth(prevHealth - beamPower);
                 attackTarget.gameEvent(GameEvent.ENTITY_DAMAGE, damage.getEntity());
                 if (attackTarget.isDeadOrDying()) {

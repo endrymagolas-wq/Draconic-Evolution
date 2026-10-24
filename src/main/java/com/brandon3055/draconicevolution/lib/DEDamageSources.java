@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 /**
  * Created by brandon3055 on 5/07/2016.
  * <p>
- * 1.19.2 (WP-22, specs/WP-22-damage.md §3.3): {@link DamageSource} implementations for {@link DEDamage.Type}.
+ * 1.19.2 (WP-22, specs/WP-22-damage.md s.3.3): {@link DamageSource} implementations for {@link DEDamage.Type}.
  * Do not construct these directly; use the {@link DEDamage} factory methods.
  * (The 1.20 version of this file was fully commented out; its deprecated 1.16 content, CHAOS_ISLAND_IMPLOSION and
  * DamageSourceChaos, is superseded by DEDamage.CHAOS_IMPLOSION / DEDamage.GUARDIAN.)
