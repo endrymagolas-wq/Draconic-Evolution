@@ -183,11 +183,11 @@ public class ForestHarvestHandler implements IHarvestHandler {
      * If true then the block can be traversed by the search process
      */
     private boolean canSearchThrough(BlockState state) {
-        return !state.isAir() && !state.is(BlockTags.REPLACEABLE) && !state.is(BlockTags.FLOWERS) && !state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && state.getFluidState().isEmpty();
+        return !state.isAir() && !state.getMaterial().isReplaceable() && !state.is(BlockTags.FLOWERS) && !state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && state.getFluidState().isEmpty();
     }
 
     private boolean canSearchUnder(BlockState state) {
-        return (state.isAir() || state.is(BlockTags.REPLACEABLE) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.LOGS) || state.is(BlockTags.LEAVES)) && state.getFluidState().isEmpty();
+        return (state.isAir() || state.getMaterial().isReplaceable() || state.is(BlockTags.FLOWERS) || state.is(BlockTags.LOGS) || state.is(BlockTags.LEAVES)) && state.getFluidState().isEmpty();
     }
 
     private boolean isHarvestable(BlockState state) {

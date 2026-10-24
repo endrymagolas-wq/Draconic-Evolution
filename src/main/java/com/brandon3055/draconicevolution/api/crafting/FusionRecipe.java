@@ -126,16 +126,16 @@ public class FusionRecipe implements IFusionRecipe {
         @Override
         public FusionRecipe fromJson(ResourceLocation id, JsonObject json) {
             ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
-            Ingredient catalyst = CraftingHelper.getIngredient(GsonHelper.getAsJsonObject(json, "catalyst"), false);
+            Ingredient catalyst = CraftingHelper.getIngredient(GsonHelper.getAsJsonObject(json, "catalyst"));
 
             List<FusionIngredient> fusionIngredients = new ArrayList<>();
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
             for (JsonElement element : ingredients) {
                 Ingredient ingredient;
                 if (element.isJsonObject() && element.getAsJsonObject().has("ingredient")) {
-                    ingredient = CraftingHelper.getIngredient(element.getAsJsonObject().get("ingredient"), false);
+                    ingredient = CraftingHelper.getIngredient(element.getAsJsonObject().get("ingredient"));
                 } else {
-                    ingredient = CraftingHelper.getIngredient(element, false);
+                    ingredient = CraftingHelper.getIngredient(element);
                 }
                 boolean isConsumed = !element.isJsonObject() || GsonHelper.getAsBoolean(element.getAsJsonObject(), "consume", true);
                 fusionIngredients.add(new FusionIngredient(ingredient, isConsumed));
