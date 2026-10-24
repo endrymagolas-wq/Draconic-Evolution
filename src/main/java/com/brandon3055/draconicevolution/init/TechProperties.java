@@ -26,6 +26,7 @@ public class TechProperties extends Item.Properties {
         copy.rarity = this.rarity;
         copy.foodProperties = this.foodProperties;
         copy.isFireResistant = this.isFireResistant;
+        copy.category = this.category; //[1.19.2 port] Item.Properties#category exists again (de-1.18 TechProperties:26)
         return copy;
     }
 }
