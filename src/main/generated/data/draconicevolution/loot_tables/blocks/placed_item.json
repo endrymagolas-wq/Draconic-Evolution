@@ -1,4 +1,3 @@
 {
-  "type": "minecraft:block",
-  "random_sequence": "draconicevolution:blocks/placed_item"
+  "type": "minecraft:block"
 }
