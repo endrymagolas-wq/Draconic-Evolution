@@ -17,7 +17,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public class GuardianChargeParticle extends SingleQuadParticle {

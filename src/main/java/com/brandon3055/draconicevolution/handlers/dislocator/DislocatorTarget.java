@@ -2,7 +2,6 @@ package com.brandon3055.draconicevolution.handlers.dislocator;
 
 import com.brandon3055.brandonscore.utils.TargetPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

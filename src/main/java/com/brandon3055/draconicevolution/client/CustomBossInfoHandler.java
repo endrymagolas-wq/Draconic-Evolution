@@ -35,7 +35,6 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 
 import java.util.Map;
 import java.util.UUID;
