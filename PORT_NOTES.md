@@ -81,3 +81,14 @@ Material = de-1.18 choice; colour = 1.20 `mapColor` as `MaterialColor`; the rest
 B1, B2, B8: rain does not fall through a `portal` block, signs/item frames can hang on crystals, note-block sounds
 differ. These are edge cases and cannot be set per block in 1.19.2 without overriding Forge hooks. `comet_spawner`
 (new in 1.20, no de-1.18 value) uses METAL/NONE; the block removes itself on its first tick.
+
+## Data and runtime (WP-30, Phase 3 headless boot)
+
+- Loot tables: the 1.20 field `random_sequence` is removed from all 51 block loot tables (`src/main/generated`;
+  1.19.2 loot tables have no random sequences, plan Phase 3). Drops are unchanged; the 1.20 per-table random sequence
+  (deterministic loot rolls per world seed) does not exist in 1.19.2, so loot uses the context random as vanilla 1.19.2 does.
+- `pack.mcmeta`: `pack_format 9`, `forge:resource_pack_format 9`, `forge:data_pack_format 10` (1.19.2 values).
+- Dev runs (`runServer`) put BrandonsCore, CodeChickenLib, JEI (forge runtime), Curios, CC:Tweaked and EnderStorage on
+  the classpath (`fg.deobf`); the dedicated dev server boots with all of them (WP-30 boot gate).
+- 1.19.2 `RecipeManager` logs `Loaded N recipes` with N = number of recipe *types* (vanilla behaviour), not recipes;
+  DE's 179 recipes are counted from the data (0 parse errors, 0 skipped), see the WP-30 handoff.
