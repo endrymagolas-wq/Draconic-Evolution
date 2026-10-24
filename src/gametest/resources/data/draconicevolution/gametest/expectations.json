@@ -1,0 +1,1479 @@
+{
+ "schema": "refdiff-gametest-expect/1",
+ "tool": "refdiff 1.0",
+ "namespace": "draconicevolution",
+ "source": {
+  "registry": {
+   "kind": "java-static",
+   "roots": [
+    "D:\\01_Projects\\DE-1.19.2\\donors\\de-1.20\\src\\main\\java",
+    "D:\\01_Projects\\DE-1.19.2\\donors\\de-1.20\\src\\api\\java"
+   ],
+   "symbol_roots": [
+    "D:\\01_Projects\\DE-1.19.2\\donors\\bc-1.20\\src\\main\\java"
+   ],
+   "git_head": [
+    "4e7fc310f025a255b685c9e9754d2369f8d7b561"
+   ],
+   "namespace": "draconicevolution"
+  },
+  "manifest": {
+   "kind": "jar",
+   "label": "Draconic-Evolution-1.20.1-3.1.2.621-universal.jar",
+   "path": "D:\\01_Projects\\DE-1.19.2\\ref\\Draconic-Evolution-1.20.1-3.1.2.621-universal.jar",
+   "sha256": "06ae009929799d7f912adcf83498b83328395bd53c90e4e03eb07d710b40441a",
+   "entries": 1872
+  },
+  "allowlists": [
+   "allow-port.txt:14",
+   "allow-port.txt:16",
+   "allow-port.txt:19"
+  ]
+ },
+ "registries": {
+  "brandonscore:world_entity": [
+   "draconicevolution:guardian_manager"
+  ],
+  "draconicevolution:modules": [
+   "draconicevolution:chaotic_aoe",
+   "draconicevolution:chaotic_damage",
+   "draconicevolution:chaotic_energy",
+   "draconicevolution:chaotic_energy_link",
+   "draconicevolution:chaotic_flight",
+   "draconicevolution:chaotic_jump",
+   "draconicevolution:chaotic_large_shield_capacity",
+   "draconicevolution:chaotic_proj_accuracy",
+   "draconicevolution:chaotic_proj_damage",
+   "draconicevolution:chaotic_proj_grav_comp",
+   "draconicevolution:chaotic_proj_penetration",
+   "draconicevolution:chaotic_proj_velocity",
+   "draconicevolution:chaotic_shield_capacity",
+   "draconicevolution:chaotic_shield_control",
+   "draconicevolution:chaotic_shield_recovery",
+   "draconicevolution:chaotic_speed",
+   "draconicevolution:chaotic_tree_harvest",
+   "draconicevolution:chaotic_undying",
+   "draconicevolution:draconic_aoe",
+   "draconicevolution:draconic_auto_feed",
+   "draconicevolution:draconic_damage",
+   "draconicevolution:draconic_ender_collection",
+   "draconicevolution:draconic_energy",
+   "draconicevolution:draconic_energy_link",
+   "draconicevolution:draconic_flight",
+   "draconicevolution:draconic_jump",
+   "draconicevolution:draconic_large_shield_capacity",
+   "draconicevolution:draconic_proj_accuracy",
+   "draconicevolution:draconic_proj_anti_immune",
+   "draconicevolution:draconic_proj_damage",
+   "draconicevolution:draconic_proj_grav_comp",
+   "draconicevolution:draconic_proj_penetration",
+   "draconicevolution:draconic_proj_velocity",
+   "draconicevolution:draconic_shield_capacity",
+   "draconicevolution:draconic_shield_control",
+   "draconicevolution:draconic_shield_recovery",
+   "draconicevolution:draconic_speed",
+   "draconicevolution:draconic_tree_harvest",
+   "draconicevolution:draconic_undying",
+   "draconicevolution:draconium_aoe",
+   "draconicevolution:draconium_auto_feed",
+   "draconicevolution:draconium_damage",
+   "draconicevolution:draconium_energy",
+   "draconicevolution:draconium_jump",
+   "draconicevolution:draconium_speed",
+   "draconicevolution:wyvern_aoe",
+   "draconicevolution:wyvern_aqua_adapt",
+   "draconicevolution:wyvern_auto_feed",
+   "draconicevolution:wyvern_auto_fire",
+   "draconicevolution:wyvern_damage",
+   "draconicevolution:wyvern_ender_collection",
+   "draconicevolution:wyvern_energy",
+   "draconicevolution:wyvern_energy_link",
+   "draconicevolution:wyvern_flight",
+   "draconicevolution:wyvern_hill_step",
+   "draconicevolution:wyvern_jump",
+   "draconicevolution:wyvern_junk_filter",
+   "draconicevolution:wyvern_large_shield_capacity",
+   "draconicevolution:wyvern_mining_stability",
+   "draconicevolution:wyvern_night_vision",
+   "draconicevolution:wyvern_proj_accuracy",
+   "draconicevolution:wyvern_proj_damage",
+   "draconicevolution:wyvern_proj_grav_comp",
+   "draconicevolution:wyvern_proj_penetration",
+   "draconicevolution:wyvern_proj_velocity",
+   "draconicevolution:wyvern_shield_capacity",
+   "draconicevolution:wyvern_shield_control",
+   "draconicevolution:wyvern_shield_recovery",
+   "draconicevolution:wyvern_speed",
+   "draconicevolution:wyvern_tree_harvest",
+   "draconicevolution:wyvern_undying"
+  ],
+  "forge:ingredient_serializer": [
+   "draconicevolution:ingredient_stack"
+  ],
+  "minecraft:block": [
+   "draconicevolution:awakened_crafting_injector",
+   "draconicevolution:awakened_draconium_block",
+   "draconicevolution:basic_crafting_injector",
+   "draconicevolution:basic_io_crystal",
+   "draconicevolution:basic_relay_crystal",
+   "draconicevolution:basic_wireless_crystal",
+   "draconicevolution:celestial_manipulator",
+   "draconicevolution:chaos_crystal",
+   "draconicevolution:chaos_crystal_part",
+   "draconicevolution:chaotic_crafting_injector",
+   "draconicevolution:comet_spawner",
+   "draconicevolution:crafting_core",
+   "draconicevolution:creative_op_capacitor",
+   "draconicevolution:deepslate_draconium_ore",
+   "draconicevolution:disenchanter",
+   "draconicevolution:dislocation_inhibitor",
+   "draconicevolution:dislocator_pedestal",
+   "draconicevolution:dislocator_receptacle",
+   "draconicevolution:draconic_io_crystal",
+   "draconicevolution:draconic_relay_crystal",
+   "draconicevolution:draconic_wireless_crystal",
+   "draconicevolution:draconium_block",
+   "draconicevolution:draconium_chest",
+   "draconicevolution:end_draconium_ore",
+   "draconicevolution:energy_core",
+   "draconicevolution:energy_core_stabilizer",
+   "draconicevolution:energy_pylon",
+   "draconicevolution:energy_transfuser",
+   "draconicevolution:entity_detector",
+   "draconicevolution:entity_detector_advanced",
+   "draconicevolution:fluid_gate",
+   "draconicevolution:flux_gate",
+   "draconicevolution:generator",
+   "draconicevolution:grinder",
+   "draconicevolution:infused_obsidian",
+   "draconicevolution:nether_draconium_ore",
+   "draconicevolution:overworld_draconium_ore",
+   "draconicevolution:particle_generator",
+   "draconicevolution:placed_item",
+   "draconicevolution:portal",
+   "draconicevolution:potentiometer",
+   "draconicevolution:rain_sensor",
+   "draconicevolution:reactor_core",
+   "draconicevolution:reactor_injector",
+   "draconicevolution:reactor_stabilizer",
+   "draconicevolution:stabilized_spawner",
+   "draconicevolution:structure_block",
+   "draconicevolution:wyvern_crafting_injector",
+   "draconicevolution:wyvern_io_crystal",
+   "draconicevolution:wyvern_relay_crystal",
+   "draconicevolution:wyvern_wireless_crystal"
+  ],
+  "minecraft:block_entity_type": [
+   "draconicevolution:celestial_manipulator",
+   "draconicevolution:chaos_crystal",
+   "draconicevolution:comet_spawner",
+   "draconicevolution:core_stabilizer",
+   "draconicevolution:crafting_core",
+   "draconicevolution:crafting_injector",
+   "draconicevolution:creative_op_capacitor",
+   "draconicevolution:disenchanter",
+   "draconicevolution:dislocator_pedestal",
+   "draconicevolution:dislocator_receptacle",
+   "draconicevolution:draconium_chest",
+   "draconicevolution:energy_pylon",
+   "draconicevolution:energy_transfuser",
+   "draconicevolution:entity_detector",
+   "draconicevolution:fluid_gate",
+   "draconicevolution:flux_gate",
+   "draconicevolution:generator",
+   "draconicevolution:grinder",
+   "draconicevolution:io_crystal",
+   "draconicevolution:placed_item",
+   "draconicevolution:portal",
+   "draconicevolution:potentiometer",
+   "draconicevolution:rain_sensor",
+   "draconicevolution:reactor_core",
+   "draconicevolution:reactor_injector",
+   "draconicevolution:reactor_stabilizer",
+   "draconicevolution:relay_crystal",
+   "draconicevolution:stabilized_spawner",
+   "draconicevolution:storage_core",
+   "draconicevolution:structure_block",
+   "draconicevolution:wireless_crystal"
+  ],
+  "minecraft:enchantment": [
+   "draconicevolution:reaper_enchantment"
+  ],
+  "minecraft:entity_type": [
+   "draconicevolution:draconic_arrow",
+   "draconicevolution:draconic_guardian",
+   "draconicevolution:guardian_crystal",
+   "draconicevolution:guardian_projectile",
+   "draconicevolution:guardian_wither"
+  ],
+  "minecraft:item": [
+   "draconicevolution:advanced_dislocator",
+   "draconicevolution:advanced_magnet",
+   "draconicevolution:awakened_core",
+   "draconicevolution:awakened_crafting_injector",
+   "draconicevolution:awakened_draconium_block",
+   "draconicevolution:awakened_draconium_dust",
+   "draconicevolution:awakened_draconium_ingot",
+   "draconicevolution:awakened_draconium_nugget",
+   "draconicevolution:basic_crafting_injector",
+   "draconicevolution:basic_io_crystal",
+   "draconicevolution:basic_relay_crystal",
+   "draconicevolution:basic_wireless_crystal",
+   "draconicevolution:celestial_manipulator",
+   "draconicevolution:chaos_shard",
+   "draconicevolution:chaotic_axe",
+   "draconicevolution:chaotic_bow",
+   "draconicevolution:chaotic_capacitor",
+   "draconicevolution:chaotic_chestpiece",
+   "draconicevolution:chaotic_core",
+   "draconicevolution:chaotic_crafting_injector",
+   "draconicevolution:chaotic_energy_core",
+   "draconicevolution:chaotic_hoe",
+   "draconicevolution:chaotic_pickaxe",
+   "draconicevolution:chaotic_shovel",
+   "draconicevolution:chaotic_staff",
+   "draconicevolution:chaotic_sword",
+   "draconicevolution:crafting_core",
+   "draconicevolution:creative_capacitor",
+   "draconicevolution:creative_op_capacitor",
+   "draconicevolution:crystal_binder",
+   "draconicevolution:deepslate_draconium_ore",
+   "draconicevolution:disenchanter",
+   "draconicevolution:dislocation_inhibitor",
+   "draconicevolution:dislocator",
+   "draconicevolution:dislocator_pedestal",
+   "draconicevolution:dislocator_receptacle",
+   "draconicevolution:draconic_axe",
+   "draconicevolution:draconic_bow",
+   "draconicevolution:draconic_capacitor",
+   "draconicevolution:draconic_chestpiece",
+   "draconicevolution:draconic_energy_core",
+   "draconicevolution:draconic_hoe",
+   "draconicevolution:draconic_io_crystal",
+   "draconicevolution:draconic_pickaxe",
+   "draconicevolution:draconic_relay_crystal",
+   "draconicevolution:draconic_shovel",
+   "draconicevolution:draconic_staff",
+   "draconicevolution:draconic_sword",
+   "draconicevolution:draconic_wireless_crystal",
+   "draconicevolution:draconium_block",
+   "draconicevolution:draconium_chest",
+   "draconicevolution:draconium_core",
+   "draconicevolution:draconium_dust",
+   "draconicevolution:draconium_ingot",
+   "draconicevolution:draconium_nugget",
+   "draconicevolution:dragon_heart",
+   "draconicevolution:end_draconium_ore",
+   "draconicevolution:energy_core",
+   "draconicevolution:energy_core_stabilizer",
+   "draconicevolution:energy_pylon",
+   "draconicevolution:energy_transfuser",
+   "draconicevolution:entity_detector",
+   "draconicevolution:entity_detector_advanced",
+   "draconicevolution:fluid_gate",
+   "draconicevolution:flux_gate",
+   "draconicevolution:generator",
+   "draconicevolution:grinder",
+   "draconicevolution:info_tablet",
+   "draconicevolution:infused_obsidian",
+   "draconicevolution:item_chaotic_aoe",
+   "draconicevolution:item_chaotic_damage",
+   "draconicevolution:item_chaotic_energy",
+   "draconicevolution:item_chaotic_energy_link",
+   "draconicevolution:item_chaotic_flight",
+   "draconicevolution:item_chaotic_jump",
+   "draconicevolution:item_chaotic_large_shield_capacity",
+   "draconicevolution:item_chaotic_proj_accuracy",
+   "draconicevolution:item_chaotic_proj_damage",
+   "draconicevolution:item_chaotic_proj_grav_comp",
+   "draconicevolution:item_chaotic_proj_penetration",
+   "draconicevolution:item_chaotic_proj_velocity",
+   "draconicevolution:item_chaotic_shield_capacity",
+   "draconicevolution:item_chaotic_shield_control",
+   "draconicevolution:item_chaotic_shield_recovery",
+   "draconicevolution:item_chaotic_speed",
+   "draconicevolution:item_chaotic_tree_harvest",
+   "draconicevolution:item_chaotic_undying",
+   "draconicevolution:item_draconic_aoe",
+   "draconicevolution:item_draconic_auto_feed",
+   "draconicevolution:item_draconic_damage",
+   "draconicevolution:item_draconic_ender_collection",
+   "draconicevolution:item_draconic_energy",
+   "draconicevolution:item_draconic_energy_link",
+   "draconicevolution:item_draconic_flight",
+   "draconicevolution:item_draconic_jump",
+   "draconicevolution:item_draconic_large_shield_capacity",
+   "draconicevolution:item_draconic_proj_accuracy",
+   "draconicevolution:item_draconic_proj_anti_immune",
+   "draconicevolution:item_draconic_proj_damage",
+   "draconicevolution:item_draconic_proj_grav_comp",
+   "draconicevolution:item_draconic_proj_penetration",
+   "draconicevolution:item_draconic_proj_velocity",
+   "draconicevolution:item_draconic_shield_capacity",
+   "draconicevolution:item_draconic_shield_control",
+   "draconicevolution:item_draconic_shield_recovery",
+   "draconicevolution:item_draconic_speed",
+   "draconicevolution:item_draconic_tree_harvest",
+   "draconicevolution:item_draconic_undying",
+   "draconicevolution:item_draconium_aoe",
+   "draconicevolution:item_draconium_auto_feed",
+   "draconicevolution:item_draconium_damage",
+   "draconicevolution:item_draconium_energy",
+   "draconicevolution:item_draconium_jump",
+   "draconicevolution:item_draconium_speed",
+   "draconicevolution:item_wyvern_aoe",
+   "draconicevolution:item_wyvern_aqua_adapt",
+   "draconicevolution:item_wyvern_auto_feed",
+   "draconicevolution:item_wyvern_auto_fire",
+   "draconicevolution:item_wyvern_damage",
+   "draconicevolution:item_wyvern_ender_collection",
+   "draconicevolution:item_wyvern_energy",
+   "draconicevolution:item_wyvern_energy_link",
+   "draconicevolution:item_wyvern_flight",
+   "draconicevolution:item_wyvern_hill_step",
+   "draconicevolution:item_wyvern_jump",
+   "draconicevolution:item_wyvern_junk_filter",
+   "draconicevolution:item_wyvern_large_shield_capacity",
+   "draconicevolution:item_wyvern_mining_stability",
+   "draconicevolution:item_wyvern_night_vision",
+   "draconicevolution:item_wyvern_proj_accuracy",
+   "draconicevolution:item_wyvern_proj_damage",
+   "draconicevolution:item_wyvern_proj_grav_comp",
+   "draconicevolution:item_wyvern_proj_penetration",
+   "draconicevolution:item_wyvern_proj_velocity",
+   "draconicevolution:item_wyvern_shield_capacity",
+   "draconicevolution:item_wyvern_shield_control",
+   "draconicevolution:item_wyvern_shield_recovery",
+   "draconicevolution:item_wyvern_speed",
+   "draconicevolution:item_wyvern_tree_harvest",
+   "draconicevolution:item_wyvern_undying",
+   "draconicevolution:large_chaos_frag",
+   "draconicevolution:magnet",
+   "draconicevolution:medium_chaos_frag",
+   "draconicevolution:mob_soul",
+   "draconicevolution:module_core",
+   "draconicevolution:nether_draconium_ore",
+   "draconicevolution:overworld_draconium_ore",
+   "draconicevolution:p2p_dislocator",
+   "draconicevolution:p2p_dislocator_unbound",
+   "draconicevolution:particle_generator",
+   "draconicevolution:player_dislocator",
+   "draconicevolution:player_dislocator_unbound",
+   "draconicevolution:potentiometer",
+   "draconicevolution:rain_sensor",
+   "draconicevolution:reactor_core",
+   "draconicevolution:reactor_injector",
+   "draconicevolution:reactor_prt_focus_ring",
+   "draconicevolution:reactor_prt_in_rotor",
+   "draconicevolution:reactor_prt_out_rotor",
+   "draconicevolution:reactor_prt_rotor_full",
+   "draconicevolution:reactor_prt_stab_frame",
+   "draconicevolution:reactor_stabilizer",
+   "draconicevolution:small_chaos_frag",
+   "draconicevolution:stabilized_spawner",
+   "draconicevolution:structure_block",
+   "draconicevolution:wyvern_axe",
+   "draconicevolution:wyvern_bow",
+   "draconicevolution:wyvern_capacitor",
+   "draconicevolution:wyvern_chestpiece",
+   "draconicevolution:wyvern_core",
+   "draconicevolution:wyvern_crafting_injector",
+   "draconicevolution:wyvern_energy_core",
+   "draconicevolution:wyvern_hoe",
+   "draconicevolution:wyvern_io_crystal",
+   "draconicevolution:wyvern_pickaxe",
+   "draconicevolution:wyvern_relay_crystal",
+   "draconicevolution:wyvern_shovel",
+   "draconicevolution:wyvern_sword",
+   "draconicevolution:wyvern_wireless_crystal"
+  ],
+  "minecraft:menu": [
+   "draconicevolution:celestial_manipulator",
+   "draconicevolution:configurable_item",
+   "draconicevolution:disenchanter",
+   "draconicevolution:draconium_chest",
+   "draconicevolution:energy_core",
+   "draconicevolution:energy_crystal",
+   "draconicevolution:energy_transfuser",
+   "draconicevolution:entity_detector",
+   "draconicevolution:flow_gate",
+   "draconicevolution:fusion_crafting_core",
+   "draconicevolution:generator",
+   "draconicevolution:grinder",
+   "draconicevolution:modular_item",
+   "draconicevolution:reactor"
+  ],
+  "minecraft:particle_type": [
+   "draconicevolution:blink",
+   "draconicevolution:energy",
+   "draconicevolution:energy_basic",
+   "draconicevolution:energy_core",
+   "draconicevolution:flame",
+   "draconicevolution:guardian_beam",
+   "draconicevolution:guardian_cloud",
+   "draconicevolution:guardian_projectile",
+   "draconicevolution:line_indicator",
+   "draconicevolution:spark"
+  ],
+  "minecraft:recipe_serializer": [
+   "draconicevolution:fusion_crafting"
+  ],
+  "minecraft:recipe_type": [
+   "draconicevolution:fusion_crafting"
+  ],
+  "minecraft:sound_event": [
+   "draconicevolution:beam",
+   "draconicevolution:blink",
+   "draconicevolution:boom",
+   "draconicevolution:chaos_chamber_ambient",
+   "draconicevolution:charge",
+   "draconicevolution:core_sound",
+   "draconicevolution:crystal_beam",
+   "draconicevolution:crystal_destabilize",
+   "draconicevolution:crystal_restore",
+   "draconicevolution:crystal_unstable",
+   "draconicevolution:discharge",
+   "draconicevolution:electric_buzz",
+   "draconicevolution:energy_bolt",
+   "draconicevolution:fusion_complete",
+   "draconicevolution:fusion_explosion",
+   "draconicevolution:fusion_rotation",
+   "draconicevolution:generator1",
+   "draconicevolution:generator2",
+   "draconicevolution:generator3",
+   "draconicevolution:guardian_thonk",
+   "draconicevolution:portal",
+   "draconicevolution:shield_strike",
+   "draconicevolution:staff_charge_electric",
+   "draconicevolution:staff_charge_fire",
+   "draconicevolution:staff_hit_default",
+   "draconicevolution:staff_hit_electric",
+   "draconicevolution:sun_dial_effect"
+  ],
+  "minecraft:worldgen/feature": [
+   "draconicevolution:chaos_island",
+   "draconicevolution:end_comet"
+  ]
+ },
+ "registries_not_checked": {
+  "brandonscore:hud_elements": [
+   "draconicevolution:shield_hud"
+  ],
+  "minecraft:creative_mode_tab": [
+   "draconicevolution:blocks",
+   "draconicevolution:items",
+   "draconicevolution:modules"
+  ],
+  "minecraft:damage_type": [
+   "draconicevolution:chaos_implosion",
+   "draconicevolution:chaotic_arrow",
+   "draconicevolution:chaotic_arrow_spoof",
+   "draconicevolution:crystal_move",
+   "draconicevolution:draconic_arrow",
+   "draconicevolution:draconic_arrow_spoof",
+   "draconicevolution:draconium_arrow",
+   "draconicevolution:draconium_arrow_spoof",
+   "draconicevolution:fusion_explosion",
+   "draconicevolution:guardian",
+   "draconicevolution:guardian_laser",
+   "draconicevolution:guardian_projectile",
+   "draconicevolution:wyvern_arrow",
+   "draconicevolution:wyvern_arrow_spoof"
+  ]
+ },
+ "recipes": {
+  "count": 179,
+  "by_type": {
+   "draconicevolution:fusion_crafting": 39,
+   "minecraft:crafting_shaped": 119,
+   "minecraft:crafting_shapeless": 18,
+   "minecraft:smelting": 3
+  },
+  "ids": {
+   "draconicevolution:awakened_draconium_block": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:awakened_draconium_block",
+    "count": 4
+   },
+   "draconicevolution:celestial_manipulator": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:celestial_manipulator",
+    "count": 1
+   },
+   "draconicevolution:components/awakened_core": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:awakened_core",
+    "count": 1
+   },
+   "draconicevolution:components/awakened_draconium_ingot_from_dust": {
+    "type": "minecraft:smelting",
+    "result": "draconicevolution:awakened_draconium_ingot",
+    "count": 1
+   },
+   "draconicevolution:components/chaotic_core": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_core",
+    "count": 1
+   },
+   "draconicevolution:components/chaotic_energy_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:chaotic_energy_core",
+    "count": 1
+   },
+   "draconicevolution:components/draconic_energy_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:draconic_energy_core",
+    "count": 1
+   },
+   "draconicevolution:components/draconium_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:draconium_core",
+    "count": 1
+   },
+   "draconicevolution:components/draconium_ingot_from_dust": {
+    "type": "minecraft:smelting",
+    "result": "draconicevolution:draconium_ingot",
+    "count": 1
+   },
+   "draconicevolution:components/draconium_ingot_from_ore": {
+    "type": "minecraft:smelting",
+    "result": "draconicevolution:draconium_ingot",
+    "count": 1
+   },
+   "draconicevolution:components/wyvern_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:wyvern_core",
+    "count": 1
+   },
+   "draconicevolution:components/wyvern_energy_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:wyvern_energy_core",
+    "count": 1
+   },
+   "draconicevolution:compress/awakened_draconium_block": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:awakened_draconium_block",
+    "count": 1
+   },
+   "draconicevolution:compress/awakened_draconium_ingot": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:awakened_draconium_ingot",
+    "count": 1
+   },
+   "draconicevolution:compress/chaos_shard": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:chaos_shard",
+    "count": 1
+   },
+   "draconicevolution:compress/draconium_block": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:draconium_block",
+    "count": 1
+   },
+   "draconicevolution:compress/draconium_ingot": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:draconium_ingot",
+    "count": 1
+   },
+   "draconicevolution:compress/large_chaos_frag": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:large_chaos_frag",
+    "count": 1
+   },
+   "draconicevolution:compress/medium_chaos_frag": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:medium_chaos_frag",
+    "count": 1
+   },
+   "draconicevolution:decompress/awakened_draconium_ingot": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:awakened_draconium_ingot",
+    "count": 9
+   },
+   "draconicevolution:decompress/awakened_draconium_nugget": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:awakened_draconium_nugget",
+    "count": 9
+   },
+   "draconicevolution:decompress/draconium_ingot": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:draconium_ingot",
+    "count": 9
+   },
+   "draconicevolution:decompress/draconium_nugget": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:draconium_nugget",
+    "count": 9
+   },
+   "draconicevolution:decompress/large_chaos_frag": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:large_chaos_frag",
+    "count": 9
+   },
+   "draconicevolution:decompress/medium_chaos_frag": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:medium_chaos_frag",
+    "count": 9
+   },
+   "draconicevolution:decompress/small_chaos_frag": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:small_chaos_frag",
+    "count": 9
+   },
+   "draconicevolution:disenchanter": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:disenchanter",
+    "count": 1
+   },
+   "draconicevolution:dislocation_inhibitor": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:dislocation_inhibitor",
+    "count": 1
+   },
+   "draconicevolution:dislocator_pedestal": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:dislocator_pedestal",
+    "count": 1
+   },
+   "draconicevolution:dislocator_receptacle": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:dislocator_receptacle",
+    "count": 1
+   },
+   "draconicevolution:entity_detector": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:entity_detector",
+    "count": 1
+   },
+   "draconicevolution:entity_detector_advanced": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:entity_detector_advanced",
+    "count": 1
+   },
+   "draconicevolution:fluid_gate": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:fluid_gate",
+    "count": 1
+   },
+   "draconicevolution:flux_gate": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:flux_gate",
+    "count": 1
+   },
+   "draconicevolution:infused_obsidian": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:infused_obsidian",
+    "count": 1
+   },
+   "draconicevolution:machines/awakened_crafting_injector": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:awakened_crafting_injector",
+    "count": 1
+   },
+   "draconicevolution:machines/basic_crafting_injector": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:basic_crafting_injector",
+    "count": 1
+   },
+   "draconicevolution:machines/basic_io_crystal": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:basic_io_crystal",
+    "count": 2
+   },
+   "draconicevolution:machines/basic_relay_crystal": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:basic_relay_crystal",
+    "count": 4
+   },
+   "draconicevolution:machines/basic_relay_crystal_combine": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:basic_relay_crystal",
+    "count": 1
+   },
+   "draconicevolution:machines/basic_wireless_crystal": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:basic_wireless_crystal",
+    "count": 1
+   },
+   "draconicevolution:machines/chaotic_crafting_injector": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_crafting_injector",
+    "count": 1
+   },
+   "draconicevolution:machines/crafting_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:crafting_core",
+    "count": 1
+   },
+   "draconicevolution:machines/draconic_io_crystal": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:draconic_io_crystal",
+    "count": 2
+   },
+   "draconicevolution:machines/draconic_relay_crystal": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_relay_crystal",
+    "count": 4
+   },
+   "draconicevolution:machines/draconic_relay_crystal_combine": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:draconic_relay_crystal",
+    "count": 1
+   },
+   "draconicevolution:machines/draconic_wireless_crystal": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:draconic_wireless_crystal",
+    "count": 1
+   },
+   "draconicevolution:machines/draconium_chest": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconium_chest",
+    "count": 1
+   },
+   "draconicevolution:machines/energy_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:energy_core",
+    "count": 1
+   },
+   "draconicevolution:machines/energy_core_stabilizer": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:energy_core_stabilizer",
+    "count": 1
+   },
+   "draconicevolution:machines/energy_pylon": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:energy_pylon",
+    "count": 2
+   },
+   "draconicevolution:machines/energy_transfuser": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:energy_transfuser",
+    "count": 1
+   },
+   "draconicevolution:machines/generator": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:generator",
+    "count": 1
+   },
+   "draconicevolution:machines/grinder": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:grinder",
+    "count": 1
+   },
+   "draconicevolution:machines/particle_generator": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:particle_generator",
+    "count": 1
+   },
+   "draconicevolution:machines/potentiometer": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:potentiometer",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_core": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:reactor_core",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_injector": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:reactor_injector",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_prt_focus_ring": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:reactor_prt_focus_ring",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_prt_in_rotor": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:reactor_prt_in_rotor",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_prt_out_rotor": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:reactor_prt_out_rotor",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_prt_rotor_full": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:reactor_prt_rotor_full",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_prt_stab_frame": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:reactor_prt_stab_frame",
+    "count": 1
+   },
+   "draconicevolution:machines/reactor_stabilizer": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:reactor_stabilizer",
+    "count": 1
+   },
+   "draconicevolution:machines/wyvern_crafting_injector": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_crafting_injector",
+    "count": 1
+   },
+   "draconicevolution:machines/wyvern_io_crystal": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:wyvern_io_crystal",
+    "count": 2
+   },
+   "draconicevolution:machines/wyvern_relay_crystal": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:wyvern_relay_crystal",
+    "count": 4
+   },
+   "draconicevolution:machines/wyvern_relay_crystal_combine": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:wyvern_relay_crystal",
+    "count": 1
+   },
+   "draconicevolution:machines/wyvern_wireless_crystal": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:wyvern_wireless_crystal",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_aoe": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_aoe",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_energy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_energy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_energy_link": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_energy_link",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_flight": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_flight",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_jump": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_jump",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_large_shield_capacity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_large_shield_capacity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_proj_accuracy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_proj_accuracy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_proj_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_proj_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_proj_grav_comp": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_proj_grav_comp",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_proj_penetration": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_proj_penetration",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_proj_velocity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_proj_velocity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_shield_capacity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_shield_capacity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_shield_capacity_uncraft": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:item_chaotic_shield_capacity",
+    "count": 5
+   },
+   "draconicevolution:modules/item_chaotic_shield_control": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_shield_control",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_shield_recovery": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_shield_recovery",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_speed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_speed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_tree_harvest": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_tree_harvest",
+    "count": 1
+   },
+   "draconicevolution:modules/item_chaotic_undying": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_chaotic_undying",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_aoe": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_aoe",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_auto_feed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_auto_feed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_ender_collection": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_ender_collection",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_energy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_energy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_energy_link": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_energy_link",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_flight": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_flight",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_jump": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_jump",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_large_shield_capacity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_large_shield_capacity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_proj_accuracy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_proj_accuracy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_proj_anti_immune": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_proj_anti_immune",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_proj_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_proj_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_proj_grav_comp": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_proj_grav_comp",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_proj_penetration": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_proj_penetration",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_proj_velocity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_proj_velocity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_shield_capacity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_shield_capacity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_shield_capacity_uncraft": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:item_draconic_shield_capacity",
+    "count": 5
+   },
+   "draconicevolution:modules/item_draconic_shield_control": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_shield_control",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_shield_recovery": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_shield_recovery",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_speed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_speed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_tree_harvest": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_tree_harvest",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconic_undying": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconic_undying",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconium_aoe": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconium_aoe",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconium_auto_feed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconium_auto_feed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconium_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconium_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconium_energy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconium_energy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconium_jump": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconium_jump",
+    "count": 1
+   },
+   "draconicevolution:modules/item_draconium_speed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_draconium_speed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_aoe": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_aoe",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_aqua_adapt": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_aqua_adapt",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_auto_feed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_auto_feed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_auto_fire": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_auto_fire",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_ender_collection": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_ender_collection",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_energy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_energy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_energy_link": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_energy_link",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_flight": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_flight",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_hill_step": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_hill_step",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_jump": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_jump",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_junk_filter": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_junk_filter",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_large_shield_capacity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_large_shield_capacity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_mining_stability": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_mining_stability",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_night_vision": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_night_vision",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_proj_accuracy": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_proj_accuracy",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_proj_damage": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_proj_damage",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_proj_grav_comp": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_proj_grav_comp",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_proj_penetration": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_proj_penetration",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_proj_velocity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_proj_velocity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_shield_capacity": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_shield_capacity",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_shield_capacity_uncraft": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:item_wyvern_shield_capacity",
+    "count": 5
+   },
+   "draconicevolution:modules/item_wyvern_shield_control": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_shield_control",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_shield_recovery": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_shield_recovery",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_speed": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_speed",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_tree_harvest": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_tree_harvest",
+    "count": 1
+   },
+   "draconicevolution:modules/item_wyvern_undying": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:item_wyvern_undying",
+    "count": 1
+   },
+   "draconicevolution:modules/module_core": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:module_core",
+    "count": 1
+   },
+   "draconicevolution:rain_sensor": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:rain_sensor",
+    "count": 1
+   },
+   "draconicevolution:tools/advanced_dislocator": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:advanced_dislocator",
+    "count": 1
+   },
+   "draconicevolution:tools/advanced_magnet": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:advanced_magnet",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_axe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_axe",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_bow": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_bow",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_capacitor": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_capacitor",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_chestpiece": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_chestpiece",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_hoe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_hoe",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_pickaxe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_pickaxe",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_shovel": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_shovel",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_staff": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_staff",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_staff_alt": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_staff",
+    "count": 1
+   },
+   "draconicevolution:tools/chaotic_sword": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:chaotic_sword",
+    "count": 1
+   },
+   "draconicevolution:tools/crystal_binder": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:crystal_binder",
+    "count": 1
+   },
+   "draconicevolution:tools/dislocator": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:dislocator",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_axe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_axe",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_bow": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_bow",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_capacitor": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_capacitor",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_chestpiece": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_chestpiece",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_hoe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_hoe",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_pickaxe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_pickaxe",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_shovel": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_shovel",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_staff": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_staff",
+    "count": 1
+   },
+   "draconicevolution:tools/draconic_sword": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:draconic_sword",
+    "count": 1
+   },
+   "draconicevolution:tools/magnet": {
+    "type": "minecraft:crafting_shaped",
+    "result": "draconicevolution:magnet",
+    "count": 1
+   },
+   "draconicevolution:tools/p2p_dislocator_unbound": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:p2p_dislocator_unbound",
+    "count": 1
+   },
+   "draconicevolution:tools/player_dislocator_unbound": {
+    "type": "minecraft:crafting_shapeless",
+    "result": "draconicevolution:player_dislocator_unbound",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_axe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_axe",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_bow": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_bow",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_capacitor": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_capacitor",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_chestpiece": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_chestpiece",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_hoe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_hoe",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_pickaxe": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_pickaxe",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_shovel": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_shovel",
+    "count": 1
+   },
+   "draconicevolution:tools/wyvern_sword": {
+    "type": "draconicevolution:fusion_crafting",
+    "result": "draconicevolution:wyvern_sword",
+    "count": 1
+   }
+  }
+ },
+ "loot": {
+  "blocks_with_table": 51,
+  "expected_empty": [
+   "chaos_crystal",
+   "chaos_crystal_part",
+   "comet_spawner",
+   "placed_item",
+   "portal",
+   "structure_block"
+  ]
+ },
+ "multiblocks": [
+  "draconicevolution:energy_core_1",
+  "draconicevolution:energy_core_2",
+  "draconicevolution:energy_core_3",
+  "draconicevolution:energy_core_4",
+  "draconicevolution:energy_core_5",
+  "draconicevolution:energy_core_6",
+  "draconicevolution:energy_core_7",
+  "draconicevolution:energy_core_8"
+ ],
+ "tags": [
+  "blocks|forge:ores",
+  "blocks|forge:ores/draconium",
+  "blocks|forge:storage_blocks",
+  "blocks|forge:storage_blocks/draconium",
+  "blocks|forge:storage_blocks/draconium_awakened",
+  "blocks|forge:wool",
+  "blocks|forge:wool/black",
+  "blocks|forge:wool/blue",
+  "blocks|forge:wool/brown",
+  "blocks|forge:wool/colorless",
+  "blocks|forge:wool/cyan",
+  "blocks|forge:wool/gray",
+  "blocks|forge:wool/green",
+  "blocks|forge:wool/light_blue",
+  "blocks|forge:wool/light_gray",
+  "blocks|forge:wool/lime",
+  "blocks|forge:wool/magenta",
+  "blocks|forge:wool/orange",
+  "blocks|forge:wool/pink",
+  "blocks|forge:wool/purple",
+  "blocks|forge:wool/red",
+  "blocks|forge:wool/white",
+  "blocks|forge:wool/yellow",
+  "blocks|minecraft:mineable/pickaxe",
+  "blocks|minecraft:needs_diamond_tool",
+  "blocks|minecraft:soul_fire_base_blocks",
+  "items|curios:body",
+  "items|curios:curio",
+  "items|draconicevolution:modules",
+  "items|forge:dusts",
+  "items|forge:dusts/draconium",
+  "items|forge:dusts/draconium_awakened",
+  "items|forge:ingots",
+  "items|forge:ingots/draconium",
+  "items|forge:ingots/draconium_awakened",
+  "items|forge:nuggets",
+  "items|forge:nuggets/draconium",
+  "items|forge:nuggets/draconium_awakened",
+  "items|forge:ores",
+  "items|forge:ores/draconium",
+  "items|forge:storage_blocks",
+  "items|forge:storage_blocks/draconium",
+  "items|forge:storage_blocks/draconium_awakened"
+ ],
+ "datapack_registries": {
+  "minecraft:worldgen/configured_feature": [
+   "draconicevolution:chaos_island",
+   "draconicevolution:end_comet",
+   "draconicevolution:end_draconium_ore",
+   "draconicevolution:nether_draconium_ore",
+   "draconicevolution:overworld_draconium_ore"
+  ],
+  "minecraft:worldgen/placed_feature": [
+   "draconicevolution:chaos_island",
+   "draconicevolution:end_comet",
+   "draconicevolution:end_draconium_ore",
+   "draconicevolution:nether_draconium_ore",
+   "draconicevolution:overworld_draconium_ore"
+  ],
+  "forge:biome_modifier": [
+   "draconicevolution:chaoos_island",
+   "draconicevolution:end_comet",
+   "draconicevolution:end_draconium_ore",
+   "draconicevolution:nether_draconium_ore",
+   "draconicevolution:overworld_draconium_ore"
+  ]
+ }
+}

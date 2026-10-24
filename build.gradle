@@ -237,3 +237,55 @@ publishing {
         }
     }
 }
+
+// ==== BEGIN WP-31 gametest wiring (owner: WP-31; spec R\specs\WP-31-gametests.md §3) =========================
+// Dev-only GameTest source set + FG5 `gameTestServer` run (Gradle task runGameTestServer). Nothing here reaches the
+// jar: `jar` packs sourceSets.main only (PORTING_PLAN §8.1 gate 10; refdiff's jar diff has no class:extra rule for it).
+//   [V] FG 5.1.x: `implementation` extends `minecraft`, so a source set whose configurations extend implementation sees
+//       MC/Forge; ModConfig.source(SourceSet) adds classesDirs + resourcesDir to MOD_CLASSES (gametest classes load as
+//       part of the draconicevolution mod in this run only).
+//   [V] Forge 43.2.4 userdev: run gameTestServer -> net.minecraftforge.gametest.GameTestMain; tests are registered only
+//       for the namespaces in forge.enabledGameTestNamespaces (template namespace of each @GameTest).
+//   Optional G12 (reactor run): runGameTestServer -PdeportReactorRun=true
+sourceSets {
+    gametest {
+        // conventional dirs src/gametest/{java,resources} (Gradle default for a source set named "gametest";
+        // adding them again duplicates every resource -> processGametestResources fails)
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    gametestImplementation.extendsFrom implementation
+    gametestCompileOnly.extendsFrom compileOnly
+    gametestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+minecraft {
+    runs {
+        gameTestServer {
+            // own working dir = own world, server.properties and logs; never touches run/world* of runServer
+            workingDirectory file('run/gametest')
+            property 'forge.enabledGameTestNamespaces', 'draconicevolution'
+            property 'forge.logging.console.level', 'info'
+            property 'deport.gametest.reactorRun', (project.findProperty('deportReactorRun') ?: 'false').toString()
+            jvmArg '-Xmx2G'   // shared PC (PORTING_PLAN G0 hard limits)
+            // [V javap FG 5.1.77 RunConfig.setForceExit / RunConfigGenerator: System.exit(0) in the Gradle JVM after a
+            // 0 exit value]. With the single-use daemon (org.gradle.jvmargs) that makes the client report "daemon
+            // disappeared" = BUILD FAILED although all tests passed. GameTestServer itself calls
+            // System.exit(<failed required count>), so Gradle's own exit code is the test verdict without forceExit.
+            forceExit false
+            mods {
+                draconicevolution {
+                    source sourceSets.main
+                    source sourceSets.gametest
+                }
+            }
+        }
+    }
+}
+
+// FG wires only the main classes into the run tasks; compile the gametest set first.
+tasks.matching { it.name in ['prepareRunGameTestServer', 'runGameTestServer'] }.configureEach { dependsOn 'gametestClasses' }
+// ==== END WP-31 gametest wiring ===============================================================================
