@@ -54,7 +54,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -106,11 +107,11 @@ public class DEContent {
     // Blocks
     //#################################################################
 
-    public static final Properties MACHINE = Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.METAL).strength(3.0F, 8F).noOcclusion().requiresCorrectToolForDrops();
-    public static final Properties HARDENED_MACHINE = Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.METAL).strength(20.0F, 600F).noOcclusion().requiresCorrectToolForDrops();
-    public static final Properties STORAGE_BLOCK = Properties.of().mapColor(MapColor.COLOR_GRAY).sound(SoundType.METAL).strength(30.0F, 600F).requiresCorrectToolForDrops();
-    public static final Properties STONE_PROP = Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.5F, 6F).requiresCorrectToolForDrops();
-//    public static final Properties ORE = Properties.of().mapColor(MapColor.COLOR_GRAY).strength(6.0F, 16F).requiresCorrectToolForDrops();
+    public static final Properties MACHINE = Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).sound(SoundType.METAL).strength(3.0F, 8F).noOcclusion().requiresCorrectToolForDrops();
+    public static final Properties HARDENED_MACHINE = Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).sound(SoundType.METAL).strength(20.0F, 600F).noOcclusion().requiresCorrectToolForDrops();
+    public static final Properties STORAGE_BLOCK = Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).sound(SoundType.METAL).strength(30.0F, 600F).requiresCorrectToolForDrops();
+    public static final Properties STONE_PROP = Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(1.5F, 6F).requiresCorrectToolForDrops();
+//    public static final Properties ORE = Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(6.0F, 16F).requiresCorrectToolForDrops();
     public static final Properties ORE = Properties.copy(Blocks.DIAMOND_ORE);
     //@formatter:off
     //Machines
@@ -144,11 +145,11 @@ public class DEContent {
     public static final RegistryObject<EnergyCore> ENERGY_CORE                          = BLOCKS.register("energy_core",                        () -> new EnergyCore(HARDENED_MACHINE));
     public static final RegistryObject<EnergyCoreStabilizer> ENERGY_CORE_STABILIZER     = BLOCKS.register("energy_core_stabilizer",             () -> new EnergyCoreStabilizer(HARDENED_MACHINE));
     public static final RegistryObject<EnergyPylon> ENERGY_PYLON                        = BLOCKS.register("energy_pylon",                       () -> new EnergyPylon(HARDENED_MACHINE));
-    public static final RegistryObject<StructureBlock> STRUCTURE_BLOCK                  = BLOCKS.register("structure_block",                    () -> new StructureBlock(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(5.0F, 12F).noOcclusion()));
+    public static final RegistryObject<StructureBlock> STRUCTURE_BLOCK                  = BLOCKS.register("structure_block",                    () -> new StructureBlock(Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(5.0F, 12F).noOcclusion()));
     //Reactor
     public static final RegistryObject<ReactorCore> REACTOR_CORE                        = BLOCKS.register("reactor_core",                       () -> new ReactorCore(HARDENED_MACHINE));
-    public static final RegistryObject<ReactorComponent> REACTOR_STABILIZER             = BLOCKS.register("reactor_stabilizer",                 () -> new ReactorComponent(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(5.0F, 6000F).noOcclusion(), false));
-    public static final RegistryObject<ReactorComponent> REACTOR_INJECTOR               = BLOCKS.register("reactor_injector",                   () -> new ReactorComponent(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(5.0F, 6000F).noOcclusion(), true));
+    public static final RegistryObject<ReactorComponent> REACTOR_STABILIZER             = BLOCKS.register("reactor_stabilizer",                 () -> new ReactorComponent(Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(5.0F, 6000F).noOcclusion(), false));
+    public static final RegistryObject<ReactorComponent> REACTOR_INJECTOR               = BLOCKS.register("reactor_injector",                   () -> new ReactorComponent(Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(5.0F, 6000F).noOcclusion(), true));
     //Ore
     public static final RegistryObject<DraconiumOre> OVERWORLD_DRACONIUM_ORE            = BLOCKS.register("overworld_draconium_ore",            () -> new DraconiumOre(ORE));
     public static final RegistryObject<DraconiumOre> DEEPSLATE_DRACONIUM_ORE            = BLOCKS.register("deepslate_draconium_ore",            () -> new DraconiumOre(ORE));
@@ -158,18 +159,18 @@ public class DEContent {
     public static final RegistryObject<DraconiumBlock> DRACONIUM_BLOCK                  = BLOCKS.register("draconium_block",                    () -> (DraconiumBlock) new DraconiumBlock(STORAGE_BLOCK).setMobResistant().setExplosionResistant());
     public static final RegistryObject<DraconiumBlock> AWAKENED_DRACONIUM_BLOCK         = BLOCKS.register("awakened_draconium_block",           () -> (DraconiumBlock) new DraconiumBlock(STORAGE_BLOCK).setMobResistant().setExplosionResistant());
     //Special
-    public static final RegistryObject<Portal> PORTAL                                   = BLOCKS.register("portal",                             () -> new Portal(Properties.of().noOcclusion().noCollission().strength(-1F)));
-    public static final RegistryObject<ChaosCrystal> CHAOS_CRYSTAL                      = BLOCKS.register("chaos_crystal",                      () -> new ChaosCrystal(Properties.of().strength(100, 4000).noOcclusion()));
-    public static final RegistryObject<ChaosCrystal> CHAOS_CRYSTAL_PART                 = BLOCKS.register("chaos_crystal_part",                 () -> new ChaosCrystal(Properties.of().strength(100, 4000).noOcclusion()));
-    public static final RegistryObject<BlockBCore> INFUSED_OBSIDIAN                     = BLOCKS.register("infused_obsidian",                   () -> new BlockBCore(Properties.of().mapColor(MapColor.COLOR_BLACK).strength(100.0F, 2400.0F)).setMobResistant().setExplosionResistant());
+    public static final RegistryObject<Portal> PORTAL                                   = BLOCKS.register("portal",                             () -> new Portal(Properties.of(Material.GLASS).noOcclusion().noCollission().strength(-1F)));
+    public static final RegistryObject<ChaosCrystal> CHAOS_CRYSTAL                      = BLOCKS.register("chaos_crystal",                      () -> new ChaosCrystal(Properties.of(Material.GLASS).strength(100, 4000).noOcclusion()));
+    public static final RegistryObject<ChaosCrystal> CHAOS_CRYSTAL_PART                 = BLOCKS.register("chaos_crystal_part",                 () -> new ChaosCrystal(Properties.of(Material.GLASS).strength(100, 4000).noOcclusion()));
+    public static final RegistryObject<BlockBCore> INFUSED_OBSIDIAN                     = BLOCKS.register("infused_obsidian",                   () -> new BlockBCore(Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(100.0F, 2400.0F)).setMobResistant().setExplosionResistant());
 
-    public static final RegistryObject<PlacedItem> PLACED_ITEM                          = BLOCKS.register("placed_item",                        () -> new PlacedItem(Properties.of().strength(5F, 12F).noOcclusion()));
-    public static final RegistryObject<CometSpawner> COMET_SPAWNER                      = BLOCKS.register("comet_spawner",                      () -> new CometSpawner(Properties.of()));
+    public static final RegistryObject<PlacedItem> PLACED_ITEM                          = BLOCKS.register("placed_item",                        () -> new PlacedItem(Properties.of(Material.GLASS).strength(5F, 12F).noOcclusion()));
+    public static final RegistryObject<CometSpawner> COMET_SPAWNER                      = BLOCKS.register("comet_spawner",                      () -> new CometSpawner(Properties.of(Material.METAL, MaterialColor.NONE)));
 
     //Energy Crystals
-    public static final Properties CRYSTAL_B = Properties.of().mapColor(DyeColor.BLUE).strength(3.0F, 8F);
-    public static final Properties CRYSTAL_W = Properties.of().mapColor(DyeColor.PURPLE).strength(5.0F, 16F);
-    public static final Properties CRYSTAL_D = Properties.of().mapColor(DyeColor.ORANGE).strength(8.0F, 32F);
+    public static final Properties CRYSTAL_B = Properties.of(Material.GLASS, DyeColor.BLUE).strength(3.0F, 8F);
+    public static final Properties CRYSTAL_W = Properties.of(Material.GLASS, DyeColor.PURPLE).strength(5.0F, 16F);
+    public static final Properties CRYSTAL_D = Properties.of(Material.GLASS, DyeColor.ORANGE).strength(8.0F, 32F);
     public static final RegistryObject<EnergyCrystal> BASIC_IO_CRYSTAL                  = BLOCKS.register("basic_io_crystal",                   () -> new EnergyCrystal(CRYSTAL_B, TechLevel.DRACONIUM, EnergyCrystal.CrystalType.CRYSTAL_IO));
     public static final RegistryObject<EnergyCrystal> WYVERN_IO_CRYSTAL                 = BLOCKS.register("wyvern_io_crystal",                  () -> new EnergyCrystal(CRYSTAL_W, TechLevel.WYVERN, EnergyCrystal.CrystalType.CRYSTAL_IO));
     public static final RegistryObject<EnergyCrystal> DRACONIC_IO_CRYSTAL               = BLOCKS.register("draconic_io_crystal",                () -> new EnergyCrystal(CRYSTAL_D, TechLevel.DRACONIC, EnergyCrystal.CrystalType.CRYSTAL_IO));
