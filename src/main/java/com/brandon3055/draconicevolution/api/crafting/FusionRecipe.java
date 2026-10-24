@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -69,7 +68,7 @@ public class FusionRecipe implements IFusionRecipe {
     }
 
     @Override
-    public ItemStack assemble(IFusionInventory inv, RegistryAccess registryAccess) {
+    public ItemStack assemble(IFusionInventory inv) {
         ItemStack stack = result.copy();
         if (stack.getItem() instanceof IFusionDataTransfer){
             ((IFusionDataTransfer) stack.getItem()).transferIngredientData(stack, inv);
@@ -78,7 +77,7 @@ public class FusionRecipe implements IFusionRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem() {
         return result;
     }
 

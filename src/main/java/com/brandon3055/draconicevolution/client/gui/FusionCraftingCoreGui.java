@@ -109,7 +109,7 @@ public class FusionCraftingCoreGui extends ContainerGuiProvider<FusionCraftingCo
             if (currentRecipe == null) {
                 stackIcon.setStack(ItemStack.EMPTY);
             } else {
-                stackIcon.setStack(currentRecipe.getResultItem(tile.getLevel().registryAccess()));
+                stackIcon.setStack(currentRecipe.getResultItem());
             }
         });
     }

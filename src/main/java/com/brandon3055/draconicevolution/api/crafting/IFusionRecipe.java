@@ -196,7 +196,7 @@ public interface IFusionRecipe extends Recipe<IFusionInventory> {
         }
 
         ItemStack catalyst = inv.getCatalystStack();
-        ItemStack result = recipe.assemble(inv, level.registryAccess());
+        ItemStack result = recipe.assemble(inv);
         catalyst.shrink(catCount);
         inv.setCatalystStack(catalyst);
         ItemStack outputStack = inv.getOutputStack();
@@ -225,7 +225,7 @@ public interface IFusionRecipe extends Recipe<IFusionInventory> {
     default boolean canStartCraft(IFusionInventory inv, Level level, @Nullable Consumer<Component> userStatus) {
         ItemStack output = inv.getOutputStack();
         if (!output.isEmpty()) {
-            ItemStack result = assemble(inv, level.registryAccess());
+            ItemStack result = assemble(inv);
             if (!ItemStack.isSameItemSameTags(output, result) || output.getCount() + result.getCount() > result.getItem().getMaxStackSize(result)) {
                 if (userStatus != null) {
                     userStatus.accept(Component.translatable("fusion_status.draconicevolution.output_obstructed").withStyle(ChatFormatting.RED));

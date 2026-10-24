@@ -97,7 +97,7 @@ public class DraconiumChestMenu extends DETileMenu<TileDraconiumChest> {
             if (optional.isPresent()) {
                 CraftingRecipe icraftingrecipe = optional.get();
                 if (resultInventory.setRecipeUsed(level, serverplayerentity, icraftingrecipe)) {
-                    itemstack = icraftingrecipe.assemble(craftingInventory, level.registryAccess());
+                    itemstack = icraftingrecipe.assemble(craftingInventory);
                 }
             }
 

@@ -97,7 +97,7 @@ public class FusionRecipeCategory implements IRecipeCategory<IFusionRecipe> {
                 .setSlotName("catalyst");
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, xSize / 2 - 8, ySize / 2 - 8 + 23)
-                .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
+                .addItemStack(recipe.getResultItem())
                 .setSlotName("output");
 
         List<Ingredient> ingreds = recipe.getIngredients();
