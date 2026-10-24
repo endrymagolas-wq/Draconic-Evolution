@@ -54,16 +54,16 @@ public class DEParticles {
     @OnlyIn (Dist.CLIENT)
     @SubscribeEvent
     public static void registerFactories(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(FLAME.get(), CustomFlameParticle.Factory::new);
-        event.registerSpriteSet(LINE_INDICATOR.get(), ParticleLineIndicator.Factory::new);
-        event.registerSpriteSet(ENERGY.get(), ParticleEnergy.Factory::new);
-        event.registerSpriteSet(ENERGY_BASIC.get(), ParticleEnergyBasic.Factory::new);
-        event.registerSpriteSet(ENERGY_CORE.get(), ParticleEnergyCoreFX.Factory::new);
-        event.registerSpriteSet(GUARDIAN_PROJECTILE.get(), GuardianProjectileParticle.Factory::new);
-        event.registerSpriteSet(BLINK.get(), BlinkParticle.Factory::new);
-        event.registerSpriteSet(GUARDIAN_CLOUD.get(), GuardianCloudParticle.Factory::new);
-        event.registerSpriteSet(GUARDIAN_BEAM.get(), GuardianBeamParticle.Factory::new);
-        event.registerSpriteSet(SPARK.get(), SparkParticle.Factory::new);
+        event.register(FLAME.get(), CustomFlameParticle.Factory::new);
+        event.register(LINE_INDICATOR.get(), ParticleLineIndicator.Factory::new);
+        event.register(ENERGY.get(), ParticleEnergy.Factory::new);
+        event.register(ENERGY_BASIC.get(), ParticleEnergyBasic.Factory::new);
+        event.register(ENERGY_CORE.get(), ParticleEnergyCoreFX.Factory::new);
+        event.register(GUARDIAN_PROJECTILE.get(), GuardianProjectileParticle.Factory::new);
+        event.register(BLINK.get(), BlinkParticle.Factory::new);
+        event.register(GUARDIAN_CLOUD.get(), GuardianCloudParticle.Factory::new);
+        event.register(GUARDIAN_BEAM.get(), GuardianBeamParticle.Factory::new);
+        event.register(SPARK.get(), SparkParticle.Factory::new);
     }
 
 

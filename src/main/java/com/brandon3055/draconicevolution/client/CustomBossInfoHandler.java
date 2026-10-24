@@ -75,7 +75,7 @@ public class CustomBossInfoHandler {
         event.setCanceled(true);
         BossShieldInfo shieldInfo = events.get(info.getId());
         Minecraft mc = Minecraft.getInstance();
-        GuiRender render = GuiRender.convert(event.getGuiGraphics());
+        GuiRender render = GuiRender.convert(event.getPoseStack());
         PoseStack poseStack = render.pose();
 
         int width = event.getWindow().getGuiScaledWidth();
@@ -85,7 +85,7 @@ public class CustomBossInfoHandler {
         RenderSystem.enableDepthTest();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI_BARS_LOCATION);
-        drawBar(event.getGuiGraphics(), x, y, info, info.getColor(), info.getProgress(), true);
+        drawBar(event.getPoseStack(), x, y, info, info.getColor(), info.getProgress(), true);
 
         float shield = shieldInfo.isImmune() ? 1 : shieldInfo.getShield();
         MultiBufferSource.BufferSource getter = Minecraft.getInstance().renderBuffers().bufferSource();//IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
@@ -102,7 +102,7 @@ public class CustomBossInfoHandler {
             drawShieldRect(builder, x, y, 182, 6);
             getter.endBatch();
         } else if (shield > 0){
-            drawBar(event.getGuiGraphics(), x, y, info, shieldInfo.isImmune() ? BossEvent.BossBarColor.BLUE : BossEvent.BossBarColor.WHITE, shield, false);
+            drawBar(event.getPoseStack(), x, y, info, shieldInfo.isImmune() ? BossEvent.BossBarColor.BLUE : BossEvent.BossBarColor.WHITE, shield, false);
         }
 
         if (shieldInfo.crystals > 0) {
