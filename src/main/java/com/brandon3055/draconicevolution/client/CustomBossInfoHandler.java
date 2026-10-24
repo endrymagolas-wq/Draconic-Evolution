@@ -14,7 +14,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -161,7 +161,7 @@ public class CustomBossInfoHandler {
         render.drawString(itextcomponent, (float) stringX, (float) stringY, 0xff0000);
     }
 
-    private static void drawBar(GuiGraphics graphics, int x, int y, BossEvent info, BossEvent.BossBarColor color, float progress, boolean backing) {
+    private static void drawBar(PoseStack graphics, int x, int y, BossEvent info, BossEvent.BossBarColor color, float progress, boolean backing) {
         if (backing) {
             drawRect(graphics, x, y, 0, color.ordinal() * 5 * 2, 182, 5);
             if (info.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
@@ -204,8 +204,9 @@ public class CustomBossInfoHandler {
         }
     }
 
-    public static void drawRect(GuiGraphics render, int x, int y, int u, int v, int width, int height) {
-        render.blit(GUI_BARS_LOCATION, x, y, 0, (float) u, (float) v, width, height, 256, 256);
+    public static void drawRect(PoseStack render, int x, int y, int u, int v, int width, int height) {
+        RenderSystem.setShaderTexture(0, GUI_BARS_LOCATION); //1.19.2: the 1.20.1 blit(ResourceLocation, ...) bound the texture itself
+        GuiComponent.blit(render, x, y, 0, (float) u, (float) v, width, height, 256, 256);
     }
 
     public static void drawShieldRect(VertexConsumer builder, int x, int y, int width, int height) {

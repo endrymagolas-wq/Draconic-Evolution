@@ -348,11 +348,12 @@ public class ClientEventHandler {
         if (o.w() == 0) {
             return Vector3.ZERO.copy();
         }
-        o.w = 1.0F / o.w() * 0.5F;
+        //1.19.2: com.mojang.math.Vector4f fields are private (Forge setters setX..setW), same evaluation order as the 1.20.1 JOML field writes
+        o.setW(1.0F / o.w() * 0.5F);
 
-        o.x = o.x() * o.w() + 0.5F;
-        o.y = o.y() * o.w() + 0.5F;
-        o.z = o.z() * o.w() + 0.5F;
+        o.setX(o.x() * o.w() + 0.5F);
+        o.setY(o.y() * o.w() + 0.5F);
+        o.setZ(o.z() * o.w() + 0.5F);
 
         Vector3 winPos = new Vector3();
         winPos.z = o.z();
