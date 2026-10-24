@@ -13,7 +13,7 @@ import net.covers1624.quack.util.SneakyUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
@@ -384,7 +384,7 @@ public class DraconicProjectileEntity extends AbstractArrow {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.potion != Potions.EMPTY && this.potion != null) {
-            compound.putString("Potion", BuiltInRegistries.POTION.getKey(this.potion).toString());
+            compound.putString("Potion", Registry.POTION.getKey(this.potion).toString());
         }
 
         if (this.fixedColor) {

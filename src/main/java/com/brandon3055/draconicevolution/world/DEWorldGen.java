@@ -3,7 +3,7 @@ package com.brandon3055.draconicevolution.world;
 import codechicken.lib.config.ConfigCategory;
 import codechicken.lib.math.MathHelper;
 import net.covers1624.quack.util.CrashLock;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -38,8 +38,8 @@ public class DEWorldGen {
     public static final RuleTest END_STONE = new BlockMatchTest(Blocks.END_STONE);
 
 //    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, MODID);
-//    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registries.CONFIGURED_FEATURE, MODID);
-//    public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registries.PLACED_FEATURE, MODID);
+//    public static final DeferredRegister<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, MODID);
+//    public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, MODID);
 
 
 //    public static RegistryObject<PlacedFeature> ISLAND_FEATURE;

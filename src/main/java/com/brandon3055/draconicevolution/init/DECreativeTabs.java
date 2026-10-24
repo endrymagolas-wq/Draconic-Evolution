@@ -2,7 +2,7 @@ package com.brandon3055.draconicevolution.init;
 
 import com.brandon3055.brandonscore.lib.CustomTabHandling;
 import com.brandon3055.draconicevolution.api.modules.items.ModuleItem;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;

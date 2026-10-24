@@ -10,7 +10,7 @@ import com.brandon3055.draconicevolution.blocks.tileentity.TileStructureBlock;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -51,7 +51,7 @@ public class EnergyLinkModuleItem extends ModuleItem<EnergyLinkData> {
         CompoundTag tag = stack.getOrCreateTag();
         BlockPos pos = new BlockPos(tag.getInt("core_x"), tag.getInt("core_y"), tag.getInt("core_z"));
         UUID uuid = tag.getUUID("link_id");
-        ResourceKey<Level> dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dim")));
+        ResourceKey<Level> dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(tag.getString("dim")));
         ServerLevel coreLevel = level.getServer().getLevel(dimension);
 
         boolean reset = coreLevel == null;

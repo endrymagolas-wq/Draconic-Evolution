@@ -15,7 +15,7 @@ import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyCore;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -160,7 +160,7 @@ public class EnergyLinkEntity extends ModuleEntity<EnergyLinkData> {
         if (nbt.contains("link_id")) {
             linkId = nbt.getUUID("link_id");
             corePos = new BlockPos(nbt.getInt("core_x"), nbt.getInt("core_y"), nbt.getInt("core_z"));
-            dimKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("dim")));
+            dimKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(nbt.getString("dim")));
         }
     }
 
