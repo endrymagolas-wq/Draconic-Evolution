@@ -20,9 +20,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.RegisterGameTestsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import static com.brandon3055.draconicevolution.gametest.DEGameTestUtil.*;
 
+// Without @PrefixGameTestTemplate(false) Forge prefixes the template with the class name
+// ("reactorrungametests.platform_11x9x11") and a missing template crashes the whole gametest server (run-09).
+@PrefixGameTestTemplate(false)
 @Mod.EventBusSubscriber(modid = DEGameTestUtil.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ReactorRunGameTests {
     static final String BATCH = "de_reactor_run";
