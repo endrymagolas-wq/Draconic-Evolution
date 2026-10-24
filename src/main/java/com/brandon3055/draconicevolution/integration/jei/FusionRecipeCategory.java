@@ -15,8 +15,8 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -70,8 +70,10 @@ public class FusionRecipeCategory implements IRecipeCategory<IFusionRecipe> {
     }
 
     @Override
-    public void draw(IFusionRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        GuiRender render = GuiRender.convert(graphics);
+    public void draw(IFusionRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack poseStack, double mouseX, double mouseY) {
+        //1.19.2: JEI 11 passes a PoseStack (JEI 15 / 1.20 passed the vanilla gui graphics); GuiRender.convert(PoseStack) wraps it
+        //with Minecraft's main buffer source (WP-10 api-changes B1/C7), so the buffers are flushed at the end of this method.
+        GuiRender render = GuiRender.convert(poseStack);
         TechLevel tier = recipe.getRecipeTier();
         int colour = tier.index == 0 ? 5263615 : (tier.index == 1 ? 8388863 : (tier.index == 2 ? 16737792 : 5263440));
         render.drawCenteredString(I18n.get("gui.draconicevolution.fusion_craft.tier." + recipe.getRecipeTier().name().toLowerCase(Locale.ENGLISH)), this.xSize / 2D, 5, colour, false);
@@ -88,6 +90,7 @@ public class FusionRecipeCategory implements IRecipeCategory<IFusionRecipe> {
             render.borderRect(12, 2, 20, 107, 1, 0x40FFFFFF, 0xFFAA00FF);
             render.borderRect(xSize - 32, 2, 20, 107, 1, 0x40FFFFFF, 0xFFAA00FF);
         }
+        render.flush();
     }
 
     @Override
