@@ -32,7 +32,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.RelativeMovement;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -186,7 +186,7 @@ public class DislocatorAdvanced extends Dislocator {
 
         if (result.getType() == HitResult.Type.MISS) {
             if (player.isFallFlying()) { //Maintain momentum if elytra flying
-                player.connection.teleport(endVec.x, endVec.y, endVec.z, player.getYRot(), player.getXRot(), Sets.newHashSet(RelativeMovement.X, RelativeMovement.Y, RelativeMovement.Z));
+                player.connection.teleport(endVec.x, endVec.y, endVec.z, player.getYRot(), player.getXRot(), Sets.newHashSet(ClientboundPlayerPositionPacket.RelativeArgument.X, ClientboundPlayerPositionPacket.RelativeArgument.Y, ClientboundPlayerPositionPacket.RelativeArgument.Z));
                 player.setYHeadRot(player.getYRot());
             } else {
                 TeleportUtils.teleportEntity(player, player.level.dimension(), endVec.x, endVec.y, endVec.z);

@@ -35,7 +35,7 @@ public class CommandRespawnGuardian {
         }
         Vec3 pos = ctx.getSource().getPosition();
 //        ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
-        TileChaosCrystal tile = BlockPos.betweenClosedStream(BlockPos.containing(pos).offset(-60, -60, -60), BlockPos.containing(pos).offset(60, 60, 60))
+        TileChaosCrystal tile = BlockPos.betweenClosedStream(new BlockPos(pos).offset(-60, -60, -60), new BlockPos(pos).offset(60, 60, 60))
                 .filter(e -> ctx.getSource().getLevel().getBlockEntity(e) instanceof TileChaosCrystal)
                 .map(e -> (TileChaosCrystal) ctx.getSource().getLevel().getBlockEntity(e))
                 .findAny()
@@ -69,7 +69,7 @@ public class CommandRespawnGuardian {
 
         tile.guardianDefeated.set(false);
         WorldEntityHandler.addWorldEntity(tile.getLevel(), new GuardianFightManager(tile.getBlockPos()));
-        ctx.getSource().sendSuccess(() -> Component.literal("Reset Successful. Go to center of island to trigger spawning sequence.").withStyle(ChatFormatting.GREEN), true);
+        ctx.getSource().sendSuccess(Component.literal("Reset Successful. Go to center of island to trigger spawning sequence.").withStyle(ChatFormatting.GREEN), true);
         return 0;
     }
 

@@ -78,7 +78,7 @@ public class CommandKaboom {
         explosionProcess.enableEffect = effect;
         explosionProcess.progressMon = progress -> {
             if (TimeKeeper.getServerTick() % 20 == 0) {
-                source.sendSuccess(() -> Component.literal("Calculating: " + Math.round(progress * 100D) + "%"), true);
+                source.sendSuccess(Component.literal("Calculating: " + Math.round(progress * 100D) + "%"), true);
             }
         };
         ProcessHandler.addProcess(explosionProcess);
@@ -155,7 +155,7 @@ public class CommandKaboom {
     }
 
     private static int relight(CommandSourceStack source) {
-        BlockPos pos = BlockPos.containing(source.getPosition());
+        BlockPos pos = new BlockPos(source.getPosition());
         ServerLevel world = source.getLevel();
         while (world.isEmptyBlock(pos)) pos = pos.below();
 

@@ -43,7 +43,7 @@ public abstract class ServerEntityMixin {
     }
 
     @Redirect(
-            method = "sendPairingData(Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V",
+            method = "sendPairingData(Ljava/util/function/Consumer;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V",

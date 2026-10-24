@@ -93,7 +93,7 @@ public class LootEventHandler {
             ItemEntity item = EntityType.ITEM.create(entity.level);
             if (item != null) {
                 item.setItem(new ItemStack(DEContent.DRAGON_HEART.get()));
-                BlockPos podiumPos = entity.level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.getLocation(manager.origin)).offset(0, 3, 0);
+                BlockPos podiumPos = entity.level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.END_PODIUM_LOCATION).offset(0, 3, 0);
                 item.moveTo(podiumPos.getX() + 0.5, podiumPos.getY(), podiumPos.getZ() + 0.5, 0, 0);
                 item.setDeltaMovement(0, 0, 0);
                 item.setUnlimitedLifetime();
@@ -102,7 +102,7 @@ public class LootEventHandler {
             }
 
             if (DEConfig.dragonEggSpawnOverride && manager.hasPreviouslyKilledDragon()) {
-                entity.level.setBlockAndUpdate(entity.level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.getLocation(manager.origin)).offset(0, 0, -4), Blocks.DRAGON_EGG.defaultBlockState());
+                entity.level.setBlockAndUpdate(entity.level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, EndPodiumFeature.END_PODIUM_LOCATION).offset(0, 0, -4), Blocks.DRAGON_EGG.defaultBlockState());
             }
         }
 
