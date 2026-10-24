@@ -196,7 +196,7 @@ public class ModularItemMenu extends ModularGuiContainerMenu implements ModuleHo
                             else playerSlot = new PlayerSlot(slotId, PlayerSlot.EnumInvCategory.MAIN);
                             NetworkHooks.openScreen((ServerPlayer) player, new Provider(slot.getItem(), playerSlot), playerSlot::toBuff);
                         } else {
-                            player.playSound(SoundEvents.UI_BUTTON_CLICK.get(), 0.25F, 1F);
+                            player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1F);
                         }
                         return;
                     }
