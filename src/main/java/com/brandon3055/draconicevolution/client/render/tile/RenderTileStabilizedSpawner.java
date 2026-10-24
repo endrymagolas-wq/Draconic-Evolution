@@ -52,6 +52,6 @@ public class RenderTileStabilizedSpawner implements BlockEntityRenderer<TileStab
         mStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
 
         ItemStack stack = CORE_RENDER_ITEMS[tile.spawnerTier.get().ordinal()];
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, mStack, getter, tile.posSeed());
+        Minecraft.getInstance().getItemRenderer().renderStatic(null, stack, ItemTransforms.TransformType.FIXED, false, mStack, getter, tile.getLevel(), packedLight, packedOverlay, tile.posSeed());
     }
 }

@@ -56,7 +56,7 @@ public class RenderTilePlacedItem implements BlockEntityRenderer<TilePlacedItem>
                 mStack.mulPose(Vector3f.XP.rotationDegrees(90));
                 mStack.scale(scale, scale, scale);
             }
-            mc.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, mStack, getter, posLong + i);
+            mc.getItemRenderer().renderStatic(null, stack, ItemTransforms.TransformType.FIXED, false, mStack, getter, tile.getLevel(), packedLight, packedOverlay, posLong + i);
             mStack.popPose();
             mStack.translate(0, 0.00005F, 0); //Adds a slight offset to avoid z-fighting when items overlap
         }
