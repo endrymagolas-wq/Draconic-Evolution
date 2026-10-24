@@ -170,15 +170,16 @@ public class ExplosionHelper {
 //                    level.getLightEngine().propagateLightSources(new ChunkPos(player.getOnPos())); //Works on chunk after reload
 
 //                lightManager.runUpdates()
-//                lightManager.lightChunk(chunk, true)
-//                        .thenRun(() -> helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false)
-//                                .forEach(e -> e.connection.send(new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null))));
+                // 1.19.2 (WP-22 spec row 44): relight as in de-1.18 (commented out in the 1.20 source; 1.19.2 test M4).
+                lightManager.lightChunk(chunk, true)
+                        .thenRun(() -> helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false)
+                                .forEach(e -> e.connection.send(new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null, false))));
 
 //                ClientboundLightUpdatePacket packet = new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null, true);
 //                helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false).forEach(e -> e.connection.send(packet));
 
 //                ClientboundLightUpdatePacket packet = new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null, true);
-                ClientboundLevelChunkWithLightPacket packet = new ClientboundLevelChunkWithLightPacket(chunk, helper.serverWorld.getLightEngine(), null, null);
+                ClientboundLevelChunkWithLightPacket packet = new ClientboundLevelChunkWithLightPacket(chunk, helper.serverWorld.getLightEngine(), null, null, false);
                 helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false).forEach(e -> e.connection.send(packet));
 //                DraconicNetwork.sendChunkRelight(chunk);
             }

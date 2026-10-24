@@ -28,7 +28,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
@@ -550,7 +549,7 @@ public class DraconicGuardianEntity extends Mob implements Enemy {
             if (damage < 0.01F) {
                 return false;
             } else {
-                if (source.getEntity() instanceof Player || source.is(DamageTypes.EXPLOSION)) {
+                if (source.getEntity() instanceof Player || (source.isExplosion() && "explosion".equals(source.getMsgId()))) { // 1.19.2: the 1.20 minecraft:explosion type = an explosion without a causing entity, msgId "explosion"
                     this.attackDragonFrom(source, damage);
                     if (this.isDeadOrDying() && !this.phaseManager.getCurrentPhase().getIsStationary()) {
                         this.setHealth(1.0F);
@@ -863,7 +862,7 @@ public class DraconicGuardianEntity extends Mob implements Enemy {
         }
 
         if (crystal == this.closestGuardianCrystal && destroyed) {
-            this.attackEntityPartFrom(this.dragonPartHead, damageSources().explosion(crystal, playerentity), 20.0F);
+            this.attackEntityPartFrom(this.dragonPartHead, DamageSource.explosion(playerentity), 20.0F);
         }
 
         this.phaseManager.getCurrentPhase().onCrystalAttacked(crystal, pos, dmgSrc, playerentity, damage, destroyed);

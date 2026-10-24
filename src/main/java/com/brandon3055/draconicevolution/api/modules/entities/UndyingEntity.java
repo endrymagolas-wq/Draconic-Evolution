@@ -114,7 +114,7 @@ public class UndyingEntity extends ModuleEntity<UndyingData> {
          * This is to allow this module to block full power guardian beam damage.
          * The undying module is intended to be the only way to have *some* change of *maybe* surviving a full power beam hit.
          * */
-        if (event.getSource().is(DEDamage.GUARDIAN_LASER) && invulnerableTime > 0) {
+        if (DEDamage.is(event.getSource(), DEDamage.GUARDIAN_LASER) && invulnerableTime > 0) {
             event.getEntity().setHealth(event.getEntity().getHealth() + 1);
             return true;
         }
