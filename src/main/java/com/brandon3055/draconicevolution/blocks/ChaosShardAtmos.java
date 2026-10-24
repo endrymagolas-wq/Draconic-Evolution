@@ -7,6 +7,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -16,7 +17,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class ChaosShardAtmos extends BlockBCore {
     public ChaosShardAtmos() {
-        super(Properties.of().air().randomTicks().noCollission());
+        super(Properties.of(Material.AIR).air().randomTicks().noCollission());
 
     }
 
