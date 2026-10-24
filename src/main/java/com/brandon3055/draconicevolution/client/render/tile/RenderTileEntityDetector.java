@@ -31,7 +31,7 @@ public class RenderTileEntityDetector implements BlockEntityRenderer<TileEntityD
         poseStack.scale(scale, scale, scale);
         poseStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
         poseStack.mulPose(Vector3f.XP.rotationDegrees(pitch));
-        mc.getItemRenderer().renderStatic(getRenderStack(advanced), ItemTransforms.TransformType.FIXED, packedLight, packedLight, poseStack, buffers, te.posSeed());
+        mc.getItemRenderer().renderStatic(null, getRenderStack(advanced), ItemTransforms.TransformType.FIXED, false, poseStack, buffers, te.getLevel(), packedLight, packedLight, te.posSeed());
         poseStack.popPose();
     }
 

@@ -28,7 +28,7 @@ public class RenderTileDisenchanter implements BlockEntityRenderer<TileDisenchan
             mStack.translate(0.5, 1.15 + Math.sin((ClientEventHandler.elapsedTicks + partialTicks) / 40) / 10, 0.5);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Vector3f.YP.rotationDegrees((ClientEventHandler.elapsedTicks + partialTicks) * 0.8F));
-            mc.getItemRenderer().renderStatic(input, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.posSeed());
+            mc.getItemRenderer().renderStatic(null, input, ItemTransforms.TransformType.FIXED, false, mStack, getter, te.getLevel(), packetLight, packetOverlay, te.posSeed());
             mStack.popPose();
         }
 
@@ -39,7 +39,7 @@ public class RenderTileDisenchanter implements BlockEntityRenderer<TileDisenchan
             mStack.translate(0.5, 0.76, 0.5);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Quaternion.fromXYZ(90 * (float) MathHelper.torad, 0, 180 * (float) MathHelper.torad));
-            mc.getItemRenderer().renderStatic(books, ItemTransforms.TransformType.FIXED, packetLight, packetOverlay, mStack, getter, te.posSeed());
+            mc.getItemRenderer().renderStatic(null, books, ItemTransforms.TransformType.FIXED, false, mStack, getter, te.getLevel(), packetLight, packetOverlay, te.posSeed());
             mStack.popPose();
         }
     }

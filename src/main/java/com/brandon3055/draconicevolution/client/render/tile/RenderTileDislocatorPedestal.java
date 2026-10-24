@@ -61,7 +61,7 @@ public class RenderTileDislocatorPedestal implements BlockEntityRenderer<TileDis
             mStack.translate(0.5, 0.79, 0.52);
             mStack.scale(0.5F, 0.5F, 0.5F);
             mStack.mulPose(Vector3f.XP.rotationDegrees(-67.5F));
-            mc.getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedoverlay, mStack, getter, tile.posSeed());
+            mc.getItemRenderer().renderStatic(null, stack, ItemTransforms.TransformType.FIXED, false, mStack, getter, tile.getLevel(), packedLight, packedoverlay, tile.posSeed());
             mStack.popPose();
         }
         RenderUtils.endBatch(getter);

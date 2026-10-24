@@ -58,7 +58,7 @@ public class RenderTileEnergyTransfuser implements BlockEntityRenderer<TileEnerg
                 mStack.mulPose(Quaternion.fromYXZ(90 * (float) MathHelper.torad, 90 * (float) MathHelper.torad, 180 * (float) MathHelper.torad));
                 mStack.translate(0, 0, 0.0625 * (1.5 / 2));
                 mStack.scale(0.5F, 0.5F, 0.5F);
-                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, OverlayTexture.NO_OVERLAY, mStack, getter, tile.posSeed());
+                Minecraft.getInstance().getItemRenderer().renderStatic(null, stack, ItemTransforms.TransformType.FIXED, false, mStack, getter, tile.getLevel(), packedLight, OverlayTexture.NO_OVERLAY, tile.posSeed());
             }
 
             mStack.popPose();
