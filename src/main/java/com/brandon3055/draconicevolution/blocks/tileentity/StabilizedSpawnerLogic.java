@@ -16,9 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,12 +130,13 @@ public class StabilizedSpawnerLogic extends BaseSpawner {
     }
 
     public boolean canEntitySpawnSpawner(Mob entity, ServerLevel level, float x, float y, float z, BaseSpawner spawner) {
-        var event = new MobSpawnEvent.PositionCheck(entity, level, MobSpawnType.SPAWNER, null);
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.getResult() == Event.Result.DEFAULT) {
+        // PORT(WP-26): Forge 43 has no MobSpawnEvent.PositionCheck; its predecessor is LivingSpawnEvent.CheckSpawn,
+        // posted by ForgeEventFactory.canEntitySpawn. The 1.20.1 code passes a null spawner, so null is kept here.
+        Event.Result result = ForgeEventFactory.canEntitySpawn(entity, level, x, y, z, null, MobSpawnType.SPAWNER);
+        if (result == Event.Result.DEFAULT) {
             return (tile.spawnerTier.get().ignoreSpawnReq() || entity.checkSpawnRules(level, MobSpawnType.SPAWNER)) && entity.checkSpawnObstruction(level);
         }
-        return event.getResult() == Event.Result.ALLOW;
+        return result == Event.Result.ALLOW;
     }
 
     private void resetTimer() {
@@ -186,8 +185,15 @@ public class StabilizedSpawnerLogic extends BaseSpawner {
 
     @Nullable
     @Override
-    public Entity getOrCreateDisplayEntity(Level pLevel, RandomSource pRandom, BlockPos pPos) {
+    public Entity getOrCreateDisplayEntity(Level pLevel) {
         return tile.getRenderEntity();
+    }
+
+    // PORT(WP-26): 1.19.2 BaseSpawner only has getOrCreateDisplayEntity(Level) (overridden above). The 1.20.1
+    // signature is kept as a plain method so RenderTileStabilizedSpawner (WP-24) keeps compiling unchanged.
+    @Nullable
+    public Entity getOrCreateDisplayEntity(Level pLevel, RandomSource pRandom, BlockPos pPos) {
+        return getOrCreateDisplayEntity(pLevel);
     }
 
     @Override
