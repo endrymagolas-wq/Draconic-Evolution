@@ -7,6 +7,7 @@ import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyCore;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyCoreStabilizer;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyPylon;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileStructureBlock;
+import com.brandon3055.draconicevolution.init.DECreativeTabs;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -36,7 +37,7 @@ public class EnergyLinkModuleItem extends ModuleItem<EnergyLinkData> {
     }
 
     public EnergyLinkModuleItem(Supplier<Module<?>> moduleSupplier) {
-        super(new Properties().stacksTo(1), moduleSupplier);
+        super(new Properties().stacksTo(1).tab(DECreativeTabs.MODULES), moduleSupplier);
     }
 
     @Override

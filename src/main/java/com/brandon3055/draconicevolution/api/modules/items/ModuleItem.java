@@ -7,6 +7,7 @@ import com.brandon3055.draconicevolution.api.modules.data.ModuleData;
 import com.brandon3055.draconicevolution.api.modules.lib.LimitedModuleContext;
 import com.brandon3055.draconicevolution.api.modules.lib.ModuleEntity;
 import com.brandon3055.draconicevolution.api.modules.lib.StackModuleContext;
+import com.brandon3055.draconicevolution.init.DECreativeTabs;
 import net.covers1624.quack.util.SneakyUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +40,7 @@ public class ModuleItem<P extends ModuleData<P>> extends Item implements ModuleP
     }
 
     public ModuleItem(Supplier<Module<?>> moduleSupplier) {
-        super(new Properties());
+        super(new Properties().tab(DECreativeTabs.MODULES));
         this.moduleSupplier = SneakyUtils.unsafeCast(moduleSupplier);
     }
 
