@@ -54,7 +54,8 @@ public class ModularResultSlot extends ModularSlot {
 
       Container container = this.container;
       if (container instanceof RecipeHolder recipeholder) {
-         recipeholder.awardUsedRecipes(this.player, this.craftSlots.getItems());
+         //1.19.2: RecipeHolder.awardUsedRecipes(Player) has no item list (1.20 passes it on to the recipe_crafted trigger, absent in 1.19.2).
+         recipeholder.awardUsedRecipes(this.player);
       }
 
       this.removeCount = 0;

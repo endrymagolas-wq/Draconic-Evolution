@@ -25,8 +25,8 @@ import com.brandon3055.draconicevolution.integration.equipment.EquipmentManager;
 import com.brandon3055.draconicevolution.inventory.ConfigurableItemMenu;
 import com.brandon3055.draconicevolution.network.DraconicNetwork;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -523,8 +523,8 @@ public class ConfigurableItemGui extends ContainerGuiProvider<ConfigurableItemMe
         }
 
         @Override
-        public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-            super.render(graphics, mouseX, mouseY, partialTicks);
+        public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+            super.render(poseStack, mouseX, mouseY, partialTicks);
             ((ConfigurableItemGui) modularGui.getProvider()).updateAnimations.removeIf(UpdateAnim::isFinished);
             ((ConfigurableItemGui) modularGui.getProvider()).updateAnimations.forEach(e -> e.tick(partialTicks));
         }
