@@ -700,6 +700,6 @@ public class DraconicArrowEntity extends AbstractArrow {
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        return source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(source);
+        return source.isFire() || super.isInvulnerableTo(source);
     }
 }

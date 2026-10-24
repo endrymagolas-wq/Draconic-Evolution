@@ -141,7 +141,7 @@ public class ModularHoe extends HoeItem implements IModularTieredItem, IDraconic
 
     @Override
     public boolean canBeHurtBy(DamageSource source) {
-        return source.is(DamageTypes.FELL_OUT_OF_WORLD);
+        return source == DamageSource.OUT_OF_WORLD;
     }
 
     @Override

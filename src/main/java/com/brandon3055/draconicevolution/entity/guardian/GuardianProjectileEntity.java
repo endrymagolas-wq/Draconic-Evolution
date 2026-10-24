@@ -98,7 +98,7 @@ public class GuardianProjectileEntity extends AbstractHurtingProjectile implemen
             }
         }
 //                BCoreNetwork.sendSound(level, blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundCategory.HOSTILE, 10, random.nextFloat() * 0.1F + 0.9F, false);
-        level.explode(shooter, blockPosition().getX(), blockPosition().getY(), blockPosition().getZ(), 8, destroy ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+        level.explode(shooter, blockPosition().getX(), blockPosition().getY(), blockPosition().getZ(), 8, destroy ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
         DraconicNetwork.sendImpactEffect(level, blockPosition(), 0);
 
         this.discard();

@@ -407,7 +407,7 @@ public class TileReactorCore extends TileBCore implements MenuProvider {
                 ManagedVec3I v = componentPositions[i];
                 if (v.get().sum() > 0) {
                     BlockPos p = getOffsetPos(v.get()).relative(Direction.from3DDataValue(i).getOpposite());
-                    level.explode((Entity) null, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 4, true, Level.ExplosionInteraction.BLOCK);
+                    level.explode((Entity) null, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 4, true, Explosion.BlockInteraction.DESTROY);
                 }
             }
         }
@@ -910,7 +910,7 @@ public class TileReactorCore extends TileBCore implements MenuProvider {
 
         Vec3D vec = Vec3D.getCenter(worldPosition);
         level.removeBlock(worldPosition, false);
-        level.explode(null, vec.x, vec.y, vec.z, 8, Level.ExplosionInteraction.BLOCK);
+        level.explode(null, vec.x, vec.y, vec.z, 8, Explosion.BlockInteraction.DESTROY);
         int c = 25 + level.random.nextInt(25);
         for (int i = 0; i < c; i++) {
             FallingBlockEntity entity = FallingBlockEntity.fall(level, vec.getPos(), lava);

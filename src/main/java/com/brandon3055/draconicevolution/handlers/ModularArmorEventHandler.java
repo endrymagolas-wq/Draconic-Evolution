@@ -145,7 +145,7 @@ public class ModularArmorEventHandler {
         }
 
         //Allows /kill to completely bypass all protections
-        if (event.getAmount() == Float.MAX_VALUE && event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD)) {
+        if (event.getAmount() == Float.MAX_VALUE && event.getSource() == DamageSource.OUT_OF_WORLD) {
             event.setCanceled(true);
             entity.hurt(DEDamage.killDamage(entity.level), Float.MAX_VALUE / 5);
             return;

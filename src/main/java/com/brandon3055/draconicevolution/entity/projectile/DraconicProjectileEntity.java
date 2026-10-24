@@ -230,9 +230,9 @@ public class DraconicProjectileEntity extends AbstractArrow {
             disableDefault = true;
         } else if (explosivePower > 0) {
             if (owner instanceof LivingEntity) {
-                level.explode(owner, level.damageSources().explosion(owner, null), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
+                level.explode(owner, level.damageSources().explosion(owner, null), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Explosion.BlockInteraction.NONE);
             }else {
-                level.explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
+                level.explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks ? Level.ExplosionInteraction.MOB : Explosion.BlockInteraction.NONE);
             }
 
             explosivePower = 0;

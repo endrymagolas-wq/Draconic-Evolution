@@ -102,7 +102,7 @@ public class ModHelper {
 //
 //            return Math.max(event.getAmount(), Math.min(50F, summery.protectionPoints));
 //        }
-        else if (event.getSource().is(DamageTypeTags.BYPASSES_ARMOR) || event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+        else if (event.getSource().isBypassArmor() || event.getSource().isBypassInvul()) {
 //            summery.entropy += 3;
 //
 //            if (summery.entropy > 100) {

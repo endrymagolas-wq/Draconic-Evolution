@@ -199,8 +199,8 @@ public class GuardianCrystalEntity extends Entity {
                 }
 
                 discard();
-                if (!source.is(DamageTypeTags.IS_EXPLOSION)) {
-                    level.explode(null, getX(), getY(), getZ(), 10.0F, Level.ExplosionInteraction.BLOCK);
+                if (!source.isExplosion()) {
+                    level.explode(null, getX(), getY(), getZ(), 10.0F, Explosion.BlockInteraction.DESTROY);
                 }
                 onCrystalAttacked(source, amount, true);
             }
@@ -221,7 +221,7 @@ public class GuardianCrystalEntity extends Entity {
 
     @Override
     public void kill() {
-        onCrystalAttacked(level.damageSources().generic(), 0, true);
+        onCrystalAttacked(DamageSource.GENERIC, 0, true);
         super.kill();
     }
 

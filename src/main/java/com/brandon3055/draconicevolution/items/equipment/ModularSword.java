@@ -94,7 +94,7 @@ public class ModularSword extends SwordItem implements IReaperItem, IModularMele
 
     @Override
     public boolean canBeHurtBy(DamageSource source) {
-        return source.is(DamageTypes.FELL_OUT_OF_WORLD);
+        return source == DamageSource.OUT_OF_WORLD;
     }
 
     @Override

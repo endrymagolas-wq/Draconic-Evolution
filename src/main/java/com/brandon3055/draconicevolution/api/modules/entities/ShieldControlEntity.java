@@ -199,7 +199,7 @@ public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
      */
     public void tryBlockDamage(LivingAttackEvent event) {
         DamageSource source = event.getSource();
-        if (!shieldEnabled.getValue() || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) || FastStream.of(UNBLOCKABLE).anyMatch(source::is)) return;
+        if (!shieldEnabled.getValue() || source.isBypassInvul() || FastStream.of(UNBLOCKABLE).anyMatch(source::is)) return;
 
         if (blockEnvironmentalDamage(event, source)) {
             return;
@@ -216,7 +216,7 @@ public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
 
     private boolean blockEnvironmentalDamage(LivingAttackEvent event, DamageSource source) {
         LivingEntity entity = event.getEntity();
-        if (source.is(DamageTypeTags.IS_FIRE) && getShieldPoints() > 10) {
+        if (source.isFire() && getShieldPoints() > 10) {
             entity.clearFire();
         }
 
@@ -292,8 +292,8 @@ public class ShieldControlEntity extends ModuleEntity<ShieldControlData> {
     }
 
     private float applyDamageModifiers(DamageSource source, float damage) {
-        if (source.is(DamageTypeTags.BYPASSES_ARMOR)) damage *= 3;
-        if (source.is(DamageTypes.MAGIC)) damage *= 2;
+        if (source.isBypassArmor()) damage *= 3;
+        if (source == DamageSource.MAGIC) damage *= 2;
         return damage;
     }
 
