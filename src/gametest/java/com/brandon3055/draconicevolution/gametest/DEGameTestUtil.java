@@ -52,6 +52,8 @@ public final class DEGameTestUtil {
     public static final String BATCH_DATA = "de_data";
     public static final String BATCH_MACHINES = "de_machines";
     public static final String BATCH_REACTOR = "de_reactor";
+    /** Optional extended checks assigned to WP-31 by other specs (WP-22 §5.1 H*, WP-23 §4.2 T*); required = false. */
+    public static final String BATCH_EXT = "de_ext";
 
     /** Copy of tools/refdiff/ref-manifests/de-gametest-expectations.json (refdiff-gametest-expect/1). */
     public static final ResourceLocation EXPECTATIONS = new ResourceLocation(MODID, "gametest/expectations.json");
