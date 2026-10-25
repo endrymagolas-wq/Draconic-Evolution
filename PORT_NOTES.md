@@ -63,7 +63,10 @@ Decisions taken with the spec defaults (change only by CR to WP-22):
   players take no damage from the explosion (`ServerPlayer.hurt:656-660` + `canHarmPlayer`; 1.20.1 damages them); each
   victim gets the vanilla 1.19.2 hurt-knockback of 0.4 away from the owner (`:1142`; not exempted by `LivingEntityMixin`,
   which only covers DE types); death message `death.attack.explosion.player` ("blown up by <owner>"; 1.20.1:
-  `death.attack.explosion`). The owner itself is not hit in either version (`level.explode(owner, ...)` excludes it).
+  `death.attack.explosion`); no difficulty scaling against players when the owner is a player
+  (`EntityDamageSource.scalesWithDifficulty()` ignores the flag and checks for a non-player living entity,
+  `EntityDamageSource.java:39-41`; 1.20.1 `explosion` scales "always" [I-1.20]). The owner itself is not hit in either
+  version (`level.explode(owner, ...)` excludes it).
   Test P5 (not run: needs a client or a player GameTest). Parity alternative for a lead decision: see `logs\WP-30.md`.
 - D-4 `TileReactorCore:914` explosion = `Explosion.BlockInteraction.DESTROY` (1.20.1 BLOCK parity, decay).
 - D-5 missing death keys (draconic/wyvern/draconium arrow, fusion/chaos/crystal_move): allowlist (as 1.20.1).
