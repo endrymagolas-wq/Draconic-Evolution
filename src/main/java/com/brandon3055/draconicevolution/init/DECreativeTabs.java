@@ -2,6 +2,8 @@ package com.brandon3055.draconicevolution.init;
 
 import com.brandon3055.brandonscore.lib.CustomTabHandling;
 import com.brandon3055.draconicevolution.api.modules.items.ModuleItem;
+import com.brandon3055.draconicevolution.items.cosmetic.CosmeticArmor;
+import com.brandon3055.draconicevolution.items.cosmetic.CosmeticArmorItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -48,7 +50,9 @@ public class DECreativeTabs {
             if (key.getNamespace().equals(MODID)) {
                 Item item = ForgeRegistries.ITEMS.getValue(key);
                 if (item instanceof CustomTabHandling || item == null || item instanceof BlockItem || item instanceof ModuleItem) continue;
+                if (item instanceof CosmeticArmorItem) continue; //[1.19.2 port addition] placed after its chestpiece below
                 output.accept(new ItemStack(item));
+                CosmeticArmor.followingInTab(item).forEach(e -> output.accept(new ItemStack(e))); //[1.19.2 port addition]
             }
         }
     }

@@ -181,3 +181,62 @@ differ. These are edge cases and cannot be set per block in 1.19.2 without overr
   and later the ingredient icons and the craft button, fell behind the near plane and were not drawn. Now the ingredient
   area is 32 deep for any injector count. The icons do not overlap below 43 stacks, so the screen looks the same as
   1.20.1; with 43 or more, overlapping icons share one z band instead of stacking. Needs client verification.
+
+## Additions not in upstream 1.20.1: cosmetic armor
+
+Not part of DE 1.20.1; added by the port so a player can wear a visually complete set together with the modular
+chestpiece. The pieces have no gameplay function at all. Code is kept apart from upstream code:
+`items/cosmetic/*` (items, material, tier, registration with its own `DeferredRegister`) and
+`client/model/cosmetic/*` (rendering); the only hooks in upstream files are one line in `DraconicEvolution`
+(`CosmeticArmor.init()`) and two lines in `init/DECreativeTabs.itemContents`.
+
+- **Items (9):** `draconicevolution:{wyvern,draconic,chaotic}_{helmet,leggings,boots}` (`CosmeticArmorItem extends
+  ArmorItem`, stack size 1, rarity of the tier). None of these ids exists in DE 1.20.1 or collides with another DE id.
+- **No properties:** armor material with defense 0, toughness 0, knockback resistance 0, durability 0 (so the item is
+  not damageable), enchantment value 0, no repair ingredient; `getDefaultAttributeModifiers` returns an empty map in every
+  slot (no "When on head" tooltip block); not enchantable (table, anvil/book), not repairable, no glint, no effects. Only
+  the diamond equip sound is kept. A tooltip says "Cosmetic only". The modular-armor logic (`ModularArmorEventHandler`,
+  shield, undying, flight, attributes, capacitor charging) only looks at `IModularItem` / `IModularArmor` items, so it
+  never sees these pieces; a full set + chestpiece gives exactly the attributes of the chestpiece alone (GameTest).
+- **Recipes** (`data/draconicevolution/recipes/cosmetic/*.json`, vanilla armor shapes, shaped crafting table):
+  helmet `XXX / X X` (5), leggings `XXX / X X / X X` (7), boots `X X / X X` (4), with X = Wyvern:
+  `#forge:ingots/draconium` (draconium ingot), Draconic: `#forge:ingots/draconium_awakened` (awakened draconium
+  ingot), Chaotic: `draconicevolution:medium_chaos_frag` (medium chaos fragment). No recipe advancements (the recipes
+  are not auto-unlocked in the recipe book; JEI shows them).
+- **Creative tab:** DE items tab, right after the chestpiece of the same tier (helmet, leggings, boots). The walk over the
+  item registry skips the cosmetic items and inserts them after each chestpiece, so this holds for any registry order.
+  Search tab / JEI: registry order.
+- **Lang:** `en_us` (in `src/main/generated`, which the port ships as committed files; a datagen rerun would drop the
+  keys), `uk_ua` and `ru_ru` (proper names). The other shipped locales fall back to `en_us`.
+- **Rendering, fancy mode** (`DEConfig` client `fancyToolModels = true`, default): the 3D OBJ parts of DE 1.12.2
+  (`models/armor/{wyvern,draconic}_{helmet,belt,left_leg,right_leg,left_boot,right_boot}.obj`, copied unchanged to
+  `models/cosmetic_armor/`) with the 1.12.2 textures. `CosmeticArmorModel` (a `HumanoidModel` whose head / body / legs are
+  BC `ExtendedModelPart`s with one CCL `CCModel` child per OBJ) is drawn by BrandonsCore's `EquippedItemModelLayer`, the
+  chestpiece's path; the vanilla armor layer gets BC's empty `DummyHumanoidModel`. Helmet on the head, leggings = belt
+  (body) + two leg pieces, boots = two boot pieces on the legs. Offsets and scales are the 1.12.2 values of
+  `ModelWyvernArmor` / `ModelDraconicArmor` plus the `ModelRenderOBJ` rotation (180 deg about (-1, 0, 1)); the humanoid
+  skeleton is the same in 1.12.2 and 1.19.2. One deviation: the Wyvern helmet is scaled by 1.01 because 104 of its faces
+  are exactly coplanar with the vanilla head cube (z-fighting). The pose is copied from the wearer's model every frame
+  (`ForgeHooksClient.copyModelProperties`, as the vanilla armor layer does), so sneaking, riding, swimming, babies and
+  armor stand poses follow the vanilla model; 1.12.2's whole-model sneak translation is not ported (1.19.2 moves the
+  bones instead). The parts are rendered every frame through `CCRenderState` into the vanilla
+  `RenderType.entityCutoutNoCull(<part texture>)` buffer (OBJ triangles as degenerate quads, flat normals, V flipped back
+  because the 1.12.2 OBJs use a top-down V and CCL's parser flips V). No DE shader and no VBO render type is used.
+- **Rendering, non-fancy mode** (`fancyToolModels = false`, recommended with Oculus shader packs): the vanilla armor
+  layer and model with the 1.12.2 2D armor textures (`getArmorTexture` ->
+  `textures/models/cosmetic_armor/<tier>_armor_layer_{1,2}.png`, 256x128, layer 2 for leggings).
+- **Chaotic tier:** 1.12.2 had no Chaotic armor. The Chaotic set uses the Draconic geometry; its textures (3D part
+  textures, armor layers, item icons `textures/item/armor/chaotic_*.png`) are generated from the Draconic ones by
+  `tools/cosmetic/recolor.py` in the port workspace: orange pixels become the dark, fully saturated red of DE's Chaotic
+  chestpiece icon (brightness fitted on the Draconic vs Chaotic chestpiece icons), everything else is kept.
+  `recolor.py --check` verifies the committed PNGs. Wyvern/Draconic item icons are the files already present in the
+  1.20 assets (`textures/item/armor/`, identical to 1.12.2).
+- **Licence / origin:** all models and textures are brandon3055's Draconic Evolution art (1.12.2 branch), reused and, for
+  Chaotic, modified under DE's licence, CC BY-NC-SA 4.0 (non-commercial, attribution, share-alike), like the rest of
+  this port.
+- **Checks:** GameTests `CosmeticArmorGameTests` (batch `de_cosmetic`, required): registration, no properties
+  (attributes, durability, enchanting, repair), recipes (load + real crafting grid + wrong material), tab placement,
+  armor stands with chestpiece vs chestpiece + set (identical attributes, chestpiece still found, pieces never damaged).
+  The upstream-parity tests (WP-23 T1-T5, G4) skip the 9 items / `cosmetic/` recipes; refdiff lines in
+  `tools/refdiff/allow-port.txt` ("cosmetic armor"). Offline preview: `tools/cosmetic/preview.py`. In-game look
+  (lighting, render order, shader packs) is not verified by any automated check.
