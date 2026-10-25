@@ -27,7 +27,10 @@
   "allowlists": [
    "allow-port.txt:14",
    "allow-port.txt:16",
-   "allow-port.txt:19"
+   "allow-port.txt:19",
+   "allow-port.txt:97",
+   "allow-port.txt:98",
+   "allow-port.txt:99"
   ]
  },
  "registries": {

@@ -115,6 +115,7 @@ public class DataGameTests {
 
         List<ResourceLocation> deIds = rm.getRecipeIds()                                       // [V RecipeManager.java:155]
                 .filter(id -> id.getNamespace().equals(MODID))
+                .filter(id -> !CosmeticArmorGameTests.isCosmeticRecipe(id)) // [1.19.2 port addition], see CosmeticArmorGameTests
                 .toList();
         for (ResourceLocation id : deIds) {
             if (!ids.has(id.toString())) problems.add(id + ": extra recipe not in the 1.20.1 reference");

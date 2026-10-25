@@ -115,6 +115,9 @@ public class ContentGameTests {
                 else if (s.hasTag()) defaultTagged.add(id + s.getTag());
                 if (s.getCount() != 1) p.add(tab + ": " + id + " count " + s.getCount());
             }
+            // [1.19.2 port addition] the 9 cosmetic armor items are not in the 1.20.1 Appendix A lists; their placement
+            // (items tab, right after the chestpiece of their tier) is asserted by CosmeticArmorGameTests.
+            ids.removeIf(CosmeticArmorGameTests::isCosmeticId);
             List<String> reg = list(tabs, tab, "registration");
             List<String> snap = list(tabs, tab, "snapshot");
             if (ids.size() != reg.size()) p.add(tab + ": " + ids.size() + " stacks, expected " + reg.size());
@@ -150,6 +153,7 @@ public class ContentGameTests {
         }
         List<String> p = new ArrayList<>();
         int items = 0;
+        int cosmetic = 0;
         NonNullList<ItemStack> search = NonNullList.create();
         for (ResourceLocation key : ForgeRegistries.ITEMS.getKeys()) {
             if (!key.getNamespace().equals(MODID)) continue;
@@ -157,7 +161,10 @@ public class ContentGameTests {
             Item item = Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(key));
             CreativeModeTab cat = item.getItemCategory();
             String id = key.getPath();
-            if (id.equals("structure_block")) {
+            if (CosmeticArmorGameTests.isCosmeticId(id)) {                                             // [1.19.2 port addition]
+                cosmetic++;
+                if (cat != DECreativeTabs.ITEMS) p.add(id + ": category " + (cat == null ? "null" : cat.getRecipeFolderName()) + " != items");
+            } else if (id.equals("structure_block")) {
                 if (cat != null) p.add("structure_block has category " + cat.getRecipeFolderName());
             } else if (!want.containsKey(id)) {
                 p.add(id + ": not in any Appendix A tab list");
@@ -166,10 +173,13 @@ public class ContentGameTests {
             }
             item.fillItemCategory(CreativeModeTab.TAB_SEARCH, search);                                // T5
         }
+        // 179 upstream items (1.20.1) + 9 cosmetic armor items (1.19.2 port addition)
         int n = items;
-        if (n != 179) p.add("DE items " + n + " != 179");
+        int nc = cosmetic;
+        if (n != 179 + CosmeticArmorGameTests.COUNT) p.add("DE items " + n + " != 179 + " + CosmeticArmorGameTests.COUNT);
+        if (nc != CosmeticArmorGameTests.COUNT) p.add("cosmetic armor items " + nc + " != " + CosmeticArmorGameTests.COUNT);
         long structure = search.stream().filter(s -> "structure_block".equals(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(s.getItem())).getPath())).count();
-        if (search.size() != 178) p.add("search tab: " + search.size() + " DE stacks != 178");
+        if (search.size() != 178 + CosmeticArmorGameTests.COUNT) p.add("search tab: " + search.size() + " DE stacks != 178 + " + CosmeticArmorGameTests.COUNT);
         if (structure != 0) p.add("search tab contains structure_block");
         LOGGER.info("DEPORT-GATE tab.search.draconicevolution={}", search.size());
         finish(helper, "T4-T5", p);
