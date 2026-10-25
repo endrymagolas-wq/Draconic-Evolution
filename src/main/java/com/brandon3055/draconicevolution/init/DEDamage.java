@@ -256,6 +256,17 @@ public class DEDamage {
     }
 
     /**
+     * Emulates the 1.20 {@code LivingEntity.hurt} rule "no hurt-knockback for #minecraft:is_explosion" for DE types
+     * (1.19.2 knocks back for every source with a causing entity). Used by {@code mixin.LivingEntityMixin}.
+     *
+     * @return true if this is a DE damage source whose type is in #minecraft:is_explosion.
+     */
+    public static boolean skipsHurtKnockback(@Nullable DamageSource source) {
+        Type type = getType(source);
+        return type != null && type.has(Flag.IS_EXPLOSION);
+    }
+
+    /**
      * Emulates 1.20 #minecraft:bypasses_cooldown: a DE hit inside the 10-tick hurt window deals full damage.
      * Registered by ModularArmorEventHandler.init() at EventPriority.LOWEST (not receiving canceled events).
      */

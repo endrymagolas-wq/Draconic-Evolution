@@ -31,13 +31,25 @@ entity, not the arrow).
 | KILL (1.20 `minecraft:generic_kill`) | administrative.kill | never | 0.0 | - | - | KillSource (shared; death message always the base key) | bypassInvul, bypassArmor, bypassMagic | - |
 
 (*) `effects: burning` only changes the player hurt sound in 1.20; no 1.19.2 equivalent -> accepted deviation.
-Tag mapping: is_explosion -> setExplosion; is_projectile -> setProjectile; bypasses_armor -> bypassArmor (also bypasses vanilla
+Tag mapping: is_explosion -> setExplosion (+ no hurt-knockback, see "Hurt knockback" below); is_projectile -> setProjectile; bypasses_armor -> bypassArmor (also bypasses vanilla
 shields in 1.19.2, which covers bypasses_shield); bypasses_effects + bypasses_resistance -> bypassMagic;
 bypasses_invulnerability -> bypassInvul (weaker in 1.19.2: Entity.isInvulnerableTo only exempts OUT_OF_WORLD);
 bypasses_cooldown -> DEDamage.applyCooldownBypass; DE tags -> IDraconicDamage.getTechLevel / DEDamage.hasTag;
 proj_anti_dodge -> CausingOnlySource structure (no datapack tag in 1.19.2).
 /kill: 1.19.2 `/kill` = `hurt(OUT_OF_WORLD, Float.MAX_VALUE)`; ModularArmorEventHandler converts it to DE's KILL source
 (de-1.18 logic). Known limits: spawn invulnerability, `Invulnerable` NBT.
+
+Hurt knockback (WP-30, review finding COMBAT-1): 1.20.1 `LivingEntity.hurt` knocks the victim back (0.4, away from the
+causing entity) only if the source is not in `#minecraft:is_explosion` [I-1.20]; 1.19.2 `LivingEntity.hurt` does it for
+every source with a causing entity (mc-1.19.2 `LivingEntity.java:1133-1142`). `mixin/LivingEntityMixin` (common side,
+`@Redirect` of the `knockback(DDD)V` call in `hurt(DamageSource, float)`) skips that call when
+`DEDamage.skipsHurtKnockback(source)` (a DE type with `Flag.IS_EXPLOSION`). Effect: the guardian laser (every
+unobstructed beam tick, and the obstructed-beam explosion) and guardian projectile hits no longer push the target away
+from the guardian, as in 1.20.1. `fusion_explosion` / `chaos_implosion` have no causing entity, so nothing changes for
+them. Vanilla sources keep the vanilla 1.19.2 knockback, including the vanilla `level.explode(shooter, ...)` of the
+guardian projectile and the D-3 staff explosion (`explosion.player`, see D-3). The explosion push itself
+(`Explosion.explode`) is unchanged. If another mod redirects the same call first (Mixin priority >= 1000), Mixin skips
+this redirect with a "@Redirect conflict" warning and the 1.19.2 knockback applies.
 
 Decisions taken with the spec defaults (change only by CR to WP-22):
 - D-1 new types nested in the locked files (`DEDamage.Type`, `DEDamageSources.IDEDamageSource`).
