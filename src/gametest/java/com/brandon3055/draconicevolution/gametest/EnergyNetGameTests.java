@@ -52,7 +52,8 @@ public class EnergyNetGameTests {
         DEGameTestUtil.installReporter();
     }
 
-    static final boolean REQUIRED = false;
+    /** required since WP-31b run-03: every test of this class passed in run-01..03 or after its test-bug fix (logs/WP-31b.md). */
+    static final boolean REQUIRED = true;
     static final long BASIC_CRYSTAL_CAPACITY = 4_000_000L;   // TileCrystalBase.getCapacityForTier(0)
     static final int BASIC_WIRELESS_RATE = 32_000;           // TileCrystalWirelessIO.getMaxWirelessTransfer() tier 0
 

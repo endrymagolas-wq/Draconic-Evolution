@@ -53,7 +53,8 @@ public class ModularItemGameTests {
         DEGameTestUtil.installReporter();
     }
 
-    static final boolean REQUIRED = false;
+    /** required since WP-31b run-03: every test of this class passed in run-01..03 or after its test-bug fix (logs/WP-31b.md). */
+    static final boolean REQUIRED = true;
 
     static String key(Component c) {
         return c == null ? "null" : c.getContents() instanceof TranslatableContents t ? t.getKey() : c.getString();

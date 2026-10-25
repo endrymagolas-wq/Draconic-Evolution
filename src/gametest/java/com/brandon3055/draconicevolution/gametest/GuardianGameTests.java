@@ -44,7 +44,8 @@ public class GuardianGameTests {
         DEGameTestUtil.installReporter();
     }
 
-    static final boolean REQUIRED = false;
+    /** required since WP-31b run-03: every test of this class passed in run-01..03 or after its test-bug fix (logs/WP-31b.md). */
+    static final boolean REQUIRED = true;
 
     /** Failure path: whatever a failed/timed-out test left behind is released after the batch. */
     static final Set<ChunkPos> FORCED = java.util.Collections.synchronizedSet(new LinkedHashSet<>());

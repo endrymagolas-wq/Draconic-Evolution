@@ -41,7 +41,8 @@ public class DislocatorGameTests {
         DEGameTestUtil.installReporter();
     }
 
-    static final boolean REQUIRED = false;
+    /** required since WP-31b run-03: every test of this class passed in run-01..03 or after its test-bug fix (logs/WP-31b.md). */
+    static final boolean REQUIRED = true;
 
     static Vec3 feet(GameTestHelper helper, BlockPos rel) {
         return helper.absoluteVec(new Vec3(rel.getX() + 0.5, rel.getY(), rel.getZ() + 0.5));

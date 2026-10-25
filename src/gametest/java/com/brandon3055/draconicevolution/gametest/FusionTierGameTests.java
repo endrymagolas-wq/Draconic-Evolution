@@ -44,7 +44,8 @@ public class FusionTierGameTests {
         DEGameTestUtil.installReporter();
     }
 
-    static final boolean REQUIRED = false;
+    /** required since WP-31b run-03: every test of this class passed in run-01..03 or after its test-bug fix (logs/WP-31b.md). */
+    static final boolean REQUIRED = true;
     static final BlockPos CORE = new BlockPos(4, 2, 4);
 
     static Map<BlockPos, Direction> injectorLayout() {
