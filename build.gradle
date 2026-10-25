@@ -119,8 +119,10 @@ processResources {
 
 repositories {
     maven {
-        name = 'Port' // local maven of the port (BrandonsCore 1.19.2-3.2.1.90NN), see gradle.properties
-        url = port_maven
+        // Maven repo holding the BrandonsCore 1.19.2 port build (1.19.2-3.2.1.90NN). Set -Pport_maven=<url> or the env
+        // var ORG_GRADLE_PROJECT_port_maven; default: a "maven" folder next to this project.
+        name = 'Port'
+        url = project.findProperty('port_maven') ?: rootProject.file('../maven').toURI()
     }
     maven { url = "https://maven.covers1624.net/" }
     maven { url = "https://dvs1.progwml6.com/files/maven" }

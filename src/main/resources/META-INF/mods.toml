@@ -8,6 +8,7 @@ license="CoFH \"Don't Be a Jerk\" License"
 	version="${file.jarVersion}"
 	authors="brandon3055"
 	description='''[Unofficial 1.19.2 port] Unofficial derivative port of Draconic Evolution 3.1.2 (MC 1.20.1) to Minecraft 1.19.2 / Forge 43. Not supported by brandon3055.'''
+	displayURL="https://github.com/endrymagolas-wq/Draconic-Evolution/tree/port/1.19.2"
 
 [[dependencies.draconicevolution]]
 	modId="forge"
