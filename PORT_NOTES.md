@@ -71,6 +71,12 @@ Decisions taken with the spec defaults (change only by CR to WP-22):
 Accepted deviations: Warden treats spoof arrows as non-indirect; `DraconicGuardianEntity` crystal explosion loses the
 direct entity (crystal), no consumer reads it.
 
+Explosion block interaction: 1.20 `Level.ExplosionInteraction.MOB` -> `ForgeEventFactory.getMobGriefingEvent(level, entity)
+? DESTROY : NONE` when the explosion has a source entity (`DraconicProjectileEntity`), and the plain `mobGriefing`
+gamerule when it has none (`LaserBeamPhase` obstructed-beam explosion; review finding COMBAT-4, WP-30). Forge 47
+`getMobGriefingEvent(level, null)` returns the gamerule without posting an event [I-1.20]; Forge 43 would post an
+`EntityMobGriefingEvent` with a null entity, so protection mods could allow or deny it, which 1.20.1 does not allow.
+
 ## Reactor explosion lighting (WP-22 spec row 44)
 
 Deviation from 1.20.1: `lib/ExplosionHelper.RemovalProcess.finishChunks` re-lights every modified chunk with

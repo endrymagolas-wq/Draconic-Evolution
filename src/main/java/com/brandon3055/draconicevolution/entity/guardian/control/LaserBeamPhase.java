@@ -14,12 +14,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -91,7 +91,7 @@ public class LaserBeamPhase extends ChargeUpPhase {
         }
 
         if (obstructed & chargedTime % 2 == 0) {
-            guardian.level.explode(null, damage, null, beamPos.x, beamPos.y, beamPos.z, 8, false, ForgeEventFactory.getMobGriefingEvent(guardian.level, null) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE); // 1.19.2: 1.20 explosion interaction "MOB" = mobGriefing gamerule
+            guardian.level.explode(null, damage, null, beamPos.x, beamPos.y, beamPos.z, 8, false, guardian.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE); // 1.19.2: 1.20 explosion interaction "MOB" with a null source entity = the mobGriefing gamerule, no EntityMobGriefingEvent (Forge 47 getMobGriefingEvent(level, null); Forge 43 would post an event with a null entity)
         } else if (!obstructed) {
             float prevHealth = attackTarget.getHealth();
             if (getSecondaryCharge() >= 1) {
