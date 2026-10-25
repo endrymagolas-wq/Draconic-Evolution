@@ -1,6 +1,11 @@
 package com.brandon3055.draconicevolution.init;
 
 import codechicken.lib.model.ModelRegistryHelper;
+import com.brandon3055.draconicevolution.client.render.item.ClassicToolRenderer;
+import net.minecraft.world.item.Item;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import com.brandon3055.brandonscore.BrandonsCore;
 import com.brandon3055.brandonscore.api.TechLevel;
 import com.brandon3055.brandonscore.api.hud.AbstractHudElement;
@@ -175,7 +180,9 @@ public class ClientInit {
         MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.REACTOR_PRT_ROTOR_FULL.get()), "inventory"), new RenderItemReactorComponent());
         MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.REACTOR_PRT_FOCUS_RING.get()), "inventory"), new RenderItemReactorComponent());
 
-        if (DEConfig.fancyToolModels) {
+        if (DEConfig.fancyToolModels && DEConfig.classicModels) {
+            registerClassicToolRenderers();
+        } else if (DEConfig.fancyToolModels) {
             MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.PICKAXE_WYVERN.get()), "inventory"), new RenderModularPickaxe(TechLevel.WYVERN));
             MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.PICKAXE_DRACONIC.get()), "inventory"), new RenderModularPickaxe(TechLevel.DRACONIC));
             MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.PICKAXE_CHAOTIC.get()), "inventory"), new RenderModularPickaxe(TechLevel.CHAOTIC));
@@ -207,6 +214,37 @@ public class ClientInit {
             MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.CHESTPIECE_DRACONIC.get()), "inventory"), new RenderModularChestpiece(TechLevel.DRACONIC));
             MODEL_HELPER.register(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(DEContent.CHESTPIECE_CHAOTIC.get()), "inventory"), new RenderModularChestpiece(TechLevel.CHAOTIC));
         }
+    }
+
+    /**
+     * PORT(1.19.2) classic (DE 1.12.2) tool models, {@code DEConfig.classicModels} (see {@link ClassicToolRenderer}). The
+     * chestpiece item keeps its JSON model (the 2D sprite, which is the 1.12.2 chestplate icon); its worn model is
+     * chosen in {@code ModularChestpiece.getExtendedModel}.
+     */
+    @SuppressWarnings ("ConstantConditions")
+    private static void registerClassicToolRenderers() {
+        Map<ModelResourceLocation, ClassicToolRenderer> renderers = new LinkedHashMap<>();
+        BiConsumer<Item, ClassicToolRenderer> add = (item, renderer) -> renderers.put(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(item), "inventory"), renderer);
+        TechLevel[] tiers = {TechLevel.WYVERN, TechLevel.DRACONIC, TechLevel.CHAOTIC};
+        Item[][] items = {
+                {DEContent.SWORD_WYVERN.get(), DEContent.SWORD_DRACONIC.get(), DEContent.SWORD_CHAOTIC.get()},
+                {DEContent.PICKAXE_WYVERN.get(), DEContent.PICKAXE_DRACONIC.get(), DEContent.PICKAXE_CHAOTIC.get()},
+                {DEContent.AXE_WYVERN.get(), DEContent.AXE_DRACONIC.get(), DEContent.AXE_CHAOTIC.get()},
+                {DEContent.SHOVEL_WYVERN.get(), DEContent.SHOVEL_DRACONIC.get(), DEContent.SHOVEL_CHAOTIC.get()},
+                {DEContent.HOE_WYVERN.get(), DEContent.HOE_DRACONIC.get(), DEContent.HOE_CHAOTIC.get()},
+                {DEContent.BOW_WYVERN.get(), DEContent.BOW_DRACONIC.get(), DEContent.BOW_CHAOTIC.get()},
+                {null, DEContent.STAFF_DRACONIC.get(), DEContent.STAFF_CHAOTIC.get()}
+        };
+        ClassicToolRenderer.Kind[] kinds = {ClassicToolRenderer.Kind.SWORD, ClassicToolRenderer.Kind.PICKAXE, ClassicToolRenderer.Kind.AXE,
+                ClassicToolRenderer.Kind.SHOVEL, ClassicToolRenderer.Kind.HOE, ClassicToolRenderer.Kind.BOW, ClassicToolRenderer.Kind.STAFF};
+        for (int k = 0; k < kinds.length; k++) {
+            for (int t = 0; t < tiers.length; t++) {
+                if (items[k][t] != null) add.accept(items[k][t], new ClassicToolRenderer(tiers[t], kinds[k]));
+            }
+        }
+        //GUI: the item's own JSON model (2D sprite); grab it before CCL puts the renderer in its place (every bake)
+        MODEL_HELPER.registerPreBakeCallback(event -> renderers.forEach((location, renderer) -> renderer.setGuiModel(event.getModels().get(location))));
+        renderers.forEach(MODEL_HELPER::register);
     }
 
     private static void setupRenderLayers() {

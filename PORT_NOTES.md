@@ -305,3 +305,79 @@ render types (plain `EquippedItemModelLayer` / armor layers), so it is not affec
   `fancyToolModels`. Client-only parts: keybinds (`RegisterKeyMappingsEvent`), shield HUD (BC `HudManager` via
   `RenderGuiEvent`), toggle packets with server handlers in `ServerPacketHandler`. Upstream quirks kept: login flight
   restore does not check energy; the fly-speed attribute modifier is marked untested upstream.
+
+## Additions not in upstream 1.20.1: classic (DE 1.12.2) models (DE 3.1.2.9006)
+
+Port-only option for our pack: the worn modular chestpiece and the 3D tools can use the look of DE 1.12.2 instead of
+the DE 1.20.1 (DE3) models. Only rendering changes; items, modules, energy, shield, attributes and every server-side
+behaviour are untouched (no server class changed, 68/68 GameTests unchanged).
+
+- **Config:** `DEConfig` client `classicModels` (`config/brandon3055/DraconicEvolution.cfg`, category `Client`,
+  default `true`). With `false` the code paths are exactly those of 9005. The worn chestpiece switches immediately; the
+  tool renderers are registered at client setup, so the tool part needs a restart.
+
+  | `fancyToolModels` | `classicModels` | worn chestpiece | tools in hand / ground / frame | tools, chestpiece in GUI |
+  |---|---|---|---|---|
+  | true | true (default) | classic 1.12.2 | classic 1.12.2 OBJ | 2D sprite (= 1.12.2 sprite) |
+  | true | false | DE3 (9005) | DE3 (9005) | DE3 3D |
+  | false | true | classic 1.12.2 | 2D sprite | 2D sprite |
+  | false | false | DE3 (9005) | 2D sprite | 2D sprite |
+
+- **Worn chestpiece** (`ModularChestpieceModel.classic(TechLevel)`, chosen in `ModularChestpiece.getExtendedModel`):
+  the 1.12.2 body and left/right arm OBJs (`models/cosmetic_armor/{wyvern,draconic}_{body,left_arm,right_arm}.obj`,
+  unchanged copies of `origin/1.12.2` `models/armor/*`; the folder now holds all 1.12.2 armor parts) with their 1.12.2
+  textures, placed exactly like the cosmetic armor (`CosmeticArmorModel.ObjPart`: bone pose copied from the wearer,
+  1.12.2 offset in the bone frame, scale, `rotate(180, -1, 0, 1)`, vanilla `entityCutoutNoCull`). Offsets/scales from
+  1.12.2 `ModelWyvernArmor` / `ModelDraconicArmor`: body (0, 0.755, -0.03) at 1/16 (scale unset in 1.12.2); Wyvern arms
+  (+-0.21, 0.72, 0) at 1/13.7; Draconic arms right (-0.205, 0.72, -0.05), left (0.21, 0.72, -0.06) at 1/13.9. The DE3 base
+  model, chevrons, power crystals and core gem are not drawn (the 1.12.2 chestplate has its gem in the texture).
+  Chaotic = Draconic geometry with recoloured textures (`tools/cosmetic/recolor.py`, same method as the cosmetic armor).
+  The same model is used on the chest slot and in the curios body slot (the DE3 "on armor" variant only shifted the
+  chevrons). The chestpiece item keeps its JSON model in classic mode (the 2D sprite, which is the 1.12.2 chestplate
+  icon), so `RenderModularChestpiece` is not registered.
+- **Shield on the classic chestpiece:** the DE3 shield parts are kept (shield shader without a shader pack, the 9005
+  `ShaderPackFallback.renderShield` with one), with the same `shieldState`/colour logic (module host, contributor
+  override). Differences, all in classic mode only: (1) the 1.12.2 parts are much larger than the DE3 chestpiece
+  (Draconic body +-0.5 block vs the shell's +-0.3), so the body and arm shells are stretched per axis to the part's
+  bounding box + 1/32 block (`fitShell`; UVs and so the shader pattern unchanged; head and leg shells unchanged);
+  (2) the shield is drawn in a second pass after the armor parts, and before it `MultiBufferSource.BufferSource.endLastBatch()`
+  is called (vanilla buffer source, no shader pack) so the buffered armor is already drawn when the immediate shield
+  shader blends over it; (3) the shield render type has no depth write (`COLOR_WRITE`), so geometry drawn later (e.g. the
+  cosmetic helmet / leggings, which BC's layer draws after the chest slot) is not hidden behind the translucent shell.
+  If a batching buffer source (Oculus without pack, ImmediatelyFast) is not a vanilla `BufferSource` or ignores
+  `endLastBatch`, the shell may be drawn before the armor: the armor then covers the shield tint instead of being tinted
+  (no part disappears).
+- **Tools** (`client/render/item/ClassicToolRenderer`, a CCL `IItemRenderer`, registered in `ClientInit` for sword,
+  pickaxe, axe, shovel, hoe, bow of all three tiers and the Draconic/Chaotic staff): port of 1.12.2 `ToolBakedModel` /
+  `ToolOverrideList` / `ToolTransforms`.
+  - GUI: the item's own JSON model, i.e. the 2D sprite (the DE 1.20.1 tool sprites are the 1.12.2 sprites; 1.12.2 also
+    drew the 2D sprite in GUIs). It is captured in a CCL pre-bake callback before the renderer replaces it and drawn
+    through the vanilla item quad path (`renderModelLists`, item sheet render types, glint), so GUIs, hotbar batching
+    and shader packs see an ordinary item. Fallback if missing: the 3D model.
+  - Everywhere else: the 1.12.2 OBJ (`models/item/classic/*.obj`, unchanged copies of `origin/1.12.2`
+    `models/item/tools/*`) with its 1.12.2 palette texture (`textures/item/classic/*.png`), every frame through
+    `CCRenderState` into vanilla `entityCutoutNoCull(<texture>)` (+ vanilla entity glint when enchanted). No DE shader,
+    no VBO render type, no emissive part (the 1.12.2 tools had none).
+  - Transforms (CCL 1.12.x `TransformUtils`, verified against its source): hands = `DEFAULT_TOOL`
+    (third person (0, 4, 0.5) rot (0, -90, 55) x0.85, first person (1.13, 3.2, 1.13) rot (0, -90, 25) x0.68, left hand
+    mirrored), GROUND = `DEFAULT_ITEM` ground (0, 2, 0) x0.5, FIXED/HEAD identity; sword and staff FIXED/GROUND from
+    1.12.2 `ToolTransforms` (`DR_SWORD_STATE`, `WY_SWORD_STATE`, `STAFF_STATE`). The model is drawn after the transform and
+    CCL's item `translate(-0.5, -0.5, -0.5)`, as 1.12.2 drew its baked OBJ.
+  - Bow: frames `bow00..03`, frame = min(floor(ticksUsing / drawTicks * 3), 3) (1.12.2 `ToolOverrideList`), draw time
+    = `ModularBow.getChargeTicks` (speed module). The DE3 energy strings and arrow are not drawn (the 1.12.2 frames
+    contain the string). Shooting itself is unchanged.
+  - Staff: the DE3 first-person placement handler (`ModularItemRenderOverrideHandler`) is unchanged and applies to the
+    classic staff too.
+  - Tiers: Chaotic (no 1.12.2 tools) = Draconic geometry + recoloured palettes; Wyvern hoe (1.12.2 had none) = Draconic
+    hoe geometry with a Wyvern-palette texture (`recolor.py` `WYVERN_HOE_MAP`: the hoe's three orange palette cells
+    -> the purples of the 1.12.2 Wyvern tools; the palettes are per-model, so no 1.12.2 Wyvern texture fits the
+    Draconic hoe UVs). There is no Wyvern staff item.
+- **Shader packs / batching:** everything classic is drawn with plain vanilla entity or item render types, so Oculus
+  shader packs, ImmediatelyFast/Oculus batching and GUIs need no fallback; `ShaderPackFallback` is only used by the kept
+  DE3 shield.
+- **Licence / origin:** all 1.12.2 models and textures are brandon3055's Draconic Evolution art (`origin/1.12.2`),
+  reused (Chaotic and the Wyvern hoe: modified) under DE's licence, CC BY-NC-SA 4.0, like the cosmetic armor.
+- **Checks:** JUnit `ClassicToolRendererTest` (asset set per tier, every face's UV centre hits an opaque palette cell
+  with the 1.12.2 top-down V, which fails if V were flipped; bow frame rule; geometry per tier); `recolor.py --check`;
+  offline previews `tools/cosmetic/classic_preview.py` (-> `logs/classic/*.png` in the workspace). The in-game look
+  (lighting, hand/ground/frame placement, shield, Oculus) is not verified by any automated check.

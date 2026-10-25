@@ -370,6 +370,8 @@ public class DEConfig {
     public static boolean configUiEnableDeleteZone;
     public static boolean configUiEnableAdvancedXOver;
     public static boolean fancyToolModels;
+    //PORT(1.19.2) classic (DE 1.12.2) chestpiece and tool models, see PORT_NOTES "Classic models"
+    public static boolean classicModels;
     @Deprecated
 //    public static boolean toolShaders;
 //    public static boolean crystalShaders;
@@ -386,6 +388,10 @@ public class DEConfig {
                 .setComment("Set this to false to disable the fancy 3D tool models. (Requires restart)")
                 .setDefaultBoolean(true)
                 .onSync((tag, type) -> fancyToolModels = tag.getBoolean());
+        clientTag.getValue("classicModels")
+                .setComment("Port addition (1.19.2): use the classic Draconic Evolution 1.12.2 look for the worn modular chestpiece (full chestplate with arms) and the 3D sword, pickaxe, axe, shovel, hoe, bow and staff models. Set to false for the 1.20.1 (DE3) models. Only the look changes. (Tool models require restart)")
+                .setDefaultBoolean(true)
+                .onSync((tag, type) -> classicModels = tag.getBoolean());
 //        clientTag.getValue("toolShaders")
 //                .setComment("Set this to false to disable tool shaders.")
 //                .setDefaultBoolean(true)

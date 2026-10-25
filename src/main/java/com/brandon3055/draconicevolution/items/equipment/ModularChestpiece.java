@@ -139,9 +139,20 @@ public class ModularChestpiece extends ArmorItem implements IModularArmor, IDEEq
     @OnlyIn(Dist.CLIENT)
     private ModularChestpieceModel<?> model_on_armor;
 
+    @OnlyIn(Dist.CLIENT)
+    private ModularChestpieceModel<?> model_classic;
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public EquippedItemModel getExtendedModel(LivingEntity entity, ItemStack stack, @Nullable EquipmentSlot slot, HumanoidModel<?> parentModel, boolean slim) {
+        if (DEConfig.classicModels) {
+            //PORT(1.19.2) classic (DE 1.12.2) look; the same model on the chest slot and in the curios body slot
+            if (model_classic == null) {
+                model_classic = ModularChestpieceModel.classic(techLevel);
+            }
+            ForgeHooksClient.copyModelProperties(parentModel, model_classic);
+            return model_classic;
+        }
         ItemStack chest = entity.getItemBySlot(EquipmentSlot.CHEST);
         boolean onArmor = slot == null && !chest.isEmpty() && chest.getItem() instanceof ArmorItem;
         if (model == null || model_on_armor == null) {

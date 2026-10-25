@@ -2,10 +2,9 @@ package com.brandon3055.draconicevolution.client.model.cosmetic;
 
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.model.OBJParser;
-import codechicken.lib.vec.Vertex5;
 import com.brandon3055.brandonscore.client.model.ExtendedModelPart;
 import com.brandon3055.brandonscore.client.render.EquippedItemModel;
+import com.brandon3055.draconicevolution.client.model.classic.ClassicObj;
 import com.brandon3055.draconicevolution.items.cosmetic.CosmeticArmorTier;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -114,17 +113,11 @@ public class CosmeticArmorModel<T extends LivingEntity> extends HumanoidModel<T>
     }
 
     /**
-     * QUADS (triangles become degenerate quads) so the parts can go into vanilla entity buffers. The 1.12.2 OBJs carry
-     * no normals (flat normals are computed, as the 1.12.2 OBJ loader did) and expect the texture V axis top-down,
-     * while CCL's parser flips V (OBJ convention), so V is flipped back here.
+     * QUADS (triangles become degenerate quads) so the parts can go into vanilla entity buffers; flat normals, V flipped
+     * back to the 1.12.2 top-down convention (see {@link ClassicObj}).
      */
     private static CCModel loadModel(ResourceLocation obj) {
-        Map<String, CCModel> map = new OBJParser(obj).ignoreMtl().quads().parse();
-        CCModel model = CCModel.combine(map.values());
-        for (Vertex5 v : model.verts) {
-            v.uv.v = 1 - v.uv.v;
-        }
-        return model.computeNormals();
+        return ClassicObj.load(obj);
     }
 
     public EquipmentSlot getSlot() {
