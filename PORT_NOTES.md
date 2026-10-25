@@ -146,3 +146,13 @@ differ. These are edge cases and cannot be set per block in 1.19.2 without overr
   client-only `shield_hud`. Reports: `logs\gametest-report.md`, `logs\WP-31.md`.
 - No behaviour change to the mod. The death-message keys a DE source can produce and that have no translation are
   exactly the 16 on the WP-22 §4 allowlist (missing in 1.20.1 as well, decision D-5).
+
+## Client GUI (mgui) deviations
+
+- Fusion crafting core screen (`client/gui/FusionCraftingCoreGui.IngredRenderer`, review finding CL-1, WP-30): child
+  z-stacking is disabled (`setZStacking(false)`). The 1.19.2 GUI projection (`GameRenderer` ortho near 1000 /
+  `ForgeHooksClient.getGuiFarPlane()`) leaves a visible z range of about +-1000 (1.20.1 about +-10000, WP-10 C11). Each
+  ingredient icon adds 32 z when stacked, so with about 24 or more filled injectors the tooltips (overlay at depth + 100),
+  and later the ingredient icons and the craft button, fell behind the near plane and were not drawn. Now the ingredient
+  area is 32 deep for any injector count. The icons do not overlap below 43 stacks, so the screen looks the same as
+  1.20.1; with 43 or more, overlapping icons share one z band instead of stacking. Needs client verification.

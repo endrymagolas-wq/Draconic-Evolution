@@ -122,6 +122,10 @@ public class FusionCraftingCoreGui extends ContainerGuiProvider<FusionCraftingCo
         public IngredRenderer(@NotNull GuiParent<?> parent, TileFusionCraftingCore core) {
             super(parent);
             this.core = core;
+            // 1.19.2 port (WP-30 CL-1): the 1.19.2 GUI z range is about +-1000 (1.20.1 about +-10000). Z-stacked icons
+            // (32 each) pushed tooltips, later icons and the craft button past the near plane from about 24 injectors.
+            // The icons do not overlap (below 43 stacks), so they can share one z band; depth stays 32 for any count.
+            setZStacking(false);
         }
 
         private void setInjectors() {
