@@ -171,9 +171,13 @@ public class ExplosionHelper {
 
 //                lightManager.runUpdates()
                 // 1.19.2 (WP-22 spec row 44): relight as in de-1.18 (commented out in the 1.20 source; 1.19.2 test M4).
+                // The lightChunk future completes on the light-engine worker; the send goes back to the server thread
+                // (MinecraftServer is an Executor), because ChunkMap's player map is not thread-safe (WP-30 COMBAT-3/TILES-1).
                 lightManager.lightChunk(chunk, true)
-                        .thenRun(() -> helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false)
-                                .forEach(e -> e.connection.send(new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null, false))));
+                        .thenRunAsync(() -> {
+                            ClientboundLightUpdatePacket lightPacket = new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null, false);
+                            helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false).forEach(e -> e.connection.send(lightPacket));
+                        }, server);
 
 //                ClientboundLightUpdatePacket packet = new ClientboundLightUpdatePacket(chunk.getPos(), helper.serverWorld.getLightEngine(), null, null, true);
 //                helper.serverWorld.getChunkSource().chunkMap.getPlayers(chunk.getPos(), false).forEach(e -> e.connection.send(packet));

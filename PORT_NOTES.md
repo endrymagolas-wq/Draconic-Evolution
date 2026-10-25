@@ -71,6 +71,17 @@ Decisions taken with the spec defaults (change only by CR to WP-22):
 Accepted deviations: Warden treats spoof arrows as non-indirect; `DraconicGuardianEntity` crystal explosion loses the
 direct entity (crystal), no consumer reads it.
 
+## Reactor explosion lighting (WP-22 spec row 44)
+
+Deviation from 1.20.1: `lib/ExplosionHelper.RemovalProcess.finishChunks` re-lights every modified chunk with
+`ThreadedLevelLightEngine.lightChunk(chunk, true)`, as de-1.18 does. When the relight has finished it sends
+`ClientboundLightUpdatePacket(pos, light, null, null, false)` to the players tracking the chunk. 1.20.1 has this block
+commented out and only sends `ClientboundLevelChunkWithLightPacket`; the port still sends that packet too (5-arg form,
+`trustEdges = false`, as de-1.18). Reason: the 1.19.2 light engine supports it, and it avoids dark or unlit chunks after a
+reactor explosion (test M4, client, not verified). Threading (review findings COMBAT-3 / TILES-1, WP-30): the
+`lightChunk` future completes on the light-engine worker thread, so the send is handed back to the server thread with
+`thenRunAsync(..., server)`; reading `ChunkMap`'s player map from the worker was a data race (de-1.18 used `thenRun`).
+
 ## Creative tabs and block materials (WP-23)
 
 Source: `specs/WP-23-tabs-materials.md`. Code: `init/DECreativeTabs.java`, `init/DEContent.java`, `blocks/ChaosShardAtmos.java`.
