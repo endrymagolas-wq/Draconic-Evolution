@@ -155,4 +155,95 @@ public final class DEGameTestUtil {
     public static JsonObject obj() {
         return new JsonObject();
     }
+
+    // ==== WP-31b helpers ===========================================================================================
+
+    /**
+     * WP-31b batches (one per area; batches run one after another, tests inside a batch run concurrently). Fusion tests
+     * use BATCH_FUSION + "_a".."_d", one test per batch (see FusionTierGameTests.teardown).
+     */
+    public static final String BATCH_ENERGY = "de_energy";
+    public static final String BATCH_FUSION = "de_fusion";
+    public static final String BATCH_REACTOR_LONG = "de_reactor_long";
+    public static final String BATCH_MACHINES_EXT = "de_machines_ext";
+    public static final String BATCH_CELESTIAL = "de_celestial";
+    public static final String BATCH_DISLOCATOR = "de_dislocator";
+    public static final String BATCH_MODULAR = "de_modular";
+    public static final String BATCH_GUARDIAN = "de_guardian";
+
+    /**
+     * 1.19.2 GameTestSequence only converts GameTestAssertException into a test failure; any other exception thrown from
+     * a thenExecute/thenWaitUntil step (or an Error from onEachTick/the test body) escapes GameTestInfo.tickInternal and
+     * crashes the whole gametest server [V MC GameTestSequence.java:79-120, GameTestInfo.java:73-128]. Every WP-31b step
+     * that calls DE code goes through this wrapper so a DE exception fails only its own test.
+     */
+    public static Runnable safe(Runnable step) {
+        return () -> {
+            try {
+                step.run();
+            } catch (GameTestAssertException e) {
+                throw e;
+            } catch (Throwable t) {
+                LOGGER.warn("DEPORT-GATE gametest.exception", t);
+                throw new GameTestAssertException("unexpected " + t + firstFrames(t));
+            }
+        };
+    }
+
+    private static String firstFrames(Throwable t) {
+        StringBuilder sb = new StringBuilder();
+        int n = 0;
+        for (StackTraceElement e : t.getStackTrace()) {
+            if (n++ >= 4) break;
+            sb.append(" @ ").append(e.getClassName().replace("com.brandon3055.", "")).append('.').append(e.getMethodName()).append(':').append(e.getLineNumber());
+        }
+        return sb.toString();
+    }
+
+    /** CCL MCDataByteBuf implements both MCDataInput and MCDataOutput: build a "client packet" payload for receivePacketFromClient. */
+    public static codechicken.lib.data.MCDataByteBuf packet(java.util.function.Consumer<codechicken.lib.data.MCDataByteBuf> writer) {
+        codechicken.lib.data.MCDataByteBuf buf = new codechicken.lib.data.MCDataByteBuf();
+        writer.accept(buf);
+        return buf;
+    }
+
+    /** OP capability of a block entity on a side (BC CapabilityOP via EnergyUtils), asserted present. */
+    public static com.brandon3055.brandonscore.api.power.IOPStorage op(GameTestHelper helper, BlockPos rel, @javax.annotation.Nullable net.minecraft.core.Direction side) {
+        BlockEntity be = helper.getBlockEntity(rel);
+        com.brandon3055.brandonscore.api.power.IOPStorage storage = be == null ? null : com.brandon3055.brandonscore.utils.EnergyUtils.getStorage(be, side);
+        checkAt(helper, storage != null, rel, () -> "no OP capability on side " + side + " of " + be);
+        return storage;
+    }
+
+    /** Right-click with the held main-hand item on a block face, through ServerPlayerGameMode.useItemOn (fires PlayerInteractEvent.RightClickBlock). */
+    public static net.minecraft.world.InteractionResult useItemOn(GameTestHelper helper, net.minecraft.server.level.ServerPlayer player, BlockPos rel, net.minecraft.core.Direction face) {
+        BlockPos abs = helper.absolutePos(rel);
+        net.minecraft.world.phys.Vec3 hit = net.minecraft.world.phys.Vec3.atCenterOf(abs).add(face.getStepX() * 0.5, face.getStepY() * 0.5, face.getStepZ() * 0.5);
+        net.minecraft.world.phys.BlockHitResult result = new net.minecraft.world.phys.BlockHitResult(hit, face, abs, false);
+        return player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), net.minecraft.world.InteractionHand.MAIN_HAND, result);
+    }
+
+    /** Places a block item exactly like a player click on the given face of the support block (BlockItem.useOn -> place -> setPlacedBy / BC onTilePlaced). */
+    public static void placeWithItem(GameTestHelper helper, net.minecraft.server.level.ServerPlayer player, net.minecraft.world.item.ItemStack stack, BlockPos support, net.minecraft.core.Direction face) {
+        BlockPos abs = helper.absolutePos(support);
+        net.minecraft.world.phys.Vec3 hit = net.minecraft.world.phys.Vec3.atCenterOf(abs).add(face.getStepX() * 0.5, face.getStepY() * 0.5, face.getStepZ() * 0.5);
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, stack);
+        net.minecraft.world.InteractionResult r = stack.useOn(new net.minecraft.world.item.context.UseOnContext(player, net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.phys.BlockHitResult(hit, face, abs, false)));
+        BlockPos placed = support.relative(face);
+        checkAt(helper, r.consumesAction(), placed, () -> "placing " + stack + " returned " + r);
+    }
+
+    /** Discards (no drops) every non-player entity of the given class inside the relative box [min, max] (block corners inclusive). */
+    public static <T extends net.minecraft.world.entity.Entity> int discardAll(GameTestHelper helper, Class<T> type, BlockPos min, BlockPos max) {
+        java.util.List<T> list = entitiesIn(helper, type, min, max);
+        list.forEach(net.minecraft.world.entity.Entity::discard);
+        return list.size();
+    }
+
+    public static <T extends net.minecraft.world.entity.Entity> java.util.List<T> entitiesIn(GameTestHelper helper, Class<T> type, BlockPos min, BlockPos max) {
+        BlockPos a = helper.absolutePos(min);
+        BlockPos b = helper.absolutePos(max);
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(a, b).expandTowards(1, 1, 1);
+        return helper.getLevel().getEntitiesOfClass(type, box, e -> !(e instanceof net.minecraft.world.entity.player.Player));
+    }
 }
