@@ -61,7 +61,7 @@ public class NightVisionEntity extends ModuleEntity<AutoFeedData> {
             disableTimer = 0;
         } else if (appliedByModule && disableTimer++ >= 3){
             player.removeEffect(MobEffects.NIGHT_VISION);
-            appliedByModule = true;
+            appliedByModule = false; //PORT(1.19.2) fix: upstream left this true, which kept stripping night vision (incl. potions) every second in light
         }
     }
 }
