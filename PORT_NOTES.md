@@ -262,10 +262,46 @@ Found in game (2026-10-25) with the target pack and in a clean dev client; fixed
    pattern, not separately checked in game.)
 3. **Fancy tools still missing in the HUD hotbar** with ImmediatelyFast: its `hud_batching` batches hotbar item
    rendering the same way. Pack-side fix (verified): `config/immediatelyfast.json` -> `"hud_batching": false`.
-   With an Oculus **shader pack active**, DE custom-shader models stay invisible in the world (BC PORT_NOTES R2, not
-   changed): use `Client.fancyToolModels=false` (2D tool sprites; the chestpiece is then not drawn on the body) and
-   `Client.guardianShaders=false` in `config/brandon3055/DraconicEvolution.cfg`.
+4. **Shader-pack fallback (DE 3.1.2.9005, port-only).** With an Oculus shader pack active, Oculus 1.6.x masks every
+   non-Iris core shader in the world pass (BC PORT_NOTES R2), so everything DE draws with `DEShaders` / BC custom
+   shaders was invisible. Vanilla entity render types are drawn by shader packs (proven by the cosmetic armor), so DE
+   now switches those draws to vanilla types while a pack is active: `client/render/ShaderPackFallback`, detection via
+   BC `ShaderModCompat.isShaderPackInUse()` (Iris API by reflection, false without Oculus; no BC change). Same geometry
+   and transforms; the triangle VBO models are converted once to degenerate quads (`toQuads`, normals of
+   `backfacedCopy` models negated back) and drawn with CCL `CCRenderState` into `buffers.getBuffer(type)` through a
+   `TransformingVertexConsumer` (NEW_ENTITY, packed light/overlay, RGBA colour).
+   - Chestpiece on the body (`ModularChestpieceModel`): base + chevrons `entityCutout(<level>_chestpeice.png)`, chaotic
+     chevrons `entityCutout(chaos_shader.png)`; power crystals `entityTranslucentEmissive(shader_fallback_<level>.png)`
+     (chaotic: `minecraft:textures/misc/white.png` tinted red, the fallback texture is almost black); core gem white
+     emissive tinted with the shield colour; shield parts (same `shieldState > 0` condition as the shader) a
+     translucent white shell tinted with the shield colour (alpha ~ 0.22 * state, slight pulse) plus a vanilla
+     `energySwirl(creeper_armor.png)` in the shield colour scaled by the state.
+   - Item models (`ToolRenderBase` parts, `RenderModularChestpiece`, bow strings in `RenderModularBow`): same mapping
+     (base/material cutout with the tool texture, gem/trace/blade emissive). `TransformType.GUI` keeps the shader path
+     (shader packs do not touch GUIs), every other transform uses the fallback.
+   - Also: energy crystal tile + item (DE's own `crystal_no_shader.png` distance fallback), pylon shell (`eyes`,
+     additive), energy core outer layer (overlay texture tinted with the effect colour) + stabiliser spheres, reactor
+     core + shield (`reactor_core.png` / `reactor_shield.png`, colours approximating `reactor.fsh` /
+     `reactor_shield.fsh`), chaos crystal tile, chaos shard items.
+   - Not covered (still invisible with a pack): reactor beams (`REACTOR_BEAM_TYPE`), Draconic Guardian shield and beams,
+     guardian crystal shield (`guardianShaders=false` only fixes the boss bar), explosion / reactor-beam FX, staff
+     effect, energy core stabiliser beams if Oculus does not draw vanilla `position_tex` in block entities.
+   - Without a shader pack nothing changes (the fallback code only runs while `isShaderPackInUse()` is true). Not
+     verifiable headless; JUnit `ShaderPackFallbackTest` covers the triangle->quad conversion.
 
-Recommended settings: no shader pack -> `fancyToolModels=true` works, set ImmediatelyFast `hud_batching=false`;
-shader pack active -> `fancyToolModels=false`, `guardianShaders=false`. The cosmetic armor renderer does not use VBO
+Recommended settings (9005): `fancyToolModels=true` with or without a shader pack, ImmediatelyFast
+`hud_batching=false`, `guardianShaders=false` with a shader pack. The cosmetic armor renderer does not use VBO
 render types (plain `EquippedItemModelLayer` / armor layers), so it is not affected by items 1–2.
+
+## Gameplay fixes not in upstream 1.20.1
+
+- **Night vision module** (`api/modules/entities/NightVisionEntity`, DE 9005): upstream set `appliedByModule = true`
+  after removing the effect in light, so every following second the module removed night vision again, including
+  night vision from potions. Now `false`, like the other removal paths.
+- Chestpiece abilities audit (9005, code reading): shield, undying, auto-feed, night vision, speed, hill step run on
+  the server (`ModuleEntity.tick` via `ModularArmorEventHandler.livingTick`, guarded by server checks); creative
+  flight is set on both sides with energy drain server-side; elytra flight goes through BC mixins (client trigger in
+  `LocalPlayerMixin`, as vanilla); jump boost is client-predicted like vanilla. None depends on rendering or
+  `fancyToolModels`. Client-only parts: keybinds (`RegisterKeyMappingsEvent`), shield HUD (BC `HudManager` via
+  `RenderGuiEvent`), toggle packets with server handlers in `ServerPacketHandler`. Upstream quirks kept: login flight
+  restore does not check energy; the fly-speed attribute modifier is marked untested upstream.
