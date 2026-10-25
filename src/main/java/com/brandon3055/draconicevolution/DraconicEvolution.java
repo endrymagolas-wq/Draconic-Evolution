@@ -7,6 +7,7 @@ import com.brandon3055.draconicevolution.client.DEParticles;
 import com.brandon3055.draconicevolution.command.DECommands;
 import com.brandon3055.draconicevolution.handlers.*;
 import com.brandon3055.draconicevolution.init.*;
+import com.brandon3055.draconicevolution.items.cosmetic.CosmeticArmor;
 import com.brandon3055.draconicevolution.integration.computers.ComputerCraftCompatEventHandler;
 import com.brandon3055.draconicevolution.integration.equipment.EquipmentManager;
 import com.brandon3055.draconicevolution.items.tools.Dislocator;
@@ -41,6 +42,7 @@ public class DraconicEvolution {
         DETags.init();
         DEContent.init();
         DEModules.init();
+        CosmeticArmor.init(); //[1.19.2 port addition] cosmetic armor, see PORT_NOTES.md
         DESounds.init();
         DEParticles.init();
         DECreativeTabs.init();
