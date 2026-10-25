@@ -105,10 +105,11 @@ public class RenderModularChestpiece extends ToolRenderBase {
         }
 
         public void render(MultiBufferSource buffers, Matrix4 mat, int color) {
-            buffers.getBuffer(vboType.get().withCallback(() -> {
+            // 1.19.2 port: draw immediately (batching buffer sources of Oculus/ImmediatelyFast never call RenderType.end)
+            vboType.get().withCallback(() -> {
                 shader.getBaseColorUniform().glUniform4f(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, ((color >> 24) & 0xFF) / 255F);
                 shader.getModelMatUniform().glUniformMatrix4f(mat);
-            }));
+            }).drawImmediate();
         }
     }
 }

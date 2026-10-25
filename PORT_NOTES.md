@@ -240,3 +240,32 @@ chestpiece. The pieces have no gameplay function at all. Code is kept apart from
   The upstream-parity tests (WP-23 T1-T5, G4) skip the 9 items / `cosmetic/` recipes; refdiff lines in
   `tools/refdiff/allow-port.txt` ("cosmetic armor"). Offline preview: `tools/cosmetic/preview.py`. In-game look
   (lighting, render order, shader packs) is not verified by any automated check.
+
+## Client compatibility (Oculus / ImmediatelyFast)
+
+Found in game (2026-10-25) with the target pack and in a clean dev client; fixed in DE 3.1.2.9003 + BrandonsCore
+3.2.1.9008 (BC branch / DE branch `fix/vbo-bind`).
+
+1. **Invisible GUI items / black geometry (VAO corruption).** Stock CodeChickenLib 4.3.2 `VBORenderType` uploads and
+   draws its `VertexBuffer` without binding it, so on 1.19.2 the data goes into whatever vanilla VAO is bound. After a
+   chestpiece or fancy tool model was drawn, items in GUIs could turn invisible and other geometry black. Fix: the
+   chestpiece (`ModularChestpieceModel`), tool models (`ToolRenderBase` and subclasses) and BC contributor wings use
+   BrandonsCore `com.brandon3055.brandonscore.mgui.render.BindingVBORenderType`, a copy of the CCL 4.3.2 class that
+   binds/unbinds like CCL 1.20.1. CCL stays the stock 4.3.2.490 jar.
+2. **Chestpiece not drawn on the body, fancy 3D tools invisible.** Oculus (even with shaders off) and ImmediatelyFast
+   replace the buffer sources with batching sources that draw collected geometry themselves and never call
+   `RenderType.end`, the only place a VBO render type draws. All VBO submits now call
+   `BindingVBORenderType.WithCallbacks.drawImmediate()` instead of `buffers.getBuffer(type)`: `ToolRenderBase` (4
+   sites), `RenderModularChestpiece` core gem (1), `ModularChestpieceModel` (3), BC `ContributorModel` (1). Under vanilla
+   the result is identical (same RenderSystem matrices). Verified in the full pack with shaders off: chestpiece on the
+   body and 3D tools render. (The `RenderModularChestpiece` core gem site was converted during integration, same
+   pattern, not separately checked in game.)
+3. **Fancy tools still missing in the HUD hotbar** with ImmediatelyFast: its `hud_batching` batches hotbar item
+   rendering the same way. Pack-side fix (verified): `config/immediatelyfast.json` -> `"hud_batching": false`.
+   With an Oculus **shader pack active**, DE custom-shader models stay invisible in the world (BC PORT_NOTES R2, not
+   changed): use `Client.fancyToolModels=false` (2D tool sprites; the chestpiece is then not drawn on the body) and
+   `Client.guardianShaders=false` in `config/brandon3055/DraconicEvolution.cfg`.
+
+Recommended settings: no shader pack -> `fancyToolModels=true` works, set ImmediatelyFast `hud_batching=false`;
+shader pack active -> `fancyToolModels=false`, `guardianShaders=false`. The cosmetic armor renderer does not use VBO
+render types (plain `EquippedItemModelLayer` / armor layers), so it is not affected by items 1–2.
