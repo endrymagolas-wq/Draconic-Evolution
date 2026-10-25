@@ -68,6 +68,32 @@ public class DETestPlayer extends FakePlayer {
         MinecraftForge.EVENT_BUS.post(new LivingEvent.LivingTickEvent(this));
     }
 
+    /** Full attack charge: LivingEntity.attackStrengthTicker (protected) normally counts up in Player.tick, which FakePlayers skip. */
+    public void chargeAttack() {
+        this.attackStrengthTicker = 10_000;
+    }
+
+    /** LivingEntity.useItemRemaining (protected) normally counts down in updatingUsingItem (entity tick). */
+    public void setUseItemRemaining(int ticks) {
+        this.useItemRemaining = ticks;
+    }
+
+    /**
+     * Applies the main-hand item's attribute modifiers the way LivingEntity.detectEquipmentUpdates does on the entity tick
+     * (private there, and FakePlayers are not ticked): remove by modifier id, then add the item's current modifiers.
+     */
+    public void refreshMainHandAttributes() {
+        com.google.common.collect.Multimap<net.minecraft.world.entity.ai.attributes.Attribute, net.minecraft.world.entity.ai.attributes.AttributeModifier> mods =
+                getMainHandItem().getAttributeModifiers(net.minecraft.world.entity.EquipmentSlot.MAINHAND);
+        mods.forEach((attribute, modifier) -> {
+            net.minecraft.world.entity.ai.attributes.AttributeInstance instance = getAttribute(attribute);
+            if (instance != null) {
+                instance.removeModifier(modifier.getId());
+                instance.addTransientModifier(modifier);
+            }
+        });
+    }
+
     private void clearSpawnInvulnerability() {
         try {
             Field field = ObfuscationReflectionHelper.findField(ServerPlayer.class, SRG_SPAWN_INVULNERABLE_TIME);

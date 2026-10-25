@@ -230,7 +230,7 @@ public class DEContent {
     public static final TechProperties DRACONIC_TOOLS = (TechProperties) new TechProperties(TechLevel.DRACONIC).tab(DECreativeTabs.ITEMS).rarity(Rarity.RARE).durability(-1).fireResistant();
     public static final TechProperties CHAOTIC_TOOLS = (TechProperties) new TechProperties(TechLevel.CHAOTIC).tab(DECreativeTabs.ITEMS).rarity(Rarity.EPIC).durability(-1).fireResistant();
     public static DETier WYVERN_TIER = new DETier(TechLevel.WYVERN);
-    public static DETier DRACONIC_TIER = new DETier(TechLevel.DRACONIUM);
+    public static DETier DRACONIC_TIER = new DETier(TechLevel.DRACONIC); //PORT(1.19.2) fix: 1.20.1 used DRACONIUM (draconic tools got draconium speed/damage/mining level); upstream fixed it on 1.21 (d6a3ceae)
     public static DETier CHAOTIC_TIER = new DETier(TechLevel.CHAOTIC);
     public static final RegistryObject<DraconiumCapacitor> CAPACITOR_WYVERN             = ITEMS.register("wyvern_capacitor",                    () -> new DraconiumCapacitor(WYVERN_TOOLS));
     public static final RegistryObject<DraconiumCapacitor> CAPACITOR_DRACONIC           = ITEMS.register("draconic_capacitor",                  () -> new DraconiumCapacitor(DRACONIC_TOOLS));

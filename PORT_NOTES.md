@@ -306,6 +306,20 @@ render types (plain `EquippedItemModelLayer` / armor layers), so it is not affec
   `RenderGuiEvent`), toggle packets with server handlers in `ServerPacketHandler`. Upstream quirks kept: login flight
   restore does not check energy; the fly-speed attribute modifier is marked untested upstream.
 
+- **Draconic tool tier** (`init/DEContent.java:233`, DE 9007): the 1.20.1 donor builds `DRACONIC_TIER` from
+  `TechLevel.DRACONIUM`, so every Draconic tool (pickaxe, axe, shovel, hoe, sword, staff) had Draconium harvest speed
+  (10 instead of 25), damage bonus (1.125 instead of 1.75), enchantability and mining level, i.e. was weaker than the
+  Wyvern tools. Now `TechLevel.DRACONIC`, as upstream fixed it on the 1.21 branch (`d6a3ceae` "Fixed Draconic pickaxe
+  mining level"). Found by the GameTest `toolTiersUseTheirOwnStats`.
+- Tool and chestpiece GameTests (DE 9007, `src/gametest/.../ToolGameTests.java`, `ChestpieceAbilityGameTests.java`,
+  22 required tests): sword damage module / energy per hit / AOE sweep, bow ammo + Infinity + energy + projectile
+  modules, axe tree harvest and AOE, shovel AOE and the `mining_aoe` setting, chaotic AOE 11x11 and setting 4 = 9x9,
+  hoe AOE tilling and `tool_aoe`, staff AOE on any block + melee + right-click without projectile, mining without
+  energy (vanilla single break, speed 1), tier stats; creative flight (mayfly, drain, off when empty), speed, jump,
+  hill step, night vision (dark, energy cut-off, light), auto-feed. Apart from the tier they confirm the 1.20.1
+  behaviour unchanged. Test notes: the GameTest templates' floor is at relative y 1; module entity properties are
+  named by a random UUID (`ConfigProperty.generateUnique`), so tests find them by type, not by name.
+
 ## Additions not in upstream 1.20.1: classic (DE 1.12.2) models (DE 3.1.2.9006)
 
 Port-only option for our pack: the worn modular chestpiece and the 3D tools can use the look of DE 1.12.2 instead of
