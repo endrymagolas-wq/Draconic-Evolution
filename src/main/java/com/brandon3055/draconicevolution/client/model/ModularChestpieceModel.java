@@ -2,7 +2,7 @@ package com.brandon3055.draconicevolution.client.model;
 
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.buffer.VBORenderType;
+import com.brandon3055.brandonscore.mgui.render.BindingVBORenderType;
 import codechicken.lib.render.model.OBJParser;
 import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Translation;
@@ -193,12 +193,12 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
     }
 
     public class ChestpieceModelPart extends ExtendedModelPart {
-        protected final VBORenderType renderType;
+        protected final BindingVBORenderType renderType;
         protected final BCShader<?> shader;
 
         public ChestpieceModelPart(CCModel model, RenderType baseType, BCShader<?> shader) {
             this.shader = shader;
-            renderType = new VBORenderType(baseType, (format, builder) -> {
+            renderType = new BindingVBORenderType(baseType, (format, builder) -> {
                 CCRenderState ccrs = CCRenderState.instance();
                 ccrs.reset();
                 ccrs.bind(builder, format);
@@ -212,10 +212,10 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
                 poseStack.pushPose();
                 this.translateAndRotate(poseStack);
                 Matrix4 mat = new Matrix4(poseStack);
-                buffers.getBuffer(renderType.withCallback(() -> {
+                renderType.withCallback(() -> {
                     ToolRenderBase.glUniformBaseColor(shader, techLevel, 1F);
                     shader.getModelMatUniform().glUniformMatrix4f(mat);
-                }));
+                }).drawImmediate();
                 poseStack.popPose();
             }
         }
@@ -236,10 +236,10 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
                 this.translateAndRotate(poseStack);
                 Matrix4 mat = new Matrix4(poseStack);
                 int color = shieldColour;
-                buffers.getBuffer(renderType.withCallback(() -> {
+                renderType.withCallback(() -> {
                     shader.getBaseColorUniform().glUniform4f(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, ((color >> 24) & 0xFF) / 255F);
                     shader.getModelMatUniform().glUniformMatrix4f(mat);
-                }));
+                }).drawImmediate();
                 poseStack.popPose();
             }
         }
@@ -261,11 +261,11 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
                 Matrix4 mat = new Matrix4(poseStack);
                 int color = shieldColour;
                 float state = shieldState;
-                buffers.getBuffer(renderType.withCallback(() -> {
+                renderType.withCallback(() -> {
                     shader.getBaseColourUniform().glUniform4f(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, ((color >> 24) & 0xFF) / 255F);
                     shader.getActivationUniform().glUniform1f(state);
                     shader.getModelMatUniform().glUniformMatrix4f(mat);
-                }));
+                }).drawImmediate();
                 poseStack.popPose();
             }
         }
