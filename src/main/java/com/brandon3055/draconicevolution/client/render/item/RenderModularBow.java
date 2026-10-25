@@ -15,6 +15,7 @@ import com.brandon3055.brandonscore.utils.EnergyUtils;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.api.capability.DECapabilities;
 import com.brandon3055.draconicevolution.client.DEShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.client.shader.ToolShader;
 import com.brandon3055.draconicevolution.items.equipment.ModularBow;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -57,6 +58,10 @@ public class RenderModularBow extends ToolRenderBase {
             .setWriteMaskState(RenderStateShard.WriteMaskStateShard.COLOR_WRITE)
             .createCompositeState(false)
     );
+
+    //PORT(1.19.2) shader-pack fallback for the string beams (vanilla emissive translucent, tinted with the string colour)
+    private static final RenderType bowStringFallbackType = RenderType.entityTranslucentEmissive(new ResourceLocation(DraconicEvolution.MODID, "textures/item/equipment/bow_string.png"));
+    private int stringColour = 0xFFFFFFFF;
 
     private final ToolPart basePart;
     private final ToolPart materialPart;
@@ -107,8 +112,16 @@ public class RenderModularBow extends ToolRenderBase {
     }
 
     private void drawStrings(CCRenderState ccrs, ItemTransforms.TransformType context, Matrix4 topMat, Matrix4 bottomMat, MultiBufferSource buffers, double drawAngle, boolean isCharged) {
-        glUniformStringBaseColor(DEShaders.BOW_STRING_SHADER);
-        VertexConsumer builder = new TransformingVertexConsumer(buffers.getBuffer(bowStringType), topMat);
+        VertexConsumer builder;
+        if (ShaderPackFallback.isActive(context)) {
+            float[] c = STRING_BASE_COLORS[techLevel.index];
+            stringColour = 0xFF000000 | (int) (Math.min(1F, c[0] * 1.5F) * 255) << 16 | (int) (Math.min(1F, c[1] * 1.5F) * 255) << 8 | (int) (Math.min(1F, c[2] * 1.5F) * 255);
+            builder = new TransformingVertexConsumer(buffers.getBuffer(bowStringFallbackType), topMat);
+        } else {
+            stringColour = 0xFFFFFFFF;
+            glUniformStringBaseColor(DEShaders.BOW_STRING_SHADER);
+            builder = new TransformingVertexConsumer(buffers.getBuffer(bowStringType), topMat);
+        }
 
         double crystalX = 12.508D * 0.01D;
         double crystalY = 67.844D * 0.01D;
@@ -117,6 +130,7 @@ public class RenderModularBow extends ToolRenderBase {
         if (isCharged) {
             renderBeam(builder, new Vector3(0, -crystalX, crystalY), new Vector3(0, -(crystalX + c), 0), ccrs.brightness);
             renderBeam(builder, new Vector3(0, -crystalX, -crystalY), new Vector3(0, -(crystalX + c), 0), ccrs.brightness);
+            stringColour = 0xFFFFFFFF;
         }
 
         if (drawAngle > 0) {
@@ -174,10 +188,11 @@ public class RenderModularBow extends ToolRenderBase {
         Vector3 diff1 = p2.copy().subtract(p1);
         Vector3 diff2 = p4.copy().subtract(p1);
         Vector3 norm = diff1.crossProduct(diff2).normalize();
-        bufferVertex(buffer, p1.x, p1.y, p1.z, 0.0F, 0F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight);
-        bufferVertex(buffer, p2.x, p2.y, p2.z, 0.0F, 1F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight);
-        bufferVertex(buffer, p4.x, p4.y, p4.z, 1F, 1F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight);
-        bufferVertex(buffer, p3.x, p3.y, p3.z, 1F, 0F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight);
+        int col = stringColour;
+        bufferVertex(buffer, p1.x, p1.y, p1.z, 0.0F, 0F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight, col);
+        bufferVertex(buffer, p2.x, p2.y, p2.z, 0.0F, 1F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight, col);
+        bufferVertex(buffer, p4.x, p4.y, p4.z, 1F, 1F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight, col);
+        bufferVertex(buffer, p3.x, p3.y, p3.z, 1F, 0F, (float) norm.x, (float) norm.y, (float) norm.z, packedLight, col);
     }
 
     private void renderArrow(Matrix4 mat, MultiBufferSource getter, int packedLight) {
@@ -202,7 +217,11 @@ public class RenderModularBow extends ToolRenderBase {
     }
 
     public void bufferVertex(VertexConsumer builder, double x, double y, double z, float u, float v, float normX, float normZ, float normY, int light) {
-        builder.vertex(x, y, z).color(255, 255, 255, 255).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normX, normY, normZ).endVertex();
+        bufferVertex(builder, x, y, z, u, v, normX, normZ, normY, light, 0xFFFFFFFF);
+    }
+
+    public void bufferVertex(VertexConsumer builder, double x, double y, double z, float u, float v, float normX, float normZ, float normY, int light, int argb) {
+        builder.vertex(x, y, z).color((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF, (argb >>> 24)).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normX, normY, normZ).endVertex();
     }
 
     @Override

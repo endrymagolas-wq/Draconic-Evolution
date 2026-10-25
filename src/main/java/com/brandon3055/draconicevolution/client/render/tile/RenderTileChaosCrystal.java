@@ -7,6 +7,7 @@ import codechicken.lib.render.model.OBJParser;
 import codechicken.lib.util.ClientUtils;
 import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Vector3;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileChaosCrystal;
 import com.brandon3055.draconicevolution.client.DEShaders;
 import com.brandon3055.draconicevolution.client.handler.ClientEventHandler;
@@ -54,7 +55,13 @@ public class RenderTileChaosCrystal implements BlockEntityRenderer<TileChaosCrys
             .setCullState(RenderStateShard.NO_CULL)
             .createCompositeState(false));
 
+    //PORT(1.19.2) shader-pack fallback (vanilla entity types; see ShaderPackFallback)
+    private static final RenderType INNER_FALLBACK = RenderType.entityCutoutNoCull(ShaderPackFallback.CHAOS);
+    private static final RenderType CRYSTAL_FALLBACK = RenderType.entityTranslucent(new ResourceLocation(MODID, "textures/block/chaos_crystal.png"));
+    private static final RenderType SHIELD_FALLBACK = RenderType.entityTranslucentEmissive(ShaderPackFallback.WHITE);
+
     private final CCModel model;
+    private final CCModel fallbackModel;
 
     public RenderTileChaosCrystal(BlockEntityRendererProvider.Context context) {
         Map<String, CCModel> map = new OBJParser(new ResourceLocation(MODID, "models/block/chaos_crystal.obj"))
@@ -63,6 +70,7 @@ public class RenderTileChaosCrystal implements BlockEntityRenderer<TileChaosCrys
         model = CCModel.combine(map.values())
                 .backfacedCopy()
                 .computeNormals();
+        fallbackModel = ShaderPackFallback.toQuads(model, false);
     }
 
     @Override
@@ -82,6 +90,18 @@ public class RenderTileChaosCrystal implements BlockEntityRenderer<TileChaosCrys
         mat.translate(0.5, 0.5, 0.5);
         mat.rotate((ClientEventHandler.elapsedTicks + partialTicks) / 180F, Vector3.Y_POS);
         mat.scale(0.75F);
+
+        if (ShaderPackFallback.isActive()) {
+            //PORT(1.19.2): Oculus shader pack active -> the chaos/shield shaders are not drawn; vanilla entity types instead
+            ShaderPackFallback.render(fallbackModel, INNER_FALLBACK, getter, mat, ShaderPackFallback.FULL_BRIGHT, packedOverlay, 0xFFFFFFFF);
+            ShaderPackFallback.render(fallbackModel, CRYSTAL_FALLBACK, getter, mat, packedLight, packedOverlay, 0xFFFFFFF0);
+            if (!te.guardianDefeated.get()) {
+                Matrix4 shieldMat = mat.copy();
+                shieldMat.scale(1.03);
+                ShaderPackFallback.render(fallbackModel, SHIELD_FALLBACK, getter, shieldMat, ShaderPackFallback.FULL_BRIGHT, packedOverlay, 0xFF1A1A50);
+            }
+            return;
+        }
 
         Player player = Minecraft.getInstance().player;
         DEShaders.chaosBlockTime.glUniform1f((float) ClientUtils.getRenderTime());

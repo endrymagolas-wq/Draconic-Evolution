@@ -9,6 +9,7 @@ import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Vector3;
 import com.brandon3055.brandonscore.client.shader.BCShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyPylon;
 import com.brandon3055.draconicevolution.client.handler.ClientEventHandler;
@@ -38,6 +39,7 @@ public class RenderTileEnergyPylon implements BlockEntityRenderer<TileEnergyPylo
             .setWriteMaskState(RenderStateShard.COLOR_WRITE)
             .createCompositeState(false)
     );
+    private static final RenderType SHELL_FALLBACK_TYPE = RenderType.eyes(new ResourceLocation(DraconicEvolution.MODID, "textures/block/pylon_sphere_texture.png"));
     private final CCModel model;
 
     public RenderTileEnergyPylon(BlockEntityRendererProvider.Context context) {
@@ -86,7 +88,16 @@ public class RenderTileEnergyPylon implements BlockEntityRenderer<TileEnergyPylo
             ccrs.baseColour = Colour.packRGBA(te.colour.get().rF() * (1F - f), te.colour.get().gF(), te.colour.get().bF(), 1F - (f * f));
         }
 
-        ccrs.bind(shellType, getter);
+        if (ShaderPackFallback.isActive()) {
+            //PORT(1.19.2): BC custom shader is not drawn under an Oculus shader pack -> additive vanilla "eyes" type,
+            //alpha folded into the colour (additive blending ignores alpha)
+            int c = ccrs.baseColour;
+            float alpha = (c & 0xFF) / 255F;
+            ccrs.baseColour = Colour.packRGBA(((c >>> 24) & 0xFF) / 255F * alpha, ((c >> 16) & 0xFF) / 255F * alpha, ((c >> 8) & 0xFF) / 255F * alpha, 1F);
+            ccrs.bind(SHELL_FALLBACK_TYPE, getter);
+        } else {
+            ccrs.bind(shellType, getter);
+        }
         mat.scale(1 + f);
         model.render(ccrs, mat);
     }

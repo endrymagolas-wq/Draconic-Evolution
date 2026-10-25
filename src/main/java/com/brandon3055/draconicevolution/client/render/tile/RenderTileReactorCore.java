@@ -1,5 +1,6 @@
 package com.brandon3055.draconicevolution.client.render.tile;
 
+import codechicken.lib.colour.Colour;
 import codechicken.lib.gui.modular.lib.GuiRender;
 import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.CCModel;
@@ -13,6 +14,7 @@ import com.brandon3055.brandonscore.client.render.BlockEntityRendererTransparent
 import com.brandon3055.brandonscore.client.render.RenderUtils;
 import com.brandon3055.brandonscore.lib.Vec3D;
 import com.brandon3055.brandonscore.utils.MathUtils;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.blocks.reactor.tileentity.TileReactorComponent;
 import com.brandon3055.draconicevolution.blocks.reactor.tileentity.TileReactorCore;
@@ -138,6 +140,41 @@ public class RenderTileReactorCore implements BlockEntityRendererTransparent<Til
         RenderUtils.endBatch(getter);
     }
 
+    //PORT(1.19.2) shader-pack fallback (vanilla entity types; see ShaderPackFallback)
+    private static final RenderType REACTOR_CORE_FALLBACK_TYPE = RenderType.entityTranslucentEmissive(new ResourceLocation(DraconicEvolution.MODID, "textures/block/reactor/reactor_core.png"));
+    private static final RenderType REACTOR_SHIELD_FALLBACK_TYPE = RenderType.entityTranslucentEmissive(new ResourceLocation(DraconicEvolution.MODID, "textures/block/reactor/reactor_shield.png"));
+
+    /**
+     * PORT(1.19.2): reactor core + shield while an Oculus shader pack is active (Oculus does not draw the DE reactor
+     * shaders). Same model and transforms; colours approximate reactor.fsh / reactor_shield.fsh: the core gets brighter
+     * and whiter with temperature, the shield is a blue/cyan shell whose opacity follows the shader's shield intensity.
+     */
+    public static void renderCoreShaderPackFallback(Matrix4 mat, CCRenderState ccrs, double animState, float intensity, float shieldPower, MultiBufferSource getter) {
+        if (model == null) {
+            Map<String, CCModel> map = new OBJParser(new ResourceLocation(DraconicEvolution.MODID, "models/block/reactor/reactor_core.obj")).quads().ignoreMtl().parse();
+            model = CCModel.combine(map.values());
+        }
+        float iCap = Math.max(0F, Math.min(1F, intensity));
+        float m = 0.3F + 0.7F * Math.max(0F, Math.min(1F, intensity * 1.2F));
+        ccrs.baseColour = Colour.packRGBA(m, m * (0.55F + 0.45F * iCap), m * (0.35F + 0.65F * iCap * iCap), 1F);
+        ccrs.brightness = ShaderPackFallback.FULL_BRIGHT;
+        ccrs.bind(REACTOR_CORE_FALLBACK_TYPE, getter);
+        model.render(ccrs, mat);
+
+        float power = (0.7F * shieldPower) - (float) (1 - animState);
+        if (power > 0) {
+            Matrix4 shieldMat = mat.copy();
+            shieldMat.scale(1.05);
+            float r = Math.max(0.1F, 0.5F - (power * 2F));
+            float g = Math.min(1F, power + 0.2F);
+            float b = Math.min(1F, (power * 2F) + 0.2F);
+            ccrs.baseColour = Colour.packRGBA(r, g, b, Math.min(0.85F, 0.25F + power));
+            ccrs.bind(REACTOR_SHIELD_FALLBACK_TYPE, getter);
+            model.render(ccrs, shieldMat);
+        }
+        RenderUtils.endBatch(getter);
+    }
+
     public static void renderGUI(GuiRender render, TileReactorCore te) {
         double diameter = 100;
         float t = (float) (te.temperature.get() / TileReactorCore.MAX_TEMPERATURE);
@@ -174,7 +211,11 @@ public class RenderTileReactorCore implements BlockEntityRendererTransparent<Til
         mat.scale(diameter);
         mat.rotate((ClientEventHandler.elapsedTicks + partialTicks) / 400F, Vector3.Y_POS);
 
-        renderCore(mat, ccrs, animation, te.shaderAnimationState.get(), intensity, shieldPower, partialTicks, buffers);
+        if (ShaderPackFallback.isActive()) {
+            renderCoreShaderPackFallback(mat, ccrs, te.shaderAnimationState.get(), intensity, shieldPower, buffers);
+        } else {
+            renderCore(mat, ccrs, animation, te.shaderAnimationState.get(), intensity, shieldPower, partialTicks, buffers);
+        }
 
         float coreSize = (float) te.getCoreDiameter() / 2.3F;
         float fxState = te.shieldAnimationState;

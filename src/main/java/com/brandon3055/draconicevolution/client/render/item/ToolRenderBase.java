@@ -14,6 +14,7 @@ import com.brandon3055.brandonscore.client.shader.BCShader;
 import com.brandon3055.brandonscore.client.shader.BCShaders;
 import com.brandon3055.brandonscore.client.shader.ChaosEntityShader;
 import com.brandon3055.draconicevolution.client.DEShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.client.shader.ToolShader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,6 +42,10 @@ public abstract class ToolRenderBase implements IItemRenderer {
     protected final TechLevel techLevel;
     protected final String tool;
 
+    //PORT(1.19.2) shader-pack fallback: light/overlay of the item draw in progress (item rendering is single-threaded)
+    protected static int fallbackLight = ShaderPackFallback.FULL_BRIGHT;
+    protected static int fallbackOverlay = ShaderPackFallback.NO_OVERLAY;
+
     public ToolRenderBase(TechLevel techLevel, String tool) {
         this.techLevel = techLevel;
         this.tool = tool;
@@ -53,6 +58,8 @@ public abstract class ToolRenderBase implements IItemRenderer {
         ccrs.reset();
         ccrs.brightness = packedLight;
         ccrs.overlay = packedOverlay;
+        fallbackLight = packedLight;
+        fallbackOverlay = packedOverlay;
 
         DEShaders.TOOL_BASE_SHADER.getUv1OverrideUniform().glUniform2i(packedOverlay & 0xFFFF, (packedOverlay >> 16) & 0xFFFF);
         DEShaders.TOOL_BASE_SHADER.getUv2OverrideUniform().glUniform2i(packedLight & 0xFFFF, (packedLight >> 16) & 0xFFFF);
@@ -133,7 +140,9 @@ public abstract class ToolRenderBase implements IItemRenderer {
                 .createCompositeState(false)
         );
 
-        return new BaseToolPart(model, baseType, guiType, DEShaders.TOOL_BASE_SHADER);
+        BaseToolPart part = new BaseToolPart(model, baseType, guiType, DEShaders.TOOL_BASE_SHADER);
+        part.setFallback(model, RenderType.entityCutout(new ResourceLocation(MODID, "textures/item/equipment/" + levelName + "_" + tool + ".png")), 0xFFFFFFFF, false);
+        return part;
     }
 
     //These are parts like the head that are made out of the base material and will have the chaos shader applied if tech level is chaos.
@@ -147,7 +156,9 @@ public abstract class ToolRenderBase implements IItemRenderer {
                 .setOverlayState(RenderStateShard.OVERLAY)
                 .createCompositeState(false)
         );
-        return new ChaoticToolPart(model, chaoticType, BCShaders.CHAOS_ENTITY_SHADER);
+        ChaoticToolPart part = new ChaoticToolPart(model, chaoticType, BCShaders.CHAOS_ENTITY_SHADER);
+        part.setFallback(model, RenderType.entityCutout(ShaderPackFallback.CHAOS), 0xFFFFFFFF, false);
+        return part;
     }
 
     protected ToolPart gemPart(CCModel model) {
@@ -160,7 +171,7 @@ public abstract class ToolRenderBase implements IItemRenderer {
                 .createCompositeState(false)
         );
 
-        return new SimpleToolPart(model, gemType, DEShaders.TOOL_GEM_SHADER);
+        return energyFallback(new SimpleToolPart(model, gemType, DEShaders.TOOL_GEM_SHADER), model);
     }
 
     //These are the shaded model "inlays" on the handles of most tools
@@ -174,7 +185,7 @@ public abstract class ToolRenderBase implements IItemRenderer {
                 .createCompositeState(false)
         );
 
-        return new SimpleToolPart(model, gemType, DEShaders.TOOL_TRACE_SHADER);
+        return energyFallback(new SimpleToolPart(model, gemType, DEShaders.TOOL_TRACE_SHADER), model);
     }
 
     protected ToolPart bladePart(CCModel model) {
@@ -187,15 +198,51 @@ public abstract class ToolRenderBase implements IItemRenderer {
                 .createCompositeState(false)
         );
 
-        return new SimpleToolPart(model, gemType, DEShaders.TOOL_BLADE_SHADER);
+        return energyFallback(new SimpleToolPart(model, gemType, DEShaders.TOOL_BLADE_SHADER), model);
+    }
+
+    /**
+     * PORT(1.19.2): gems, traces, blades and chestpiece power crystals: emissive translucent vanilla type with the
+     * tech-level fallback texture/colour while a shader pack is active (see {@link ShaderPackFallback}).
+     */
+    protected <P extends ToolPart> P energyFallback(P part, CCModel model) {
+        part.setFallback(model, RenderType.entityTranslucentEmissive(ShaderPackFallback.energyTexture(techLevel)), ShaderPackFallback.energyColour(techLevel), true);
+        return part;
     }
 
     protected abstract static class ToolPart {
 
         protected final BCShader<?> shader;
+        //PORT(1.19.2) shader-pack fallback (vanilla entity buffers), see ShaderPackFallback
+        @Nullable
+        protected CCModel fallbackModel;
+        @Nullable
+        protected RenderType fallbackType;
+        protected int fallbackColour = 0xFFFFFFFF;
+        protected boolean fallbackEmissive;
 
         protected ToolPart(BCShader<?> shader) {
             this.shader = shader;
+        }
+
+        protected void setFallback(CCModel model, RenderType type, int rgba, boolean emissive) {
+            this.fallbackModel = ShaderPackFallback.toQuads(model);
+            this.fallbackType = type;
+            this.fallbackColour = rgba;
+            this.fallbackEmissive = emissive;
+        }
+
+        /**
+         * Draws the vanilla fallback when a shader pack is active and this is not a GUI draw.
+         *
+         * @return true if the fallback was drawn (the shader path must then be skipped)
+         */
+        protected boolean renderFallback(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, int rgba) {
+            if (fallbackModel == null || fallbackType == null || !ShaderPackFallback.isActive(transformType)) return false;
+            ShaderPackFallback.render(fallbackModel, fallbackType, buffers, mat,
+                    fallbackEmissive ? ShaderPackFallback.FULL_BRIGHT : fallbackLight,
+                    fallbackEmissive ? ShaderPackFallback.NO_OVERLAY : fallbackOverlay, rgba);
+            return true;
         }
 
         public final void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat) {
@@ -228,6 +275,7 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
+            if (renderFallback(transformType, buffers, mat, fallbackColour)) return;
             if (transformType == ItemTransforms.TransformType.GUI) {
                 guiVboType.get().withCallback(() -> shader.getModelMatUniform().glUniformMatrix4f(mat)).drawImmediate();
             } else {
@@ -252,6 +300,7 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
+            if (renderFallback(transformType, buffers, mat, fallbackColour)) return;
             vboType.get().withCallback(() -> {
                 glUniformBaseColor(shader, techLevel, pulse);
                 shader.getModelMatUniform().glUniformMatrix4f(mat);
@@ -271,6 +320,7 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
+            if (renderFallback(transformType, buffers, mat, fallbackColour)) return;
             vboType.get().withCallback(() -> {
                 shader.getDisableLightUniform().glUniform1b(true);
                 shader.getDisableOverlayUniform().glUniform1b(true);

@@ -17,6 +17,7 @@ import com.brandon3055.brandonscore.client.shader.BCShaders;
 import com.brandon3055.brandonscore.lib.Vec3I;
 import com.brandon3055.brandonscore.lib.datamanager.ManagedPos;
 import com.brandon3055.brandonscore.multiblock.MultiBlockDefinition;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyCore;
 import com.brandon3055.draconicevolution.client.AtlasTextureHelper;
@@ -89,6 +90,11 @@ public class RenderTileEnergyCore implements BlockEntityRenderer<TileEnergyCore>
             .createCompositeState(false)
     );
 
+    //PORT(1.19.2) shader-pack fallback types (vanilla entity types; see ShaderPackFallback)
+    private static final RenderType OUTER_CORE_FALLBACK_TYPE = RenderType.entityTranslucentEmissive(new ResourceLocation(DraconicEvolution.MODID, "textures/block/energy_core/energy_core_overlay.png"));
+    private static final RenderType INNER_STAB_FALLBACK_TYPE = RenderType.entityTranslucentEmissive(new ResourceLocation(DraconicEvolution.MODID, "textures/block/energy_core/stabilizer_sphere.png"));
+    private static final RenderType OUTER_STAB_FALLBACK_TYPE = RenderType.entityTranslucentEmissive(new ResourceLocation(DraconicEvolution.MODID, "textures/block/energy_core/stabilizer_sphere.png"));
+
     private final CCModel modelStabilizerSphere;
     private final CCModel modelEnergyCore;
 
@@ -146,7 +152,9 @@ public class RenderTileEnergyCore implements BlockEntityRenderer<TileEnergyCore>
 
         renderInnerCore(te, ccrs, mat, getter, partialTicks, rotation, scale);
         ccrs.reset();
-        if (te.legacyRender.get()) {
+        if (ShaderPackFallback.isActive()) {
+            renderShaderPackOuterCore(te, ccrs, mat, getter, rotation, scale);
+        } else if (te.legacyRender.get()) {
             renderLegacyOuterCore(te, ccrs, mat, getter, partialTicks, rotation, scale);
         } else {
             renderFancyOuterCore(te, ccrs, mat, getter, partialTicks, rotation, scale);
@@ -206,6 +214,24 @@ public class RenderTileEnergyCore implements BlockEntityRenderer<TileEnergyCore>
         modelEnergyCore.render(ccrs, overlayMat);
     }
 
+    /**
+     * PORT(1.19.2): outer core while an Oculus shader pack is active (the DE core shader and BC's posColourTexAlpha0 are
+     * not drawn by Oculus). Same geometry/transform as the legacy outer core, vanilla emissive translucent type, tinted
+     * with the core's effect colour (custom or default).
+     */
+    public void renderShaderPackOuterCore(TileEnergyCore te, CCRenderState ccrs, Matrix4 mat, MultiBufferSource getter, float rotation, double scale) {
+        boolean t8 = te.tier.get() == 8;
+        float[] effect = unpack(te.customColour.get() ? te.effectColour.get() : t8 ? TileEnergyCore.DEFAULT_EFFECT_COLOUR_T8 : TileEnergyCore.DEFAULT_EFFECT_COLOUR);
+        ccrs.baseColour = Colour.packRGBA(effect[0], effect[1], effect[2], 1F);
+        ccrs.brightness = ShaderPackFallback.FULL_BRIGHT;
+        ccrs.bind(OUTER_CORE_FALLBACK_TYPE, getter);
+        Matrix4 overlayMat = mat.copy();
+        overlayMat.translate(Vector3.CENTER);
+        overlayMat.scale(scale * -0.7, scale * -0.7, scale * -0.7);
+        overlayMat.rotate(rotation * 0.5F * MathHelper.torad, new Vector3(0F, -1F, -0.5F).normalize());
+        modelEnergyCore.render(ccrs, overlayMat);
+    }
+
     public void renderLegacyOuterCore(TileEnergyCore te, CCRenderState ccrs, Matrix4 mat, MultiBufferSource getter, float partialTicks, float rotation, double scale) {
         if (te.tier.get() == 8) {
             ccrs.baseColour = Colour.packRGBA(0.95F, 0.45F, 0F, 1F);
@@ -227,6 +253,7 @@ public class RenderTileEnergyCore implements BlockEntityRenderer<TileEnergyCore>
             return;
         }
 
+        boolean shaderPack = ShaderPackFallback.isActive();
         for (ManagedPos posOffset : te.stabilizerPositions) {
             Matrix4 mat = matrix4.copy();
             mat.translate(-posOffset.get().getX() + 0.5, -posOffset.get().getY() + 0.5, -posOffset.get().getZ() + 0.5);
@@ -253,14 +280,14 @@ public class RenderTileEnergyCore implements BlockEntityRenderer<TileEnergyCore>
             ccrs.baseColour = 0x00FFFFFF;
             ccrs.brightness = 240;
             innerMat.rotate((ClientEventHandler.elapsedTicks + partialTick) * MathHelper.torad, new Vector3(0, -1, 0));
-            ccrs.bind(innerStabType, getter);
+            ccrs.bind(shaderPack ? INNER_STAB_FALLBACK_TYPE : innerStabType, getter);
             modelStabilizerSphere.render(ccrs, innerMat);
 
             mat.scale(1.1F, 1.1F, 1.1F);
             ccrs.baseColour = 0x00FFFF7F;
             ccrs.brightness = 240;
             mat.rotate((ClientEventHandler.elapsedTicks + partialTick) * 0.5F * MathHelper.torad, new Vector3(0, 1, 0));
-            ccrs.bind(outerStabType, getter);
+            ccrs.bind(shaderPack ? OUTER_STAB_FALLBACK_TYPE : outerStabType, getter);
             modelStabilizerSphere.render(ccrs, mat);
         }
     }

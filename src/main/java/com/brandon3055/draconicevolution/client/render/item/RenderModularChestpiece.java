@@ -15,6 +15,7 @@ import com.brandon3055.draconicevolution.api.capability.ModuleHost;
 import com.brandon3055.draconicevolution.api.modules.ModuleTypes;
 import com.brandon3055.draconicevolution.api.modules.entities.ShieldControlEntity;
 import com.brandon3055.draconicevolution.client.DEShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.client.shader.ToolShader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -70,7 +71,7 @@ public class RenderModularChestpiece extends ToolRenderBase {
             }
         }
         gemPart.render(context, buffers, mat);
-        coreGemPart.render(buffers, mat, shieldColour);
+        coreGemPart.render(context, buffers, mat, shieldColour);
     }
 
     @Override
@@ -88,7 +89,9 @@ public class RenderModularChestpiece extends ToolRenderBase {
                 .createCompositeState(false)
         );
 
-        return new CoreGemPart(model, gemType, DEShaders.CHESTPIECE_GEM_SHADER);
+        CoreGemPart part = new CoreGemPart(model, gemType, DEShaders.CHESTPIECE_GEM_SHADER);
+        part.setFallback(model, RenderType.entityTranslucentEmissive(ShaderPackFallback.WHITE), 0xFFFFFFFF, true);
+        return part;
     }
 
     private class CoreGemPart extends SimpleToolPart {
@@ -101,10 +104,12 @@ public class RenderModularChestpiece extends ToolRenderBase {
 
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
-            render(buffers, mat, 0xFFFFFFFF);
+            render(transformType, buffers, mat, 0xFFFFFFFF);
         }
 
-        public void render(MultiBufferSource buffers, Matrix4 mat, int color) {
+        public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, int color) {
+            //PORT(1.19.2) shader-pack fallback: white emissive gem tinted with the shield colour (as the gem shader's BaseColor)
+            if (renderFallback(transformType, buffers, mat, ShaderPackFallback.argbToRgba(color, 0xFF))) return;
             // 1.19.2 port: draw immediately (batching buffer sources of Oculus/ImmediatelyFast never call RenderType.end)
             vboType.get().withCallback(() -> {
                 shader.getBaseColorUniform().glUniform4f(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, ((color >> 24) & 0xFF) / 255F);

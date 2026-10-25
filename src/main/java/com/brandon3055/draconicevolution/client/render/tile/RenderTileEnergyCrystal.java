@@ -15,6 +15,7 @@ import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.blocks.energynet.tileentity.TileCrystalBase;
 import com.brandon3055.draconicevolution.blocks.energynet.tileentity.TileCrystalDirectIO;
 import com.brandon3055.draconicevolution.client.DEShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.client.handler.ClientEventHandler;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -83,6 +84,8 @@ public class RenderTileEnergyCrystal implements BlockEntityRenderer<TileCrystalB
         DEShaders.energyCrystalColour.glUniform3f(COLOURS[tier][0], COLOURS[tier][1], COLOURS[tier][2]);
 //        DEShaders.energyCrystalAngle.glUniform2f(xrot / -3.125F, yrot / 3.125F);
 
+        //PORT(1.19.2): with an Oculus shader pack active the crystal shader is not drawn; use DE's own distance fallback
+        boolean shaderPack = ShaderPackFallback.isActive();
         if (te instanceof TileCrystalDirectIO) {
             ccrs.bind(crystalBaseType, getter);
             mat.translate(0.5, 1, 0.5);
@@ -90,7 +93,7 @@ public class RenderTileEnergyCrystal implements BlockEntityRenderer<TileCrystalB
             mat.apply(Rotation.sideOrientation(((TileCrystalDirectIO) te).facing.get().getOpposite().get3DDataValue(), 0).at(new Vector3(0, 1, 0)));
             crystalBase.render(ccrs, mat);
             mat.rotate((ClientEventHandler.elapsedTicks + partialTicks) / 400F, new Vector3(0, 1, 0));
-            if (mm < 1) {
+            if (mm < 1 && !shaderPack) {
                 ccrs.bind(crystalType, getter);
                 crystalHalf.render(ccrs, mat);
             } else {
@@ -104,7 +107,7 @@ public class RenderTileEnergyCrystal implements BlockEntityRenderer<TileCrystalB
             mat.rotate(180 * MathHelper.torad, new Vector3(1, 0, 0));
             mat.scale(-0.5);
             mat.rotate((ClientEventHandler.elapsedTicks + partialTicks) / 400F, new Vector3(0, 1, 0));
-            if (mm < 1) {
+            if (mm < 1 && !shaderPack) {
                 ccrs.bind(crystalType, getter);
                 crystalFull.render(ccrs, mat);
             } else {

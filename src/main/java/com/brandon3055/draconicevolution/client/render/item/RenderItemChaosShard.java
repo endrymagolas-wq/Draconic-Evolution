@@ -10,6 +10,7 @@ import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Vector3;
 import com.brandon3055.brandonscore.client.shader.BCShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.init.DEContent;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -50,7 +51,12 @@ public class RenderItemChaosShard implements IItemRenderer {
             .setOverlayState(RenderStateShard.OVERLAY)
             .createCompositeState(false));
 
+    //PORT(1.19.2) shader-pack fallback (world/hand only; vanilla entity types; see ShaderPackFallback)
+    private static final RenderType INNER_FALLBACK = RenderType.entityCutoutNoCull(ShaderPackFallback.CHAOS);
+    private static final RenderType CRYSTAL_FALLBACK = RenderType.entityTranslucent(new ResourceLocation(MODID, "textures/block/chaos_crystal.png"));
+
     private final CCModel shard;
+    private final CCModel fallbackShard;
     private final Item item;
 
     public RenderItemChaosShard(Item item) {
@@ -61,6 +67,7 @@ public class RenderItemChaosShard implements IItemRenderer {
         shard = CCModel.combine(map.values())
                 .backfacedCopy()
                 .computeNormals();
+        fallbackShard = ShaderPackFallback.toQuads(shard, false);
     }
 
     @Override
@@ -71,6 +78,12 @@ public class RenderItemChaosShard implements IItemRenderer {
         ccrs.brightness = packedLight;
         ccrs.overlay = packedOverlay;
         mat.apply(new Scale(item == DEContent.CHAOS_SHARD.get() ? 1 : item == DEContent.CHAOS_FRAG_LARGE.get() ? 0.75 : item == DEContent.CHAOS_FRAG_MEDIUM.get() ? 0.5 : 0.25).at(new Vector3(0.5, 0.5, 0.5)));
+
+        if (ShaderPackFallback.isActive(context)) {
+            ShaderPackFallback.render(fallbackShard, INNER_FALLBACK, getter, mat, packedLight, packedOverlay, 0xFFFFFFFF);
+            ShaderPackFallback.render(fallbackShard, CRYSTAL_FALLBACK, getter, mat, packedLight, packedOverlay, 0xFFFFFFF0);
+            return;
+        }
 
         BCShaders.CHAOS_ENTITY_SHADER.getModelMatUniform().glUniformMatrix4f(new Matrix4());
         BCShaders.CHAOS_ENTITY_SHADER.getSimpleLightUniform().glUniform1b(true);

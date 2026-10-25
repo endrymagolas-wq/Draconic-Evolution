@@ -4,6 +4,7 @@ import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
 import com.brandon3055.brandonscore.mgui.render.BindingVBORenderType;
 import codechicken.lib.render.model.OBJParser;
+import codechicken.lib.util.ClientUtils;
 import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Translation;
 import com.brandon3055.brandonscore.api.TechLevel;
@@ -18,6 +19,7 @@ import com.brandon3055.draconicevolution.api.capability.ModuleHost;
 import com.brandon3055.draconicevolution.api.modules.ModuleTypes;
 import com.brandon3055.draconicevolution.api.modules.entities.ShieldControlEntity;
 import com.brandon3055.draconicevolution.client.DEShaders;
+import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
 import com.brandon3055.draconicevolution.client.render.item.ToolRenderBase;
 import com.brandon3055.brandonscore.client.shader.BCShader;
 import com.brandon3055.draconicevolution.client.shader.ShieldShader;
@@ -116,17 +118,23 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
                 .createCompositeState(false)
         );
 
+        //PORT(1.19.2) shader-pack fallback types (vanilla entity render types, see ShaderPackFallback)
+        RenderType baseFallback = RenderType.entityCutout(new ResourceLocation(MODID, "textures/item/equipment/" + levelName + "_chestpeice.png"));
+        RenderType chaoticFallback = RenderType.entityCutout(ShaderPackFallback.CHAOS);
+        RenderType gemFallback = RenderType.entityTranslucentEmissive(ShaderPackFallback.energyTexture(techLevel));
+        RenderType coreGemFallback = RenderType.entityTranslucentEmissive(ShaderPackFallback.WHITE);
+
         ExtendedModelPart body = new ExtendedModelPart();
         if (!isOnArmor) {
-            body.addChild(new ChestpieceModelPart(baseModel, baseType, DEShaders.TOOL_BASE_SHADER));
+            body.addChild(new ChestpieceModelPart(baseModel, baseType, DEShaders.TOOL_BASE_SHADER).fallback(baseFallback, 0xFFFFFFFF, false));
         }
         if (techLevel == TechLevel.CHAOTIC) {
-            body.addChild(new ChestpieceModelPart(materialModel, chaoticType, BCShaders.CHAOS_ENTITY_SHADER));
+            body.addChild(new ChestpieceModelPart(materialModel, chaoticType, BCShaders.CHAOS_ENTITY_SHADER).fallback(chaoticFallback, 0xFFFFFFFF, false));
         } else {
-            body.addChild(new ChestpieceModelPart(materialModel, baseType, DEShaders.TOOL_BASE_SHADER));
+            body.addChild(new ChestpieceModelPart(materialModel, baseType, DEShaders.TOOL_BASE_SHADER).fallback(baseFallback, 0xFFFFFFFF, false));
         }
-        body.addChild(new ChestpieceModelPart(gemModel, gemType, DEShaders.TOOL_GEM_SHADER));
-        body.addChild(new CoreGemModelPart(coreGemModel, coreGemType, DEShaders.CHESTPIECE_GEM_SHADER));
+        body.addChild(new ChestpieceModelPart(gemModel, gemType, DEShaders.TOOL_GEM_SHADER).fallback(gemFallback, ShaderPackFallback.energyColour(techLevel), true));
+        body.addChild(new CoreGemModelPart(coreGemModel, coreGemType, DEShaders.CHESTPIECE_GEM_SHADER).fallback(coreGemFallback, 0xFFFFFFFF, true));
         this.body = body;
 
         head = new ShieldModelPart(shieldHeadModel, shieldType, DEShaders.CHESTPIECE_SHIELD_SHADER);
@@ -195,9 +203,15 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
     public class ChestpieceModelPart extends ExtendedModelPart {
         protected final BindingVBORenderType renderType;
         protected final BCShader<?> shader;
+        //PORT(1.19.2) shader-pack fallback (vanilla entity buffers), see ShaderPackFallback
+        protected final CCModel fallbackModel;
+        protected RenderType fallbackType;
+        protected int fallbackColour = 0xFFFFFFFF;
+        protected boolean fallbackEmissive;
 
         public ChestpieceModelPart(CCModel model, RenderType baseType, BCShader<?> shader) {
             this.shader = shader;
+            this.fallbackModel = ShaderPackFallback.toQuads(model);
             renderType = new BindingVBORenderType(baseType, (format, builder) -> {
                 CCRenderState ccrs = CCRenderState.instance();
                 ccrs.reset();
@@ -206,12 +220,36 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
             });
         }
 
+        public ChestpieceModelPart fallback(RenderType type, int rgba, boolean emissive) {
+            this.fallbackType = type;
+            this.fallbackColour = rgba;
+            this.fallbackEmissive = emissive;
+            return this;
+        }
+
+        /**
+         * Draws the vanilla fallback of this part (pose already applied) when a shader pack is active.
+         *
+         * @return true if drawn (the shader path must then be skipped)
+         */
+        protected boolean renderFallback(Matrix4 mat, MultiBufferSource buffers, int packedLight, int packedOverlay, int rgba) {
+            if (fallbackType == null || !ShaderPackFallback.isActive()) return false;
+            ShaderPackFallback.render(fallbackModel, fallbackType, buffers, mat,
+                    fallbackEmissive ? ShaderPackFallback.FULL_BRIGHT : packedLight,
+                    fallbackEmissive ? ShaderPackFallback.NO_OVERLAY : packedOverlay, rgba);
+            return true;
+        }
+
         @Override
         public void render(PoseStack poseStack, MultiBufferSource buffers, int packedLight, int packedOverlay, float r, float g, float b, float a) {
             if (this.visible) {
                 poseStack.pushPose();
                 this.translateAndRotate(poseStack);
                 Matrix4 mat = new Matrix4(poseStack);
+                if (renderFallback(mat, buffers, packedLight, packedOverlay, fallbackColour)) {
+                    poseStack.popPose();
+                    return;
+                }
                 renderType.withCallback(() -> {
                     ToolRenderBase.glUniformBaseColor(shader, techLevel, 1F);
                     shader.getModelMatUniform().glUniformMatrix4f(mat);
@@ -236,6 +274,11 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
                 this.translateAndRotate(poseStack);
                 Matrix4 mat = new Matrix4(poseStack);
                 int color = shieldColour;
+                //Fallback: white emissive gem tinted with the shield colour (the gem shader's BaseColor)
+                if (renderFallback(mat, buffers, packedLight, packedOverlay, ShaderPackFallback.argbToRgba(color, 0xFF))) {
+                    poseStack.popPose();
+                    return;
+                }
                 renderType.withCallback(() -> {
                     shader.getBaseColorUniform().glUniform4f(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, ((color >> 24) & 0xFF) / 255F);
                     shader.getModelMatUniform().glUniformMatrix4f(mat);
@@ -261,6 +304,12 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
                 Matrix4 mat = new Matrix4(poseStack);
                 int color = shieldColour;
                 float state = shieldState;
+                if (ShaderPackFallback.isActive()) {
+                    //Fallback: translucent shell + energy swirl in the shield colour, scaled by the activation state
+                    ShaderPackFallback.renderShield(fallbackModel, buffers, mat, color, state, (float) ClientUtils.getRenderTime());
+                    poseStack.popPose();
+                    return;
+                }
                 renderType.withCallback(() -> {
                     shader.getBaseColourUniform().glUniform4f(((color >> 16) & 0xFF) / 255F, ((color >> 8) & 0xFF) / 255F, (color & 0xFF) / 255F, ((color >> 24) & 0xFF) / 255F);
                     shader.getActivationUniform().glUniform1f(state);
