@@ -229,9 +229,9 @@ public abstract class ToolRenderBase implements IItemRenderer {
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
             if (transformType == ItemTransforms.TransformType.GUI) {
-                buffers.getBuffer(guiVboType.get().withCallback(() -> shader.getModelMatUniform().glUniformMatrix4f(mat)));
+                guiVboType.get().withCallback(() -> shader.getModelMatUniform().glUniformMatrix4f(mat)).drawImmediate();
             } else {
-                buffers.getBuffer(vboType.get().withCallback(() -> shader.getModelMatUniform().glUniformMatrix4f(mat)));
+                vboType.get().withCallback(() -> shader.getModelMatUniform().glUniformMatrix4f(mat)).drawImmediate();
             }
         }
     }
@@ -252,10 +252,10 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
-            buffers.getBuffer(vboType.get().withCallback(() -> {
+            vboType.get().withCallback(() -> {
                 glUniformBaseColor(shader, techLevel, pulse);
                 shader.getModelMatUniform().glUniformMatrix4f(mat);
-            }));
+            }).drawImmediate();
         }
 
     }
@@ -271,12 +271,12 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
         @Override
         public void render(ItemTransforms.TransformType transformType, MultiBufferSource buffers, Matrix4 mat, float pulse) {
-            buffers.getBuffer(vboType.get().withCallback(() -> {
+            vboType.get().withCallback(() -> {
                 shader.getDisableLightUniform().glUniform1b(true);
                 shader.getDisableOverlayUniform().glUniform1b(true);
                 shader.getAlphaUniform().glUniform1f(0.7F);
                 shader.getModelMatUniform().glUniformMatrix4f(mat);
-            }));
+            }).drawImmediate();
         }
     }
 }
