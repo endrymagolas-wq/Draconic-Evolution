@@ -7,6 +7,7 @@ import com.brandon3055.draconicevolution.api.damage.IDraconicDamage;
 import com.brandon3055.draconicevolution.init.DEDamage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +19,8 @@ import javax.annotation.Nullable;
  * Created by brandon3055 on 5/07/2016.
  * <p>
  * 1.19.2 (WP-22, specs/WP-22-damage.md s.3.3): {@link DamageSource} implementations for {@link DEDamage.Type}.
- * Do not construct these directly; use the {@link DEDamage} factory methods.
+ * Do not construct these directly; use the {@link DEDamage} factory methods. Exception: {@link #explosion(Entity)}, the
+ * vanilla-type explosion source of the staff projectile (decision D-3).
  * (The 1.20 version of this file was fully commented out; its deprecated 1.16 content, CHAOS_ISLAND_IMPLOSION and
  * DamageSourceChaos, is superseded by DEDamage.CHAOS_IMPLOSION / DEDamage.GUARDIAN.)
  */
@@ -123,5 +125,54 @@ public final class DEDamageSources {
         @Nullable
         @Override
         public Vec3 getSourcePosition() { return null; }
+    }
+
+    /**
+     * The 1.20.1 {@code DamageSources.explosion(direct, null)} (type {@code minecraft:explosion}: direct entity, no causing
+     * entity). Used by the staff projectile explosion ({@code DraconicProjectileEntity.activateDamageEffect}; WP-22 D-3,
+     * lead decision (c) of CR WP-30-2).
+     */
+    public static DamageSource explosion(Entity direct) {
+        return new DirectExplosionSource(direct);
+    }
+
+    /**
+     * The 1.20.1 {@code minecraft:explosion} source with direct = {@code entity} and causing = null (WP-22 D-3 (c)).
+     * <ul>
+     * <li>{@link #getEntity()} is null, as in 1.20.1: no kill credit, XP or player-kill loot, no {@code lastHurtByMob}
+     * (no aggro on the entity), no {@code ServerPlayer.hurt} PvP gate, no hurt-knockback in {@code LivingEntity.hurt},
+     * no looting.</li>
+     * <li>{@link #getDirectEntity()} is the entity, and {@code getSourcePosition()} its position (EntityDamageSource),
+     * so vanilla shield blocking works as in 1.20.1.</li>
+     * <li>Deliberately NOT an {@code IndirectEntityDamageSource}: 1.19.2 {@code EnderMan.hurt} dodges every Indirect
+     * source, 1.20.1 only {@code #is_projectile}; endermen take this hit in both.</li>
+     * <li>{@link #scalesWithDifficulty()} is always true (1.20.1 {@code explosion} scaling "always"; the 1.19.2
+     * EntityDamageSource version ignores the flag).</li>
+     * <li>Death message {@code death.attack.explosion} with (victim, entity), never the {@code .item} variant (1.20.1
+     * takes the item from the causing entity, which is null).</li>
+     * </ul>
+     * Not an {@link IDEDamageSource}: a vanilla type without DE tags ({@code DEDamage.getType} returns null).
+     */
+    public static class DirectExplosionSource extends EntityDamageSource {
+        public DirectExplosionSource(Entity direct) {
+            super("explosion", direct);
+            setExplosion();
+            setScalesWithDifficulty();
+        }
+
+        @Nullable
+        @Override
+        public Entity getEntity() { return null; }
+
+        @Override
+        public Entity getDirectEntity() { return entity; }
+
+        @Override
+        public boolean scalesWithDifficulty() { return true; }
+
+        @Override
+        public Component getLocalizedDeathMessage(LivingEntity victim) {
+            return Component.translatable("death.attack." + msgId, victim.getDisplayName(), entity.getDisplayName());
+        }
     }
 }

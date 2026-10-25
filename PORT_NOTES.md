@@ -47,27 +47,45 @@ every source with a causing entity (mc-1.19.2 `LivingEntity.java:1133-1142`). `m
 unobstructed beam tick, and the obstructed-beam explosion) and guardian projectile hits no longer push the target away
 from the guardian, as in 1.20.1. `fusion_explosion` / `chaos_implosion` have no causing entity, so nothing changes for
 them. Vanilla sources keep the vanilla 1.19.2 knockback, including the vanilla `level.explode(shooter, ...)` of the
-guardian projectile and the D-3 staff explosion (`explosion.player`, see D-3). The explosion push itself
+guardian projectile. The D-3 staff explosion has no causing entity since decision D-3 (c), so it gets no hurt-knockback
+in either version (see D-3). The explosion push itself
 (`Explosion.explode`) is unchanged. If another mod redirects the same call first (Mixin priority >= 1000), Mixin skips
 this redirect with a "@Redirect conflict" warning and the 1.19.2 knockback applies.
 
 Decisions taken with the spec defaults (change only by CR to WP-22):
 - D-1 new types nested in the locked files (`DEDamage.Type`, `DEDamageSources.IDEDamageSource`).
 - D-2 `ShieldControlEntity.tryBlockDamage(LivingDamageEvent)`: no UNBLOCKABLE check (1.20.1 parity; there the check never matched).
-- D-3 staff explosion (`DraconicProjectileEntity:234`): `DamageSource.explosion((LivingEntity) owner)` (= de-1.18), an
-  `EntityDamageSource("explosion.player", owner)`, so `getEntity() == owner`. 1.20.1 `explosion(owner, null)` has
-  direct = owner and no causing entity [I-1.20], so none of the following happens there. Consequences in the port
-  (review finding COMBAT-2, WP-30; mc-1.19.2 sources): kill credit, XP and player-kill loot for the owner
-  (`LivingEntity.hurt:1084-1091` sets `lastHurtByPlayer`); every mob hit gets `lastHurtByMob = owner`, so neutral mobs
-  hit by the explosion turn on the owner; on a `pvp=false` server (or for team mates without friendly fire) other
-  players take no damage from the explosion (`ServerPlayer.hurt:656-660` + `canHarmPlayer`; 1.20.1 damages them); each
-  victim gets the vanilla 1.19.2 hurt-knockback of 0.4 away from the owner (`:1142`; not exempted by `LivingEntityMixin`,
-  which only covers DE types); death message `death.attack.explosion.player` ("blown up by <owner>"; 1.20.1:
-  `death.attack.explosion`); no difficulty scaling against players when the owner is a player
-  (`EntityDamageSource.scalesWithDifficulty()` ignores the flag and checks for a non-player living entity,
-  `EntityDamageSource.java:39-41`; 1.20.1 `explosion` scales "always" [I-1.20]). The owner itself is not hit in either
-  version (`level.explode(owner, ...)` excludes it).
-  Test P5 (not run: needs a client or a player GameTest). Parity alternative for a lead decision: see `logs\WP-30.md`.
+- D-3 staff explosion (`DraconicProjectileEntity:234`): **lead decision (c)** (CR WP-30-2 §2, `DECISIONS.md`
+  2026-10-25), closest parity with 1.20.1 `damageSources().explosion(owner, null)` (type `minecraft:explosion`,
+  direct = owner, causing = null [I-1.20]). The port uses `DEDamageSources.explosion(owner)` =
+  `DEDamageSources.DirectExplosionSource`, an `EntityDamageSource("explosion", owner)` with `setExplosion()`,
+  `getEntity()` -> null, `getDirectEntity()` -> owner, `scalesWithDifficulty()` -> always true and a death message that
+  never uses the `.item` variant. It is not an `IDEDamageSource` (vanilla type, no DE tags) and deliberately not an
+  `IndirectEntityDamageSource` (1.19.2 `EnderMan.hurt:327-342` dodges every Indirect source; 1.20.1 dodges only
+  `#is_projectile`). Effects, all as 1.20.1 (mc-1.19.2 sources): no kill credit, XP or player-kill loot
+  (`LivingEntity.hurt:1084-1105` sets nothing, `dropAllDeathLoot:1337`/`dropExperience:1355` see
+  `lastHurtByPlayerTime == 0`, loot context without `killer_entity`/`last_damage_player`, direct killer = owner); no
+  `lastHurtByMob`, so no mob turns on the owner; no PvP gate (`ServerPlayer.hurt:656-660` reads `getEntity()`), so
+  other players are damaged on `pvp=false` servers and team mates without friendly fire are damaged too; no
+  hurt-knockback (`:1133-1145`, random `hurtDir`); difficulty scaling against players (`Player.hurt:848`, Easy/Hard;
+  Peaceful: 0); shield blocking against the owner's position (`isDamageSourceBlocked:1241-1263` via
+  `EntityDamageSource.getSourcePosition`) and the blocking knock-back on the owner (`blockUsingShield`); death message
+  `death.attack.explosion` ("<victim> blew up"), also when the owner holds a renamed item; endermen take the damage and
+  then teleport randomly (90 %, `EnderMan.hurt:344-347`, the 1.20.1 rule for a source without a living causing entity).
+  The owner itself is not hit (`level.explode(owner, ...)` excludes it). Exhaustion 0.1 (as 1.20.1 `explosion`).
+  Before the decision the port used the de-1.18 source `DamageSource.explosion((LivingEntity) owner)`
+  (`explosion.player`, credited to the owner, PvP-gated, +0.4 knockback, never scaled for a player owner).
+  Reachability (upstream, unchanged): the only code that creates a `DraconicProjectileEntity` (the staff shot,
+  `ModularStaff`) is commented out in 1.20.1 and in the port, the `draconic_arrow` entity type builds
+  `DraconicArrowEntity`, and the constructor itself throws `IllegalArgumentException: Unregistered serializer` because
+  `lib/Serializers.OPT_MODULE_SERIALIZER` is never registered (registration commented out upstream; the
+  `SynchedEntityData.define` check exists in both versions). So this path is not reachable in normal play; the change
+  matters only if the projectile is revived. The call-site GameTest registers the serializer on the gametest server
+  (test-only) to reach line 234.
+  Test P5 / GameTests `d3staffexplosioncallsite`, `d3staffexplosionsourceeffects`, `d3staffexplosionshieldblocking`
+  (`src/gametest/.../DamageReviewGameTests.java`, batch `de_damage_d3`): each effect above is asserted on the server,
+  each with a control (the old de-1.18 source, an Indirect variant or the option-(b) source without position) that
+  shows the difference.
 - D-4 `TileReactorCore:914` explosion = `Explosion.BlockInteraction.DESTROY` (1.20.1 BLOCK parity, decay).
 - D-5 missing death keys (draconic/wyvern/draconium arrow, fusion/chaos/crystal_move): allowlist (as 1.20.1).
 - D-6 cooldown bypass: one LOWEST `LivingAttackEvent` listener, registered in `ModularArmorEventHandler.init()`.
@@ -149,6 +167,10 @@ differ. These are edge cases and cannot be set per block in 1.19.2 without overr
   client-only `shield_hud`. Reports: `logs\gametest-report.md`, `logs\WP-31.md`.
 - No behaviour change to the mod. The death-message keys a DE source can produce and that have no translation are
   exactly the 16 on the WP-22 §4 allowlist (missing in 1.20.1 as well, decision D-5).
+- Later additions: WP-31b (35 required server tests, `logs\WP-31b.md`), the two WP-30 review-fix checks (COMBAT-1
+  knockback, COMBAT-3 relight thread; CR WP-30-3) and the three D-3 tests, the last five in
+  `src/gametest/.../DamageReviewGameTests.java`. A default run now has 63 tests: 52 required, plus the 11 optional
+  WP-22/WP-23 checks.
 
 ## Client GUI (mgui) deviations
 

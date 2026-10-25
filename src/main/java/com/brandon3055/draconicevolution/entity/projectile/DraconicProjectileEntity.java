@@ -7,6 +7,7 @@ import com.brandon3055.draconicevolution.api.modules.data.DamageModData;
 import com.brandon3055.draconicevolution.api.modules.lib.IDamageModifier;
 import com.brandon3055.draconicevolution.init.DEContent;
 import com.brandon3055.draconicevolution.items.equipment.damage.DefaultStaffDmgMod;
+import com.brandon3055.draconicevolution.lib.DEDamageSources;
 import com.brandon3055.draconicevolution.lib.Serializers;
 import com.google.common.collect.Sets;
 import net.covers1624.quack.util.SneakyUtils;
@@ -21,7 +22,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -230,8 +230,8 @@ public class DraconicProjectileEntity extends AbstractArrow {
             disableDefault = true;
         } else if (explosivePower > 0) {
             if (owner instanceof LivingEntity) {
-                // 1.19.2 (WP-22 D-3): explosion credited to the owner (= de-1.18); 1.20 interaction "MOB" = mobGriefing gamerule
-                level.explode(owner, DamageSource.explosion((LivingEntity) owner), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks && ForgeEventFactory.getMobGriefingEvent(level, owner) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                // 1.19.2 (WP-22 D-3 (c)): 1.20.1 explosion(owner, null) = direct owner, no causing entity; 1.20 interaction "MOB" = mobGriefing gamerule
+                level.explode(owner, DEDamageSources.explosion(owner), null, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks && ForgeEventFactory.getMobGriefingEvent(level, owner) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
             }else {
                 level.explode(this, pos.x, pos.y, pos.z, explosivePower, false, explodeBlocks && ForgeEventFactory.getMobGriefingEvent(level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
             }
