@@ -2,8 +2,8 @@ package com.brandon3055.draconicevolution.gametest;
 
 // GameTests for the damage findings of the adversarial review (WP-30 review-fix round) and for decision D-3.
 //  - COMBAT-1: DE is_explosion damage with a causing entity gives no hurt-knockback (1.20.1 rule), other sources do.
-//  - COMBAT-3/TILES-1: a lightChunk future completes off the server thread (plain thenRun), and thenRunAsync(.., server)
-//    brings the callback back to the server thread (the pattern ExplosionHelper now uses).
+//  - COMBAT-3/TILES-1: a lightChunk future usually completes off the server thread (plain thenRun; logged, not asserted),
+//    and thenRunAsync(.., server) always brings the callback back to the server thread (the pattern ExplosionHelper now uses).
 //    These two were WP-30's out-of-tree check R\logs\WP-30\verify\...\Wp30VerifyGameTests.java, adopted by CR WP-30-3
 //    (test names unchanged, batch de_ext).
 //  - D-3 (lead decision (c), CR WP-30-2 section 2): the staff explosion (DraconicProjectileEntity.activateDamageEffect)
@@ -131,7 +131,8 @@ public class DamageReviewGameTests {
             check(plain.get() != null && async.get() != null, () -> "lightChunk callbacks not run yet");
             LOGGER.info("DEPORT-GATE wp30.relight plainThenRun={} thenRunAsync={} serverThread={}", plain.get().getName(), async.get().getName(), serverThread.getName());
             check(async.get() == serverThread, () -> "thenRunAsync(.., server) ran on " + async.get().getName());
-            check(plain.get() != serverThread, () -> "plain thenRun ran on the server thread (finding premise not reproduced): " + plain.get().getName());
+            // Not asserted: a plain thenRun runs on whichever thread completes the future (usually the light worker,
+            // but the server thread when the future is already complete), so the finding's premise is timing-dependent.
         });
     }
 
