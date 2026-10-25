@@ -4,7 +4,7 @@ import codechicken.lib.math.MathHelper;
 import codechicken.lib.model.PerspectiveModelState;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.buffer.VBORenderType;
+import com.brandon3055.brandonscore.mgui.render.BindingVBORenderType;
 import codechicken.lib.render.item.IItemRenderer;
 import codechicken.lib.util.TransformUtils;
 import codechicken.lib.vec.Matrix4;
@@ -207,18 +207,18 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
     protected static class BaseToolPart extends ToolPart {
 
-        private final Supplier<VBORenderType> vboType;
-        private final Supplier<VBORenderType> guiVboType;
+        private final Supplier<BindingVBORenderType> vboType;
+        private final Supplier<BindingVBORenderType> guiVboType;
 
         public BaseToolPart(CCModel model, RenderType type, RenderType guiType, BCShader<?> shader) {
             super(shader);
-            vboType = new LazyValue<>(() -> new VBORenderType(type, (format, builder) -> {
+            vboType = new LazyValue<>(() -> new BindingVBORenderType(type, (format, builder) -> {
                 CCRenderState ccrs = CCRenderState.instance();
                 ccrs.reset();
                 ccrs.bind(builder, format);
                 model.render(ccrs);
             }));
-            guiVboType = new LazyValue<>(() -> new VBORenderType(guiType, (format, builder) -> {
+            guiVboType = new LazyValue<>(() -> new BindingVBORenderType(guiType, (format, builder) -> {
                 CCRenderState ccrs = CCRenderState.instance();
                 ccrs.reset();
                 ccrs.bind(builder, format);
@@ -238,11 +238,11 @@ public abstract class ToolRenderBase implements IItemRenderer {
 
     protected class SimpleToolPart extends ToolPart {
 
-        protected final Supplier<VBORenderType> vboType;
+        protected final Supplier<BindingVBORenderType> vboType;
 
         public SimpleToolPart(CCModel model, RenderType baseType, BCShader<?> shader) {
             super(shader);
-            vboType = new LazyValue<>(() -> new VBORenderType(baseType, (format, builder) -> {
+            vboType = new LazyValue<>(() -> new BindingVBORenderType(baseType, (format, builder) -> {
                 CCRenderState ccrs = CCRenderState.instance();
                 ccrs.reset();
                 ccrs.bind(builder, format);

@@ -2,7 +2,7 @@ package com.brandon3055.draconicevolution.client.model;
 
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.buffer.VBORenderType;
+import com.brandon3055.brandonscore.mgui.render.BindingVBORenderType;
 import codechicken.lib.render.model.OBJParser;
 import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Translation;
@@ -193,12 +193,12 @@ public class ModularChestpieceModel<T extends LivingEntity> extends HumanoidMode
     }
 
     public class ChestpieceModelPart extends ExtendedModelPart {
-        protected final VBORenderType renderType;
+        protected final BindingVBORenderType renderType;
         protected final BCShader<?> shader;
 
         public ChestpieceModelPart(CCModel model, RenderType baseType, BCShader<?> shader) {
             this.shader = shader;
-            renderType = new VBORenderType(baseType, (format, builder) -> {
+            renderType = new BindingVBORenderType(baseType, (format, builder) -> {
                 CCRenderState ccrs = CCRenderState.instance();
                 ccrs.reset();
                 ccrs.bind(builder, format);
