@@ -395,3 +395,11 @@ behaviour are untouched (no server class changed, 68/68 GameTests unchanged).
   with the 1.12.2 top-down V, which fails if V were flipped; bow frame rule; geometry per tier); `recolor.py --check`;
   offline previews `tools/cosmetic/classic_preview.py` (-> `logs/classic/*.png` in the workspace). The in-game look
   (lighting, hand/ground/frame placement, shield, Oculus) is not verified by any automated check.
+
+## Performance: reactor under a shader pack (9008)
+- Profiling the user's game (Oculus + Complementary, ~30 FPS, CPU-bound render thread) showed `RenderTileReactorCore`
+  in ~20% of render-thread samples: the shader-pack fallback rebuilt the core/shield through the CCRenderState pipeline
+  every frame and still built all reactor beams (~7k vertices, one flush per beam) although DE's beam shader does not run
+  under Oculus, so the beams were invisible anyway.
+- Now, while `ShaderPackFallback.isActive()`: the core model is baked once into a float array (pos/uv/normal) and written
+  straight to the vanilla entity buffer; no per-frame `endBatch`; the beams are skipped. Without a shader pack nothing changed.

@@ -9,6 +9,10 @@ import codechicken.lib.render.buffer.TransformingVertexConsumer;
 import codechicken.lib.render.model.OBJParser;
 import codechicken.lib.vec.Matrix4;
 import codechicken.lib.vec.Vector3;
+import codechicken.lib.vec.Vertex5;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import com.brandon3055.brandonscore.api.TimeKeeper;
 import com.brandon3055.brandonscore.client.render.BlockEntityRendererTransparent;
 import com.brandon3055.brandonscore.client.render.RenderUtils;
@@ -150,16 +154,10 @@ public class RenderTileReactorCore implements BlockEntityRendererTransparent<Til
      * and whiter with temperature, the shield is a blue/cyan shell whose opacity follows the shader's shield intensity.
      */
     public static void renderCoreShaderPackFallback(Matrix4 mat, CCRenderState ccrs, double animState, float intensity, float shieldPower, MultiBufferSource getter) {
-        if (model == null) {
-            Map<String, CCModel> map = new OBJParser(new ResourceLocation(DraconicEvolution.MODID, "models/block/reactor/reactor_core.obj")).quads().ignoreMtl().parse();
-            model = CCModel.combine(map.values());
-        }
+        float[] verts = bakedFallbackVerts();
         float iCap = Math.max(0F, Math.min(1F, intensity));
         float m = 0.3F + 0.7F * Math.max(0F, Math.min(1F, intensity * 1.2F));
-        ccrs.baseColour = Colour.packRGBA(m, m * (0.55F + 0.45F * iCap), m * (0.35F + 0.65F * iCap * iCap), 1F);
-        ccrs.brightness = ShaderPackFallback.FULL_BRIGHT;
-        ccrs.bind(REACTOR_CORE_FALLBACK_TYPE, getter);
-        model.render(ccrs, mat);
+        writeFallbackVerts(getter.getBuffer(REACTOR_CORE_FALLBACK_TYPE), verts, mat.toMatrix4f(), m, m * (0.55F + 0.45F * iCap), m * (0.35F + 0.65F * iCap * iCap), 1F);
 
         float power = (0.7F * shieldPower) - (float) (1 - animState);
         if (power > 0) {
@@ -168,11 +166,57 @@ public class RenderTileReactorCore implements BlockEntityRendererTransparent<Til
             float r = Math.max(0.1F, 0.5F - (power * 2F));
             float g = Math.min(1F, power + 0.2F);
             float b = Math.min(1F, (power * 2F) + 0.2F);
-            ccrs.baseColour = Colour.packRGBA(r, g, b, Math.min(0.85F, 0.25F + power));
-            ccrs.bind(REACTOR_SHIELD_FALLBACK_TYPE, getter);
-            model.render(ccrs, shieldMat);
+            writeFallbackVerts(getter.getBuffer(REACTOR_SHIELD_FALLBACK_TYPE), verts, shieldMat.toMatrix4f(), r, g, b, Math.min(0.85F, 0.25F + power));
         }
-        RenderUtils.endBatch(getter);
+        //No endBatch here: these are vanilla entity types, the buffer source draws them with the rest of the pass
+        //(a forced flush per reactor per frame was expensive under Oculus' fully buffered source).
+    }
+
+    //PORT(1.19.2) perf: the fallback runs every frame while a shader pack is active. The core model is baked once into
+    //x,y,z,u,v,nx,ny,nz floats and written straight to the buffer instead of going through the CCRenderState pipeline.
+    private static float[] fallbackVerts = null;
+
+    private static float[] bakedFallbackVerts() {
+        if (fallbackVerts == null) {
+            if (model == null) {
+                Map<String, CCModel> map = new OBJParser(new ResourceLocation(DraconicEvolution.MODID, "models/block/reactor/reactor_core.obj")).quads().ignoreMtl().parse();
+                model = CCModel.combine(map.values());
+            }
+            Vector3[] normals = model.normals();
+            float[] data = new float[model.verts.length * 8];
+            for (int i = 0; i < model.verts.length; i++) {
+                Vertex5 v = model.verts[i];
+                Vector3 n = normals != null && normals[i] != null ? normals[i] : Vector3.Y_POS;
+                int o = i * 8;
+                data[o] = (float) v.vec.x;
+                data[o + 1] = (float) v.vec.y;
+                data[o + 2] = (float) v.vec.z;
+                data[o + 3] = (float) v.uv.u;
+                data[o + 4] = (float) v.uv.v;
+                data[o + 5] = (float) n.x;
+                data[o + 6] = (float) n.y;
+                data[o + 7] = (float) n.z;
+            }
+            fallbackVerts = data;
+        }
+        return fallbackVerts;
+    }
+
+    private static void writeFallbackVerts(VertexConsumer buffer, float[] data, Matrix4f pose, float r, float g, float b, float a) {
+        Matrix3f normalMat = new Matrix3f(pose);
+        Vector3f normal = new Vector3f();
+        for (int o = 0; o < data.length; o += 8) {
+            normal.set(data[o + 5], data[o + 6], data[o + 7]);
+            normal.transform(normalMat);
+            normal.normalize();
+            buffer.vertex(pose, data[o], data[o + 1], data[o + 2])
+                    .color(r, g, b, a)
+                    .uv(data[o + 3], data[o + 4])
+                    .overlayCoords(ShaderPackFallback.NO_OVERLAY)
+                    .uv2(ShaderPackFallback.FULL_BRIGHT)
+                    .normal(normal.x(), normal.y(), normal.z())
+                    .endVertex();
+        }
     }
 
     public static void renderGUI(GuiRender render, TileReactorCore te) {
@@ -213,6 +257,9 @@ public class RenderTileReactorCore implements BlockEntityRendererTransparent<Til
 
         if (ShaderPackFallback.isActive()) {
             renderCoreShaderPackFallback(mat, ccrs, te.shaderAnimationState.get(), intensity, shieldPower, buffers);
+            //PORT(1.19.2) perf: the beams use DE's own beam shader, which Oculus does not run, so they are invisible under a
+            //shader pack anyway; building ~7k beam vertices plus a flush per beam every frame cost ~20% of the frame.
+            return;
         } else {
             renderCore(mat, ccrs, animation, te.shaderAnimationState.get(), intensity, shieldPower, partialTicks, buffers);
         }
