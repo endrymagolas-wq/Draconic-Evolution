@@ -403,3 +403,7 @@ behaviour are untouched (no server class changed, 68/68 GameTests unchanged).
   under Oculus, so the beams were invisible anyway.
 - Now, while `ShaderPackFallback.isActive()`: the core model is baked once into a float array (pos/uv/normal) and written
   straight to the vanilla entity buffer; no per-frame `endBatch`; the beams are skipped. Without a shader pack nothing changed.
+- 9009: profiling without a shader pack (user's game, 63 FPS max) showed DE block entity renderers in ~40% of render
+  thread samples. `BakedVertexModel` (new) bakes a CCModel once and writes vertices straight to the buffer; used for the
+  reactor stabilizers/injector and the energy pylon sphere. `RenderTileEnergyPylon` re-created its shell `RenderType`
+  every frame (upstream code) - removed. Reactor beams: 127/39 sides instead of 599/99.

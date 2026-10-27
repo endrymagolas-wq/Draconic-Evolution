@@ -10,6 +10,7 @@ import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Vector3;
 import com.brandon3055.brandonscore.client.shader.BCShaders;
 import com.brandon3055.draconicevolution.client.render.ShaderPackFallback;
+import com.brandon3055.draconicevolution.client.render.BakedVertexModel;
 import com.brandon3055.draconicevolution.DraconicEvolution;
 import com.brandon3055.draconicevolution.blocks.tileentity.TileEnergyPylon;
 import com.brandon3055.draconicevolution.client.handler.ClientEventHandler;
@@ -41,12 +42,14 @@ public class RenderTileEnergyPylon implements BlockEntityRenderer<TileEnergyPylo
     );
     private static final RenderType SHELL_FALLBACK_TYPE = RenderType.eyes(new ResourceLocation(DraconicEvolution.MODID, "textures/block/pylon_sphere_texture.png"));
     private final CCModel model;
+    private final BakedVertexModel baked;
 
     public RenderTileEnergyPylon(BlockEntityRendererProvider.Context context) {
         Map<String, CCModel> map = new OBJParser(new ResourceLocation(DraconicEvolution.MODID, "models/pylon_sphere.obj")).quads().ignoreMtl().parse();
         model = CCModel.combine(map.values());
         model.apply(new Scale(-0.35, -0.35, -0.35));
         model.computeNormals();
+        baked = new BakedVertexModel(model);
     }
 
     @Override
@@ -64,19 +67,13 @@ public class RenderTileEnergyPylon implements BlockEntityRenderer<TileEnergyPylo
             ccrs.baseColour = te.colour.get().rgba();
         }
 
-        shellType = RenderType.create("pylon_sphere", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, RenderType.CompositeState.builder()
-                .setTextureState(new RenderStateShard.TextureStateShard(new ResourceLocation(DraconicEvolution.MODID, "textures/block/pylon_sphere_texture.png"), false, false))
-                .setShaderState(new RenderStateShard.ShaderStateShard(() -> BCShaders.posColourTexAlpha0))
-                .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
-                .setWriteMaskState(RenderStateShard.COLOR_WRITE)
-                .createCompositeState(false)
-        );
+        //PORT(1.19.2) perf: shellType used to be re-created here every frame (a new RenderType per pylon per frame defeats
+        //the buffer source's batching); the static instance above is identical.
 
-        ccrs.bind(modelType, getter);
         mat.translate(te.direction.get().getNormal());
         mat.translate(0.5, 0.5, 0.5);
         mat.rotate(((ClientEventHandler.elapsedTicks + partialTicks) * 2F) * MathHelper.torad, new Vector3(0, 1, 0.5).normalize());
-        model.render(ccrs, mat);
+        baked.render(getter.getBuffer(modelType), mat, ccrs.baseColour, 240, packedOverlay);
 
         float f = MathHelper.clip(((ClientEventHandler.elapsedTicks + partialTicks) % 35F) / 30F, 0, 1);
         if (te.ioMode.get().canExtract()) {
@@ -94,11 +91,8 @@ public class RenderTileEnergyPylon implements BlockEntityRenderer<TileEnergyPylo
             int c = ccrs.baseColour;
             float alpha = (c & 0xFF) / 255F;
             ccrs.baseColour = Colour.packRGBA(((c >>> 24) & 0xFF) / 255F * alpha, ((c >> 16) & 0xFF) / 255F * alpha, ((c >> 8) & 0xFF) / 255F * alpha, 1F);
-            ccrs.bind(SHELL_FALLBACK_TYPE, getter);
-        } else {
-            ccrs.bind(shellType, getter);
         }
         mat.scale(1 + f);
-        model.render(ccrs, mat);
+        baked.render(getter.getBuffer(ShaderPackFallback.isActive() ? SHELL_FALLBACK_TYPE : shellType), mat, ccrs.baseColour, 240, packedOverlay);
     }
 }

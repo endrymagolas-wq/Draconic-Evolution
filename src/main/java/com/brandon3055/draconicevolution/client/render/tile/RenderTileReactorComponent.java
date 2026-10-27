@@ -12,6 +12,8 @@ import com.brandon3055.draconicevolution.blocks.reactor.tileentity.TileReactorSt
 import com.brandon3055.draconicevolution.init.DEContent;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.brandon3055.draconicevolution.client.render.BakedVertexModel;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.covers1624.quack.collection.FastStream;
 import net.minecraft.client.renderer.GameRenderer;
@@ -153,59 +155,72 @@ public class RenderTileReactorComponent implements BlockEntityRenderer<TileReact
         ccrs.reset();
     }
 
+    //PORT(1.19.2) perf: baked once, written straight to the buffer (see BakedVertexModel); drawn for every component every frame.
+    private static BakedVertexModel bInjectorBase, bInjectorEmitters, bStabFrame, bStabInnerRotor, bStabInnerRotorArm, bStabOuterRotor, bStabOuterRotorArm, bStabRing, bStabRingEmitter;
+
+    private static void bake() {
+        if (bStabFrame != null) return;
+        bInjectorBase = new BakedVertexModel(modelInjectorBase);
+        bInjectorEmitters = new BakedVertexModel(modelInjectorEmitters);
+        bStabInnerRotor = new BakedVertexModel(modelStabInnerRotor);
+        bStabInnerRotorArm = new BakedVertexModel(modelStabInnerRotorArm);
+        bStabOuterRotor = new BakedVertexModel(modelStabOuterRotor);
+        bStabOuterRotorArm = new BakedVertexModel(modelStabOuterRotorArm);
+        bStabRing = new BakedVertexModel(modelStabRing);
+        bStabRingEmitter = new BakedVertexModel(modelStabRingEmitter);
+        bStabFrame = new BakedVertexModel(modelStabFrame);
+    }
+
     public static void renderStabilizer(CCRenderState ccrs, Matrix4 mat, MultiBufferSource getter, float coreRotation, float brightness, int packedLight, int packedOverlay) {
+        bake();
         float ringRotation = coreRotation * -0.5F;//Remember Partial Ticks here
+        int glowLight = (int) (brightness * 240);
+        int overlay = packedOverlay;
 
         Matrix4 innerRotorMat = mat.copy();
         innerRotorMat.apply(new Rotation(coreRotation * torad, Vector3.Z_POS).at(new Vector3(0, 0.5, 0)));
         Matrix4 outerRotorMat = mat.copy();
         outerRotorMat.apply(new Rotation(coreRotation * torad * -2, Vector3.Z_POS).at(new Vector3(0, 0.5, 0)));
 
-        ccrs.bind(STAB_FRAME_TYPE, getter);
-        modelStabFrame.render(ccrs, mat);
-        modelStabInnerRotorArm.render(ccrs, innerRotorMat);
-        modelStabOuterRotorArm.render(ccrs, outerRotorMat);
+        VertexConsumer frame = getter.getBuffer(STAB_FRAME_TYPE);
+        bStabFrame.render(frame, mat, -1, packedLight, overlay);
+        bStabInnerRotorArm.render(frame, innerRotorMat, -1, packedLight, overlay);
+        bStabOuterRotorArm.render(frame, outerRotorMat, -1, packedLight, overlay);
 
+        Matrix4[] emitterMats = new Matrix4[4];
         for (int i = 0; i < 4; i++) {
-            ccrs.brightness = packedLight;
             Matrix4 ringMat = mat.copy();
             ringMat.apply(new Rotation(((90 * i) + ringRotation) * torad, Vector3.Z_POS).at(new Vector3(0, 0.5, 0)));
-            modelStabRing.render(ccrs, ringMat);
+            bStabRing.render(frame, ringMat, -1, packedLight, overlay);
 
-            ccrs.brightness = (int) (brightness * 240);
             Matrix4 emitterMat = ringMat.copy();
             emitterMat.apply(new Rotation(45 * torad, Vector3.X_NEG).at(new Vector3(0, 15 / 16F, -((8 + 1.5) / 16F))));
-            modelStabRingEmitter.render(ccrs, emitterMat);
+            emitterMats[i] = emitterMat;
+            bStabRingEmitter.render(frame, emitterMat, -1, glowLight, overlay);
         }
 
-        ccrs.brightness = (int) (brightness * 240);
-        modelStabInnerRotor.render(ccrs, innerRotorMat);
-        modelStabOuterRotor.render(ccrs, outerRotorMat);
+        bStabInnerRotor.render(frame, innerRotorMat, -1, glowLight, overlay);
+        bStabOuterRotor.render(frame, outerRotorMat, -1, glowLight, overlay);
 
         if (brightness >= 1) {
-            ccrs.bind(STAB_GLOW_TYPE, getter);
-            modelStabInnerRotor.render(ccrs, innerRotorMat);
-            modelStabOuterRotor.render(ccrs, outerRotorMat);
-
+            VertexConsumer glow = getter.getBuffer(STAB_GLOW_TYPE);
+            bStabInnerRotor.render(glow, innerRotorMat, -1, glowLight, overlay);
+            bStabOuterRotor.render(glow, outerRotorMat, -1, glowLight, overlay);
             for (int i = 0; i < 4; i++) {
-                Matrix4 emitterMat = mat.copy();
-                emitterMat.apply(new Rotation(((90 * i) + ringRotation) * torad, Vector3.Z_POS).at(new Vector3(0, 0.5, 0)));
-                emitterMat.apply(new Rotation(45 * torad, Vector3.X_NEG).at(new Vector3(0, 15 / 16F, -((8 + 1.5) / 16F))));
-                modelStabRingEmitter.render(ccrs, emitterMat);
+                bStabRingEmitter.render(glow, emitterMats[i], -1, glowLight, overlay);
             }
         }
     }
 
     public static void renderInjector(CCRenderState ccrs, Matrix4 mat, MultiBufferSource getter, float brightness, int packedLight, int packedOverlay) {
-        ccrs.bind(INJECTOR_FRAME_TYPE, getter);
-        modelInjectorBase.render(ccrs, mat);
-
-        ccrs.brightness = (int) (brightness * 240);
-        modelInjectorEmitters.render(ccrs, mat);
+        bake();
+        int glowLight = (int) (brightness * 240);
+        VertexConsumer frame = getter.getBuffer(INJECTOR_FRAME_TYPE);
+        bInjectorBase.render(frame, mat, -1, packedLight, packedOverlay);
+        bInjectorEmitters.render(frame, mat, -1, glowLight, packedOverlay);
 
         if (brightness >= 1) {
-            ccrs.bind(INJECTOR_GLOW_TYPE, getter);
-            modelInjectorEmitters.render(ccrs, mat);
+            bInjectorEmitters.render(getter.getBuffer(INJECTOR_GLOW_TYPE), mat, -1, glowLight, packedOverlay);
         }
     }
 

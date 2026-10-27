@@ -319,7 +319,9 @@ public class RenderTileReactorCore implements BlockEntityRendererTransparent<Til
         ccrs.bind(buffer, DefaultVertexFormat.POSITION_COLOR_TEX);
         ccrs.startDrawing(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR_TEX);
         
-        float sides = highRes ? 599 : 99;
+        //PORT(1.19.2) perf: was 599 / 99 sides (up to ~7k vertices per reactor per frame); the beam is a smooth cone,
+        //127 / 39 sides look the same at any normal viewing distance.
+        float sides = highRes ? 127 : 39;
         for (int i = 0; i < sides + 1; i++) {
             double angle = (i / sides) * (Math.PI * 2);// + beamRotation;
             float sin = (float) MathHelper.sin(angle);
